@@ -1,0 +1,10 @@
+clean: no
+merge-spans: no
+merge-divs: no
+preserve-entities: yes
+quote-nbsp: no
+literal-attributes: yes
+join-styles: no
+doctype: omit
+wrap: 1510
+quiet: yes

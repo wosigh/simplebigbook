@@ -1,0 +1,200 @@
+/*******************
+ * BODIES
+ ******************/ 
+
+body.main {
+	background: 212121;
+	/*background: #E4E4E2;*/
+	/*background: #fefbf7;*/
+	color: #010101;
+}
+
+.main .book-body-text {
+	text-align:justify;
+	font-size:16px;
+	margin:6px 6px 6px 6px;
+}
+
+.main .special-section {
+	padding: 0px 12px 0px 12px;
+	font-style: italic;
+}
+
+.main .indent {
+	padding: 9px 0px 9px 0px;
+	text-indent:2ex;
+}
+
+.main .no-indent {
+	padding: 9px 0px 9px 0px;
+}
+
+.main .page-padding {
+	padding: 8px 0px 0px 0px;
+}
+
+.main .indent-no-padding {
+	padding: 0px 0px 0px 0px;
+	text-indent:2ex;
+}
+
+.main .double-indent-no-padding {
+	padding: 0px 0px 0px 0px;
+	text-indent:4ex;
+}
+
+.main .big-letter {
+	font-size: 36pt;
+	/*font-style: italic;*/
+	font-family: serif;
+	font-weight: bold;
+	text-shadow : 1px 2px 5px black;
+	float: left;
+	display: block;
+	margin: -9px 0px -12px 0px;
+	padding: 0px 3px -6px 0px;
+	border: 0px solid black;
+}
+
+.main .center {
+	text-align: center;
+}
+
+.main .right {
+	text-align: right;
+}
+
+.main .small {
+	font-size: small;
+}
+
+.main .tightBorders {
+	margin:0px 0px 0px 0px;
+	padding:0px 0px 0px 0px;
+}
+
+.main .searchHighlight {
+	color: #0000A0;
+	background: rgba(250, 250, 0, 1.0);
+	font-weight: bold;
+	text-decoration: none;
+}
+
+
+/*******************
+ * LISTS
+ ******************/ 
+
+
+/*******************
+ * WIDGETS
+ ******************/ 
+.pagePopup {
+	font-size: small;
+}
+
+
+/*******************
+ * DOCK STYLES
+ ******************/ 
+body.dock
+{
+	background: #000;
+	color: #fff;
+	font-weight: bold;
+}
+
+.dock {
+	/*border: 1px solid blue;*/
+	width: 100%;
+	height: 100%;
+}
+.dock .bookPhrases-Container {
+	/*border: 1px solid red;*/
+	display: table;
+	width: 100%;
+	height: 100%;
+	margin-top: 3em;
+}
+.dock .bookPhrases-Container #bookPhrases {
+	/*border: 1px solid green;*/
+	color: rgba(250, 250, 250, 0.0);
+	padding: 1.5em;
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 24px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+
+/*******************
+ * ICONS
+ ******************/ 
+
+.palm-page-header .icon {
+	background:url(../images/bookicon.png) center center no-repeat;
+}
+
+.palm-menu-icon.chapter {
+	background-image:url(../images/icon-book-index.png);
+}
+
+.main .palm-menu-icon.pageMenuIcon { 
+	background-image: url(../images/icon-book-right.png);
+}
+
+.icon {
+	position:absolute;
+	top:0;
+	left:10px;
+	width:65px;
+	min-height:65px;
+	background:url(../images/bookicon.png) center center no-repeat;
+}
+
+.img_email {
+	position:relative;
+	left:8px;
+	top:10px;
+	width:32px;
+	height:32px;
+	background:url(../images/application-email.png) no-repeat bottom;
+	vertical-align:bottom;
+	float:left;
+	padding:0 0 0 5px;
+}
+
+.img_phone {
+	position:relative;
+	left:8px;
+	top:10px;
+	width:32px;
+	height:32px;
+	background:url(../images/application-phone.png) no-repeat bottom;
+	float:left;
+	padding:0 0 0 5px;
+}
+
+.img_web {
+	position:relative;
+	left:8px;
+	top:10px;
+	width:32px;
+	height:32px;
+	background:url(../images/application-web.png) no-repeat bottom;
+	float:left;
+	padding:0 0 0 5px;
+}
+
+.img_icon {
+	position:relative;
+	left:8px;
+	top:10px;
+	width:32px;
+	height:32px;
+	background:url(../images/bookiconsmall.png) no-repeat center;
+	float:left;
+	padding:0 0 0 5px;
+}

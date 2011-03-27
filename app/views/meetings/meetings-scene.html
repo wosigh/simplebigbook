@@ -1,0 +1,50 @@
+<!--
+/* SimpleBigBook Copyright (C) 2009  Rick Boatright, John Kiernan
+ *
+ * This file is part of Simple Big Book.
+ *
+ * Simple Big Book is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Simple Big Book is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Simple Big Book.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+ -->
+ 
+<div class="palm-page-header">
+	<div class="palm-page-header-wrapper">
+		<div class="icon"></div>
+		<div class="title">Meetings</div>
+	</div>
+</div>
+
+<div class="palm-text-wrapper">
+	<div class="palm-body-text center">
+	While this isn't perfect, type the zipcode you are in below and hit "Search".
+	It will open a browser to automatically search Google for AA related happenings in your zipcode.
+	<br/>
+	
+	</div>
+</div>
+ 
+<div class="palm-group">
+	<div class="palm-group-title center" id="search-terms-group">Meeting Search</div>
+	<div class="palm-list">
+		<div class="palm-row single">
+			<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+				<div class="title">
+					<div id="meetingSearchVal" x-mojo-element="TextField"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div x-mojo-element="Button" id="zipcodeSearch" class="padding:0 0 0 0;"></div>

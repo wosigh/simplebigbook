@@ -1,0 +1,17 @@
+{
+	"title": "Simple Big Book",
+	"id": "com.vocshop.simplebigbook",
+	"version": "1.2.0",
+	"release_date": "",
+	"vendor": "Vocshop",
+	"vendor_email": "support@webos-internals.org",
+	"vendor_url": "http://www.webos-internals.org/wiki/Application:SimpleBigBook",
+	"type": "web",
+	"main": "index.html",
+	"icon": "icon.png",
+	"miniicon": "miniicon.png",
+	"removable": true,
+	"noWindow": true,
+	"noDeprecatedStyles": true,
+	"dockMode": true,
+}
