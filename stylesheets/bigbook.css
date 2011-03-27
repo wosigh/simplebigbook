@@ -80,6 +80,20 @@ body.main {
 	text-decoration: none;
 }
 
+.main .scene-fade {
+	height: 54px;
+	width: 100%;
+	position: fixed;
+	left: 0px;
+	z-index: 10000;
+	-webkit-palm-mouse-target: ignore;
+}
+
+.main .scene-fade.top {
+	top: 0px;
+	background: url(../images/fade-top.png) repeat-x center bottom;
+}
+
 
 /*******************
  * LISTS

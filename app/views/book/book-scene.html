@@ -22,7 +22,7 @@
 
 <div id="menu-panel-container">
 <div class="palm-menu view-menu palm-default" x-mojo-non-scrolling="true" style="width:100%;z-index:30000;max-width:100%;">
-	<div class="palm-menu-group" style="width:100%;" id="bookMenuGroup">
+	<div class="palm-menu-group" style="width:100%;z-index:90000;" id="bookMenuGroup">
 		<div class="palm-menu-text" x-mojo-tap-highlight="delayed" id="chapMenu" style="position:relative;margin:0px 60px 0px 0px;">
 			<div class="truncating-text">#{chapLabel}</div>
 		</div>
@@ -33,6 +33,7 @@
 </div>
 </div>
 
+<div class="scene-fade top" x-mojo-scroll-fade="top"></div>
 <div id="bookdata" class="book-body-text"></div>
 
 </div>
