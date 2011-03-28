@@ -206,8 +206,8 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageActivate @@");}
 		this.prefsModel = this.prefs.get();
 		this.bookPhrases.innerHTML = this.getRandomBookPhrases();
 
-		//this.controller.document.removeEventListener(Mojo.Event.stageActivate, this.stageActivateHandler, true);
-		this.controller.document.removeEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
+		this.controller.document.removeEventListener(Mojo.Event.stageActivate, this.stageActivateHandler, true);
+		//this.controller.document.removeEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
 
 		this.stageDeactivateHandler = this.stageDeactivate.bindAsEventListener(this);
 		this.controller.document.addEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
