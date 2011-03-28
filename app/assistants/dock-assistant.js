@@ -292,11 +292,33 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 
 		/////////////////////////////////////////////////////
 		// Ends in "A", Starts with "A", Previous ends in "A"
-		// Farm it out.
-		//
+		
+		//This starts, previous ends
 		if (thisQuote > 0) {
-			if ( (this.prettyPhrase.indexOf('A') === (this.prettyPhrase.length - 1)) || (this.prettyPhrase.indexOf('A') === 0) || (rawPhrases[(thisQuote - 1)].indexOf('A') === (rawPhrases[(thisQuote - 1)].length - 1)) ) {
-				this.prettyPhrase = this.AAFixer(this.prettyPhrase);
+			if (this.prettyPhrase.indexOf('A') === 0) {
+				if (rawPhrases[thisQuote].indexOf('A') === (rawPhrases[(thisQuote -1)].length -1)) {
+					Mojo.Log.info("++ PREVIOUS ENDS WITH A");
+					if (rawPhrases[(thisQuote - 2)]) {
+						this.prettyPhrase = rawPhrases[(thisQuote - 2)] + rawPhrases[(thisQuote - 1)] + "." + this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)];
+					}
+					else {
+						this.prettyPhrase = rawPhrases[(thisQuote - 1)] + "." + this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)];
+					}
+				}
+			}
+		}
+		//This ends, next starts
+		if (thisQuote > 0) {
+			if (this.prettyPhrase.indexOf('A') === this.prettyPhrase.length -1) {
+				if (rawPhrases[(thisQuote + 1)].indexOf('A') === 0) {
+					Mojo.Log.info("++ NEXT STARTS WITH A");
+					if (rawPhrases[(thisQuote + 2)]) {
+						this.prettyPhrase = this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)] + "." + rawPhrases[(thisQuote + 2)];
+					}
+					else {
+						this.prettyPhrase = this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)];
+					}
+				}
 			}
 		}
 		/////////////////////////////////////////////////////
@@ -315,16 +337,19 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 			}
 		}
 		//starts with
-		if ((this.prettyPhrase.indexOf('Dr') === 0) || (this.prettyPhrase.indexOf('Mr') === 0) ) {
+		else if ((this.prettyPhrase.indexOf('Dr') === 0) || (this.prettyPhrase.indexOf('Mr') === 0) ) {
 			Mojo.Log.info("STARTS DOCTOR -", rawPhrases[(thisQuote - 1)]);
 			this.prettyPhrase = this.MrDrFixer(this.prettyPhrase, 'starts');
 		}
 		//previous ends with
-		if (thisQuote > 0) {
+		else if (thisQuote > 0) {
 			if ( (rawPhrases[(thisQuote - 1)].indexOf('Dr') === (rawPhrases[(thisQuote - 1)].length - 2)) || (rawPhrases[(thisQuote - 1)].indexOf('Mr') === (rawPhrases[(thisQuote - 1)].length - 2)) ){
 				Mojo.Log.info("PREVIOUS DOCTOR -", rawPhrases[(thisQuote - 1)]);
 				this.prettyPhrase = this.MrDrFixer(this.prettyPhrase, 'previous');
 			}
+		}
+		else {
+			this.prettyPhrase = this.prettyPhrase
 		}
 		/////////////////////////////////////////////////////
 
@@ -345,6 +370,11 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 			//Mojo.Log.info("HTML:", this.prettyPhrase);
 		}
 
+		// Strip "undefined"... :-\
+		if (this.prettyPhrase.indexOf('undefined') > 0) {
+			this.prettyPhrase = this.prettyPhrase.replace('undefined', '');
+		}
+		
 		// Just end at "?"
 		if (this.prettyPhrase.indexOf('?') > 0) {
 			this.prettyPhrase = this.prettyPhrase.substring(0, (this.prettyPhrase.indexOf('?') + 1));
@@ -358,17 +388,12 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 		}
 
 		// DON'T add a period back to phrases that end in "?" or "!"
-		if ((this.prettyPhrase.indexOf('?') < 0) && (this.prettyPhrase.indexOf('!') < 0)) {
-			this.prettyPhrase = this.prettyPhrase + ".";
-		}
-		/*if ((this.prettyPhrase.indexOf('?') > 0) || (this.prettyPhrase.indexOf('!') > 0)) {
-			//Mojo.Log.info("DONT PERIOD!", this.prettyPhrase.indexOf('!'), this.prettyPhrase.indexOf('?'));
-			//this.prettyPhrase = this.prettyPhrase;
+		if ((this.prettyPhrase.indexOf('?') > 0) || (this.prettyPhrase.indexOf('!') > 0)) {
+			this.prettyPhrase = this.prettyPhrase;
 		}
 		else {
-			//Mojo.Log.info("ADD PERIOD!", this.prettyPhrase.indexOf('!'), this.prettyPhrase.indexOf('?'));
 			this.prettyPhrase = this.prettyPhrase + ".";
-		}*/
+		}
 
 		if (this.debugMe === true) {Mojo.Log.info(this.prettyPhrase);}
 
@@ -415,57 +440,6 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE getRandomBookPhrases @@");}
 
 /********************
  *
- * "A.A." Fixer
- *
- ********************/
-DockAssistant.prototype.AAFixer = function (phrase) {
-if (this.debugMe === true) {Mojo.Log.info("@@ ENTER A.A. FIXER @@");}
-
-	///////////////////////////////////////////////////////////////
-	// If you're here, one of these is true:
-	// 1) Current phrase starts with "A"
-	// 2) Current phrase ends with "A"
-	// 3) Previous phrase ended with "A"
-	//
-	// No need for further checking.
-	//
-
-	// Previous phrase ends in "A"
-	if (rawPhrases[(thisQuote - 1)].indexOf('A') === (rawPhrases[(thisQuote - 1)].length - 1)) {
-		Mojo.Log.info("++ PREVIOUS ENDS WITH A");
-		//phrase = rawPhrases[(thisQuote - 2)] + "." + rawPhrases[(thisQuote - 1)] + "." + phrase + "." + rawPhrases[(thisQuote + 1)];
-		phrase = rawPhrases[(thisQuote - 1)] + "." + phrase + "." + rawPhrases[(thisQuote + 1)];
-		Mojo.Log.info(phrase);
-		//return phrase;
-	}
-	
-	// Next phrase starts with "A"
-	if (rawPhrases[(thisQuote + 1)].indexOf('A') === 0) {
-		Mojo.Log.info("++ NEXT STARTS WITH A");
-		Mojo.Log.info("FIRST - IF");
-		//phrase = rawPhrases[(thisQuote - 1)] + "." + phrase + "." + rawPhrases[(thisQuote + 1)] + "." + rawPhrases[(thisQuote + 2)];
-		phrase = rawPhrases[(thisQuote - 1)] + "." + phrase + "." + rawPhrases[(thisQuote + 1)] + "." + rawPhrases[(thisQuote + 2)];
-		Mojo.Log.info(phrase);
-		//return phrase;
-	}
-
-	/*if (this.prettyPhrase.indexOf('A') === 0) {
-		if (rawPhrases[(thisQuote - 1)].indexOf('A') === rawPhrases[(thisQuote - 1)].indexOf('A') - 1) {
-			Mojo.Log.info("SECOND - IF");
-			this.prettyPhrase = rawPhrases[(thisQuote - 1)] + rawPhrases[(thisQuote - 1)] + "." + this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)] + "." + rawPhrases[(thisQuote + 2)];
-			//return phrase;
-		}
-	}*/
-
-	// Just send it back for some reason?!?
-	return phrase;
-
-if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE A.A. FIXER @@");}
-};
-
-
-/********************
- *
  * "Mr" & "Dr" Fixer
  *
  ********************/
@@ -484,7 +458,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Mr Dr FIXER @@");}
 	switch (where) {
 		case 'previous':
 			Mojo.Log.info("++ PREVIOUS ENDS WITH Mr or Dr");
-			phrase = rawPhrases[(thisQuote - 2)] + "." + rawPhrases[(thisQuote - 1)] + "." + phrase + "." + rawPhrases[(thisQuote + 1)] + "." + rawPhrases[(thisQuote + 2)];
+			phrase = rawPhrases[(thisQuote - 2)] + "." + rawPhrases[(thisQuote - 1)] + "." + phrase + "." + rawPhrases[(thisQuote + 1)];
 			Mojo.Log.info(phrase);
 			return phrase;
 			break;
@@ -496,12 +470,12 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Mr Dr FIXER @@");}
 			break;
 		case 'ends':
 			Mojo.Log.info("++ THIS PHRASE ENDED WITH Mr or Dr");
-			phrase = phrase + "." + rawPhrases[(thisQuote + 1)] + "." + rawPhrases[(thisQuote + 2)];
+			phrase = phrase + "." + rawPhrases[(thisQuote + 1)];// + "." + rawPhrases[(thisQuote + 2)];
 			return phrase;
 			break;
 	}
 
-	// Just send it back for some reason?!?
+	//Danger Will Robinson!
 	return phrase;
 
 //if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE A.A. FIXER @@");}
