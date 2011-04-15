@@ -53,5 +53,5 @@ _APP_Help_Resource = [{
 _APP_Support_Extra = [{
 	type: 'web',
 	label: 'Wikipedia 12 Step article',
-	url: 'http://en.wikipedia.org/wiki/Twelve-step_program'
+	url: 'http://www.webos-internals.org/wiki/Application:SimpleBigBook'
 }];
