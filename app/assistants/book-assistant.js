@@ -148,10 +148,10 @@ BookAssistant.prototype.setup = function () {
 		// Should I be Full Screen?
 		//
 		if ((this.prefsModel.screenSize === true) && (this.prefsModel.isFullScreen === true)) {
-			this.doFullScreen('up');
+			this.doFullScreen('big');
 		}
 		else if ((this.prefsModel.screenSize === true) && (this.prefsModel.wasChapterJump === false)) {
-			this.doFullScreen('up');
+			this.doFullScreen('big');
 		}
 	}
 
@@ -256,8 +256,9 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Activate @@");}
 	this.resizeHandler = this.handleWindowResize.bindAsEventListener(this);
 	this.controller.window.addEventListener('resize', this.resizeHandler, true);
 
-	this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
-	this.controller.document.addEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
+	// Moved to changedOrientation()
+	//this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
+	//this.controller.document.addEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 
 	this.appClosingHandler = this.appClosingRoutine.bindAsEventListener(this);
 	window.document.addEventListener(Mojo.Event.deactivate, this.appClosingHandler, true);
@@ -404,6 +405,29 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Orientation Changed @@");}
 		//Mojo.Log.info("NewThisBig", this.NewThisBig, "ImThisBig:", this.ImThisBig, "percentDown", this.percentDown, "goHere:", this.goHere);
 		this.controller.getSceneScroller().mojo.scrollTo(0, this.goHere, false, false);
 		this.wasResized = false;
+	}
+
+	this.whichWay = this.controller.stageController.getWindowOrientation();
+
+	switch (this.whichWay) {
+		case 'up':
+			if (! this.doubleClickHandler) {
+				this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
+				this.controller.document.addEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
+			}
+			break;
+		case 'down':
+			this.controller.document.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
+			this.doubleClickHandler = null
+			break;
+		case 'left':
+			this.controller.document.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
+			this.doubleClickHandler = null
+			break;
+		case 'right':
+			this.controller.document.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
+			this.doubleClickHandler = null
+			break;
 	}
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Orientation Changed @@");}
@@ -758,7 +782,7 @@ BookAssistant.prototype.doFullScreen = function(forceSelection, event) {
 
 	if (forceSelection) {
 		switch (forceSelection) {
-			case 'up':
+			case 'big':
 				if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", event);}
 				this.controller.enableFullScreenMode(true);
 				this.windowHeight = this.controller.window.innerHeight;
@@ -766,7 +790,7 @@ BookAssistant.prototype.doFullScreen = function(forceSelection, event) {
 				this.prefs.put(this.prefsModel);
 				forceSelection = false;
 				break;
-			case 'down':
+			case 'small':
 				if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", event);}
 				this.controller.enableFullScreenMode(false);
 				this.windowHeight = this.controller.window.innerHeight;
