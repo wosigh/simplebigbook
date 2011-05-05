@@ -84,7 +84,7 @@ body.main {
 	text-decoration: none;
 }
 
-.main .scene-fade {
+.scene-fade {
 	height: 54px;
 	width: 100%;
 	position: fixed;
@@ -93,9 +93,16 @@ body.main {
 	-webkit-palm-mouse-target: ignore;
 }
 
-.main .scene-fade.top {
+.my-fade-day.top {
 	top: 0px;
-	background: url(../images/fade-top.png) repeat-x center bottom;
+	background: url(../images/fade-top-day.png) repeat-x center bottom;
+	-webkit-palm-mouse-target: ignore;
+}
+
+.my-fade-night.top {
+	top: 0px;
+	background: url(../images/fade-top-night.png) repeat-x center bottom;
+	-webkit-palm-mouse-target: ignore;
 }
 
 

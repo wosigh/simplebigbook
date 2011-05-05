@@ -289,9 +289,13 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Activate @@");}
 	switch (this.prefsModel.daynight){
 		case 'day':
 			this.controller.document.body.className = 'main';
+			$('book-fade').addClassName('my-fade-day top');
+			$('book-fade').removeClassName('my-fade-night top');
 			break;
 		case 'night':
 			this.controller.document.body.className = 'palm-dark';
+			$('book-fade').addClassName('my-fade-night top');
+			$('book-fade').removeClassName('my-fade-day top');
 			break;
 	}
 
