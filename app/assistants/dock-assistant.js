@@ -172,12 +172,18 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageDeactivate @@");}
 	this.groovyFadeInTimer = '';
 	this.doThePhrase = '';
 	this.prettyPhrase = '';
+	rawPhrases = [];
 
 	this.fullBright = false;
 	this.groovyTimer = 0.0;
 	this.bookPhrases.innerHTML = "";
 	this.bookPhrases.style.color = "rgba(250, 250, 250, 0.0)";
 
+	//Mojo.Log.info("rawPhrases.length:", rawPhrases.length);
+	//if (rawPhrases.length > 0) {
+	//	rawPhrases = [];
+	//}
+	//Mojo.Log.info("rawPhrases.length:", rawPhrases.length);
 
 	//this.controller.document.removeEventListener(Mojo.Event.stageActivate, this.stageActivateHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
@@ -201,7 +207,18 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE stageDeactivate @@");}
 DockAssistant.prototype.stageActivate = function (event) {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageActivate @@");}
 
+		//Mojo.Log.info("rawPhrases.length:", rawPhrases.length);
+		if (rawPhrases.length <= 0) {
+			//Mojo.Log.info("Yep.  Gotta reload. -", rawPhrases.length);
+			this.gatherPhrases();
+		}
+		else {
+			Mojo.Log.info("WTF?  Should've reloaded. -", rawPhrases.length);
+		}
+		//Mojo.Log.info("rawPhrases.length:", rawPhrases.length);
+
 	if (this.firstRun === false) {
+
 		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 		this.prefsModel = this.prefs.get();
 		this.bookPhrases.innerHTML = this.getRandomBookPhrases();
@@ -230,7 +247,7 @@ DockAssistant.prototype.gatherPhrases = function () {
 try {
 	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER gatherPhrases @@", rawPhrases.length);}
 
-	if (! rawPhrases.length > 0) {
+	if (!rawPhrases.length > 0) {
 		if (this.debugMe === true) {Mojo.Log.info("BEFORE rawPhrases:", rawPhrases.length);}
 
 		//var lcUrl = "bustedphrases.html";
@@ -349,7 +366,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 			}
 		}
 		else {
-			this.prettyPhrase = this.prettyPhrase
+			Mojo.Log.info(this.prettyPhrase);// = this.prettyPhrase;
 		}
 		/////////////////////////////////////////////////////
 
@@ -389,7 +406,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 
 		// DON'T add a period back to phrases that end in "?" or "!"
 		if ((this.prettyPhrase.indexOf('?') > 0) || (this.prettyPhrase.indexOf('!') > 0)) {
-			this.prettyPhrase = this.prettyPhrase;
+			Mojo.Log.info(this.prettyPhrase);// = this.prettyPhrase;
 		}
 		else {
 			this.prettyPhrase = this.prettyPhrase + ".";
@@ -461,18 +478,18 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Mr Dr FIXER @@");}
 			phrase = rawPhrases[(thisQuote - 2)] + "." + rawPhrases[(thisQuote - 1)] + "." + phrase + "." + rawPhrases[(thisQuote + 1)];
 			Mojo.Log.info(phrase);
 			return phrase;
-			break;
+			//break;
 		case 'starts':
 			Mojo.Log.info("++ THIS STARTS WITH Mr or Dr");
 			phrase = rawPhrases[(thisQuote - 1)] + phrase + "." + rawPhrases[(thisQuote + 1)];
 			Mojo.Log.info(phrase);
 			return phrase;
-			break;
+			//break;
 		case 'ends':
 			Mojo.Log.info("++ THIS PHRASE ENDED WITH Mr or Dr");
 			phrase = phrase + "." + rawPhrases[(thisQuote + 1)];// + "." + rawPhrases[(thisQuote + 2)];
 			return phrase;
-			break;
+			//break;
 	}
 
 	//Danger Will Robinson!
