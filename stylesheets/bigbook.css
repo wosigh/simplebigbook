@@ -60,6 +60,10 @@ body.main {
 	border: 0px solid black;
 }
 
+.main .left {
+	text-align: left;
+}
+
 .main .center {
 	text-align: center;
 }
@@ -105,10 +109,29 @@ body.main {
 	-webkit-palm-mouse-target: ignore;
 }
 
+.border {
+	border: 0px solid blue;
+}
+
 
 /*******************
  * LISTS
  ******************/ 
+
+.chapMenu-text {
+	font-size: 10pt;
+}
+
+.list-text {
+	margin: 5px 0px 5px 0px;
+	padding: 5px 0px 5px 0px;
+	vertical-align: middle;
+	text-align:center;
+	/*font-size:18px;*/
+	font-size:small;
+}
+.myoutercontainer { position:relative }
+.myinnercontainer { position:absolute; top:50%; }
 
 
 /*******************
@@ -116,6 +139,10 @@ body.main {
  ******************/ 
 .pagePopup {
 	font-size: small;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	vertical-align: middle;
+	text-align:center;
 }
 
 
@@ -166,8 +193,12 @@ body.dock
 	background-image:url(../images/icon-book-index.png);
 }
 
-.main .palm-menu-icon.pageMenuIcon { 
+.main .palm-menu-icon.pageMenuIcon {
 	background-image: url(../images/icon-book-right.png);
+}
+
+.main .palm-menu-icon.bookmarksMenuIcon {
+	background-image: url(../images/menu-icon-file.png);
 }
 
 .icon {

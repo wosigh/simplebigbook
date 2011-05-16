@@ -61,12 +61,16 @@ AppAssistant.prototype.handleCommand = function (event) {
 try {
 	if (event.type === Mojo.Event.command) {
 		if (this.debugMe===true) {Mojo.Log.info("AppAss handleCommand", event.command);}
+		Mojo.Log.info("AppAss handleCommand", event.command);
 		switch (event.command) {
 			case 'cmd-Dock':
 				this.controller.getStageController('book').pushScene({name: 'dock', transition: Mojo.Transition.crossFade}, this);
 				break;
 			case 'cmd-Search':
 				this.controller.getStageController('book').pushScene({name: 'search', transition: Mojo.Transition.crossFade}, this);
+				break;
+			case 'cmd-Bookmarks':
+				this.controller.getStageController('book').pushScene({name: 'bookmarks', transition: Mojo.Transition.crossFade}, this);
 				break;
 			case 'cmd-Organizations':
 				this.controller.getStageController('book').pushScene({name: 'organizations', transition: Mojo.Transition.crossFade}, this);

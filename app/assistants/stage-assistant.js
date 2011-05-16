@@ -35,6 +35,8 @@ StageAssistant.prototype.setup = function () {
 		disableSceneScroller: false
 	};
 	this.controller.pushScene(this.sceneArgs);
+	
+	//this.createMyTable();
 };
 
 StageAssistant.prototype.activate = function (event) {};
@@ -58,8 +60,9 @@ StageAssistant.prototype.cleanup = function (event) {};
 	StageAssistant.myMenuModel = {
 		visible: true,
 		items: [
-			{label: $L("Dock Test"), command: 'cmd-Dock'},//, shortcut: 's'},
+			{label: $L("Dock Test"), command: 'cmd-Dock'},//, shortcut: 'd'},
 			{label: $L("Search"), command: 'cmd-Search'},//, shortcut: 's'},
+			{label: $L("Bookmarks"), command: 'cmd-Bookmarks'},//, shortcut: 'b'},
 			{label: $L("12 Step Organizations"), command: 'cmd-Organizations'},//, shortcut: 'o'},
 			{label: $L("Meetings"), command: 'cmd-Meetings'},//, shortcut: 'r'},
 			{label: $L("Preferences"), command: 'cmd-Preferences'},//, shortcut: 'p'},
@@ -77,9 +80,10 @@ StageAssistant.prototype.cleanup = function (event) {};
 		visible: true,
 		items: [
 			{label: $L("Search"), command: 'cmd-Search'},//, shortcut: 's'},
+			{label: $L("Bookmarks"), command: 'cmd-Bookmarks'},//, shortcut: 'b'},
+			{label: $L("Quote Generator"), command: 'cmd-Dock'},//, shortcut: 's'},
 			{label: $L("12 Step Organizations"), command: 'cmd-Organizations'},//, shortcut: 'o'},
 			{label: $L("Meetings"), command: 'cmd-Meetings'},//, shortcut: 'r'},
-			{label: $L("Quote Generator"), command: 'cmd-Dock'},//, shortcut: 's'},
 			{label: $L("Preferences"), command: 'cmd-Preferences'},//, shortcut: 'p'},
 			{label: $L("Help & About"), command: 'cmd-HelpAbout'}// shortcut: 'h'}
 		]
@@ -117,83 +121,83 @@ StageAssistant.prototype.cleanup = function (event) {};
  * Global Simplicity.
  *
  ********************/
-	SimpleBigBook = {};
+	SBB = {};
 
 	/*******  List of chapters  *******/
 	try{
-	SimpleBigBook.chapterList = [];
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList = [];
+	SBB.chapterList.push({
 		label: "Foreword",
 		value: "1",
 		file: "01_foreword.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "The Doctor's Opinion",
 		value: "2",
 		//bk: "drsopinion",
 		file: "02_drsopinion.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "Bill's Story",
 		value: "3",
 		file: "03_billsstory.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "There is a Solution",
 		value: "4",
 		file: "04_thereis.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "More About Alcoholism",
 		value: "5",
 		file: "05_moreabout.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "We Agnostics",
 		value: "6",
 		file: "06_weagnostics.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "How It Works",
 		value: "7",
 		file: "07_howitworks.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "Into Action",
 		value: "8",
 		file: "08_intoaction.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "Working With Others",
 		value: "9",
 		file: "09_workingwithothers.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "To Wives",
 		value: "10",
 		file: "10_towives.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "The Family Afterward",
 		value: "11",
 		file: "11_thefamily.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "To Employers",
 		value: "12",
 		file: "12_toemployers.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "A Vision for You",
 		value: "13",
 		file: "13_avisionforyou.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "The Doctor's Nightmare",
 		value: "14",
 		file: "14_drsnightmare.html"
 	});
-	SimpleBigBook.chapterList.push({
+	SBB.chapterList.push({
 		label: "Spiritual Experience",
 		value: "15",
 		file: "15_spiritual.html"
@@ -201,5 +205,4 @@ StageAssistant.prototype.cleanup = function (event) {};
 	} catch (error) {Mojo.Log.error("STAGE CHAPTERS!", error);}
 
  
-
 Mojo.Log.info("=======================  END STAGE ASST =======================");
