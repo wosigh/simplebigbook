@@ -57,7 +57,14 @@ function BookAssistant() {
 
 }
 
-//BookAssistant.prototype.handleCommand = function(event) {Mojo.Log.info("BookAssistant - handleCommand:", event.command);};
+BookAssistant.prototype.handleCommand = function(event) {
+	Mojo.Log.info("BookAssistant - handleCommand:", event.command);
+	switch (event.command) {
+		case 'cmd-AddBookmarks':
+			this.addBookmark(event);
+			break;
+	}
+};
 
 /********************
  *
@@ -72,26 +79,27 @@ BookAssistant.prototype.setup = function () {
 	//Mojo.Log.info(DI.platformVersion, " -", DI.platformVersionDot, " -", DI.platformVersionMajor, " -", DI.platformVersionMinor);
 
 	/*******  COOKIE SECTION  *******/
-	//this.prefs = null;
-	//this.prefsModel = null;
+	////////////////////////////////////////////////////
+	// Delete the ancient cookie
+	try{
+		obsoleteCookie = new Mojo.Model.Cookie("SimpleBigBook");
+		obsoleteCookie.get();
+		//if (obsoleteCookie !== "undefined") {
+			//Mojo.Log.info("OBSOLETE IS HERE")
+			obsoleteCookie.remove();
+			obsoleteCookie = null;
+		//}
+	} catch (obsoletecookieerror) {Mojo.Log.error("OBSOLETE COOKIE CRUMBLED!", obsoletecookieerror);}
+	////////////////////////////////////////////////////
 
-	//Wipe for test
-	//this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
-	//this.prefs.get();
-	//this.prefs.remove();
-	//this.prefs = null;
+	try {
 
+	/*this.deleteprefs = new Mojo.Model.Cookie("SimpleBigBookv2");
+	this.deleteprefs.remove();
+	this.deleteprefs = null;*/
+	//break;
 
-	// Delete ancient cookie
-	var obsoleteCookie = new Mojo.Model.Cookie("SimpleBigBook");
-	obsoleteCookie.get();
-	if (obsoleteCookie !== 'undefined') {
-		//Mojo.Log.info("IT'S HERE")
-		obsoleteCookie.remove();
-		obsoleteCookie = null;
-	}
-
-
+	////////////////////////////////////////////////////
 	//  ****  Default model for preferences cookie
 	this.prefsModel = {
 		textsize:'18px',
@@ -107,15 +115,23 @@ BookAssistant.prototype.setup = function () {
 		wasBookmarkJump:false,
 		cookieVersion: 2
 	};
+	/*Mojo.Log.info(Object.toJSON(this.prefsModel));
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: textsize", this.prefsModel.textsize);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: chapterNumber", this.prefsModel.chapterNumber);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: pageNumber", this.prefsModel.pageNumber);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: screenSize", this.prefsModel.screenSize);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: isFullScreen", this.prefsModel.isFullScreen);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: pagePosition", this.prefsModel.pagePosition);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: wasChapterJump", this.prefsModel.wasChapterJump);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: scrollingEffect", this.prefsModel.scrollingEffect);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: dockPhraseSpeed", this.prefsModel.dockPhraseSpeed);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: daynight", this.prefsModel.daynight);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: wasBookmarkJump", this.prefsModel.wasBookmarkJump);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: cookieVersion", this.prefsModel.cookieVersion);}*/
+	////////////////////////////////////////////////////
 
-	try {
 
-	/*this.prefs = new Mojo.Model.Cookie('SimpleBigBookv2');
-	this.prefs.get();
-	this.prefs.remove();*/
-
-	
-	this.prefs = new Mojo.Model.Cookie('SimpleBigBookv2');
+	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 	prefstest = this.prefs.get();
 
 	//Mojo.Log.info("THIS PREFS cookieVersion:", prefstest.cookieVersion);
@@ -132,7 +148,66 @@ BookAssistant.prototype.setup = function () {
 		prefstest = null;
 	}
 
-	////////////////////////////////
+	/*try {
+
+	if (this.prefs) {
+			oldprefs = this.prefs.get();
+			Mojo.Log.info("+++++", oldprefs, "+", this.prefsModel, "|");
+		if (oldprefs) {
+			if (this.debugMe===true) {Mojo.Log.info("+++++ Checking Old Prefs...");}
+
+			if (oldprefs.textsize !== "undefined") {
+				this.prefsModel.textsize = oldprefs.textsize;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: textsize", this.prefsModel.textsize, "--", oldprefs.textsize);}
+			}
+			if (oldprefs.chapterNumber !== "undefined") {
+				this.prefsModel.chapterNumber = oldprefs.chapterNumber;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: chapterNumber", this.prefsModel.chapterNumber, "--", oldprefs.chapterNumber);}
+			}
+			if (oldprefs.pageNumber !== "undefined") {
+				this.prefsModel.pageNumber = oldprefs.pageNumber;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: pageNumber", this.prefsModel.pageNumber, "--", oldprefs.pageNumber);}
+			}
+			if (oldprefs.pagePosition !== "undefined") {
+				this.prefsModel.pagePosition = oldprefs.pagePosition;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: pagePosition", this.prefsModel.pagePosition, "--", oldprefs.pagePosition);}
+			}
+			if (oldprefs.screenSize !== "undefined") {
+				this.prefsModel.screenSize = oldprefs.screenSize;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: screenSize", this.prefsModel.screenSize, "--", oldprefs.screenSize);}
+			}
+			if (oldprefs.isFullScreen !== "undefined") {
+				this.prefsModel.isFullScreen = oldprefs.isFullScreen;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: isFullScreen", this.prefsModel.isFullScreen, "--", oldprefs.isFullScreen);}
+			}
+			if (oldprefs.wasChapterJump !== "undefined") {
+				this.prefsModel.wasChapterJump = oldprefs.wasChapterJump;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: wasChapterJump", this.prefsModel.wasChapterJump, "--", oldprefs.wasChapterJump);}
+			}
+			if (oldprefs.scrollingEffect !== "undefined") {
+				this.prefsModel.scrollingEffect = oldprefs.scrollingEffect;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: scrollingEffect", this.prefsModel.scrollingEffect, "--", oldprefs.scrollingEffect);}
+			}
+			if (oldprefs.dockPhraseSpeed !== "undefined") {
+				this.prefsModel.dockPhraseSpeed = oldprefs.dockPhraseSpeed;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: dockPhraseSpeed", this.prefsModel.dockPhraseSpeed, "--", oldprefs.dockPhraseSpeed);}
+			}
+			if (oldprefs.daynight !== "undefined") {
+				this.prefsModel.daynight = oldprefs.daynight;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: daynight", this.prefsModel.daynight, "--", oldprefs.daynight);}
+			}
+			if (oldprefs.wasBookmarkJump !== "undefined") {
+				this.prefsModel.wasBookmarkJump = oldprefs.wasBookmarkJump;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: wasBookmarkJump", this.prefsModel.wasBookmarkJump, "--", oldprefs.wasBookmarkJump);}
+			}
+		}
+	}
+	oldprefs = null;
+	} catch (prefstesterror) {Mojo.Log.error("COOKIE CRUMBLED!", prefstesterror);}*/
+
+	this.prefs.put(this.prefsModel);
+
+	////////////////////////////////////////////////////
 	// Should I be Full Screen?
 	//
 	if ((this.prefsModel.screenSize === true) && (this.prefsModel.isFullScreen === true)) {
@@ -141,10 +216,10 @@ BookAssistant.prototype.setup = function () {
 	else if ((this.prefsModel.screenSize === true) && (this.prefsModel.wasChapterJump === false)) {
 		this.doFullScreen('big');
 	}
+	////////////////////////////////////////////////////
 
 
 	//this.prefsModel = this.prefs.get();
-
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: textsize", this.prefsModel.textsize);}
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: chapterNumber", this.prefsModel.chapterNumber);}
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: pageNumber", this.prefsModel.pageNumber);}
@@ -158,8 +233,7 @@ BookAssistant.prototype.setup = function () {
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: wasBookmarkJump", this.prefsModel.wasBookmarkJump);}
 	// END OF COOKIE SECTION**********************/
 
-	this.prefs.put(this.prefsModel);
-
+	//this.prefs.put(this.prefsModel);
 
 	this.myIndex = this.prefsModel.chapterNumber;
 	this.pageNumber = this.prefsModel.pageNumber;
@@ -183,43 +257,17 @@ BookAssistant.prototype.setup = function () {
 
 
 	////////////////////////////////////////////////////
-	//  ****  Make the bookmark model for the popup
-	/*this.bookmarkMenuModelItems = [];
-
-	SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
-
-	if (!SBB.db) {
-		Mojo.Log.info("==== SBB.db ISN'T LOADED.");
-		this.createMyTable();
-	}
-
-	Mojo.Log.info("this.bookmarkMenuModelItems.length:", this.bookmarkMenuModelItems.length);
-
-	if (this.bookmarkMenuModelItems.length <= 0) {
-		SBB.db.transaction(function (transaction) {
-			Mojo.Log.info("==== activate - YES, SBB.db IS LOADED.");
-			transaction.executeSql(
-				"SELECT * FROM 'SBB_Bookmarks_Table'",
-				[],
-				this.displayList.bind(this),
-				this.dbErrorHandler.bind(this));
-		}.bind(this));
-	}*/
-	////////////////////////////////////////////////////
-
-
-	////////////////////////////////////////////////////
 	//  ****  Setup Menus ****
 	try{
-	this.bookmarkMenu = this.controller.get('bookmarkMenu');
-	this.chapMenu = this.controller.get('chapMenu');
-	this.pageMenu = this.controller.get('pageMenu');
+		this.bookmarkMenu = this.controller.get('bookmarkMenu');
+		this.chapMenu = this.controller.get('chapMenu');
+		this.pageMenu = this.controller.get('pageMenu');
 	
-	Mojo.Event.listen(this.bookmarkMenu, Mojo.Event.tap, this.selectBookmark.bindAsEventListener(this, event));
-	Mojo.Event.listen(this.chapMenu, Mojo.Event.tap, this.selectChapter.bindAsEventListener(this, event));
-	Mojo.Event.listen(this.pageMenu, Mojo.Event.tap, this.selectPage.bindAsEventListener(this, event));
+		Mojo.Event.listen(this.bookmarkMenu, Mojo.Event.tap, this.selectBookmark.bindAsEventListener(this, event));
+		Mojo.Event.listen(this.chapMenu, Mojo.Event.tap, this.selectChapter.bindAsEventListener(this, event));
+		Mojo.Event.listen(this.pageMenu, Mojo.Event.tap, this.selectPage.bindAsEventListener(this, event));
 
-	this.chapMenu.innerHTML = SBB.chapterList[this.myIndex].label;
+		this.chapMenu.innerHTML = SBB.chapterList[this.myIndex].label;
 	} catch (menuserror) {Mojo.Log.error(">>>>>  BookAssistant setup menus ERROR", menuserror);}
 	////////////////////////////////////////////////////
 
@@ -271,16 +319,17 @@ try {
 
 	if (this.controller.stageController.setWindowOrientation) {this.controller.stageController.setWindowOrientation("free");}
 
-
-	//this.controller.listen('Bookmarks_List', Mojo.Event.listTap, this.writeNewDBLine.bindAsEventListener(this));
-
-
 	this.controller.listen(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
+
 	this.resizeHandler = this.handleWindowResize.bindAsEventListener(this);
 	this.controller.window.addEventListener('resize', this.resizeHandler, true);
 
 	this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
 	this.controller.document.addEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
+
+	//this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
+	//Mojo.Event.listen($('bookdata'), Mojo.Event.tap, this.doubleClickHandler);
+	//$('bookdata').addEventListener('tap', this.doubleClickHandler, true);
 
 	this.appClosingHandler = this.appClosingRoutine.bindAsEventListener(this);
 	window.document.addEventListener(Mojo.Event.deactivate, this.appClosingHandler, true);
@@ -294,25 +343,21 @@ try {
 	//  ****  Make the bookmark model for the popup
 	this.bookmarkMenuModelItems = [];
 
-	
-
 	if (!SBB.db) {
 		Mojo.Log.info("==== SBB.db ISN'T LOADED.");
-		//this.createMyTable();
 		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
 	}
-	//else {
-		//this.displayList();
-		SBB.db.transaction(function (transaction) {
+
+	SBB.db.transaction(function (transaction) {
 		Mojo.Log.info("==== activate - YES, SBB.db IS LOADED.");
 		transaction.executeSql(
 			"SELECT * FROM 'SBB_Bookmarks_Table'",
 			[],
 			this.displayList.bind(this),
-			//this.dbErrorHandler.bind(this));
-			this.createMyTable.bind(this));
-		}.bind(this));
-	//}
+			//this.dbErrorHandler.bind(this)
+			this.createMyTable.bind(this)
+		);
+	}.bind(this));
 	////////////////////////////////////////////////////
 
 
@@ -352,8 +397,9 @@ BookAssistant.prototype.deactivate = function (event) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Deactivate @@");}
 
 	this.controller.stopListening(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
-	this.controller.getSceneScroller().removeEventListener(Mojo.Event.scrollStarting, this.doubleClickHandler, true);
+	//this.controller.getSceneScroller().removeEventListener(Mojo.Event.scrollStarting, this.doubleClickHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
+	$('bookdata').removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Deactivate @@");}
 };
@@ -368,8 +414,9 @@ BookAssistant.prototype.cleanup = function (event) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Cleanup @@");}
 
 	this.controller.stopListening(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
-	this.controller.getSceneScroller().removeEventListener(Mojo.Event.scrollStarting, this.doubleClickHandler, true);
+	//this.controller.getSceneScroller().removeEventListener(Mojo.Event.scrollStarting, this.doubleClickHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
+	$('bookdata').removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Cleanup @@");}
 };
@@ -383,16 +430,17 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Cleanup @@");}
 BookAssistant.prototype.appClosingRoutine = function(event) {
 try {
 	if (this.debugMe===true) {Mojo.Log.info("~+~+~+~+~+~+~  BLUR  ~+~+~+~+~+~+~");}
-	if (this.debugMe===true) {Mojo.Log.info("@@ APP CLOSING - this.prefs.pagePosition", this.prefs.pagePosition);}
+	if (this.debugMe===true) {Mojo.Log.info("@@ APP CLOSING - this.prefsModel.pagePosition", this.prefsModel.pagePosition);}
 
 	if ( (this.prefsModel.wasChapterJump !== true) && (this.prefsModel.wasBookmarkJump === false) ){
+		//this.prefsModel = this.prefs.get();
 		this.prefsModel.pagePosition = this.ImHere.y;
 		this.prefsModel.wasChapterJump = false;
 		this.prefs.put(this.prefsModel);
-		if (this.debugMe===true) {Mojo.Log.info("@@ APP CLOSING NOT JUMP - this.prefs.pagePosition", this.prefs.pagePosition, "this.prefsModel.wasChapterJump", this.prefsModel.wasChapterJump);}
+		if (this.debugMe===true) {Mojo.Log.info("@@ APP CLOSING NOT JUMP - this.prefsModel.pagePosition", this.prefsModel.pagePosition, "this.prefsModel.wasChapterJump", this.prefsModel.wasChapterJump);}
 	}
 
-	if (this.debugMe===true) {Mojo.Log.info("@@ APP CLOSING -", this.ImHere.y, "-- this.prefs.pagePosition", this.prefs.pagePosition);}
+	if (this.debugMe===true) {Mojo.Log.info("@@ APP CLOSING -", this.ImHere.y, "-- this.prefsModel.pagePosition", this.prefsModel.pagePosition);}
 
 } catch (error) {Mojo.Log.error("APP CLOSING ROUTINE", error);}
 };
@@ -413,14 +461,39 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
 		this.ImThisBig = $('bookdata').clientHeight;
 		this.percentDown = ((0 - this.ImHere.y) / this.ImThisBig);
 		if (this.debugMe===true) {Mojo.Log.info("this.ImHere", this.ImHere.y, "this.ImThisBig", this.ImThisBig, "this.percentDown:", this.percentDown);}
-		
-		
-		/*this.tableCount = document.getElementsByTagName("table");
-		for (i = 0; i <= this.tableCount.length; i++) {
-			lcId = document.getElementsByTagName("table").item(i).id;
-			lcName = lcId.substr(lcId.indexOf("_p") + 2);
-			Mojo.Log.info("lcId:", lcId, "lcName:", lcName);
-		}*/
+
+		this.tableCount = document.getElementsByTagName("table");
+		//Mojo.Log.info("=== this.tableCount:", this.tableCount.length, "-", this.maxScreenHeight);
+		for (i = 0; i < this.tableCount.length; i++) {
+
+			var humanOffset = (this.maxScreenHeight * 0.4);
+			var lcId = document.getElementsByTagName("table").item(i).id;
+			var shortName = lcId.substring(0, lcId.indexOf("_"));
+			var thisPage = (humanOffset - document.getElementsByTagName("table").item(i).offsetTop);
+
+			if((i + 1) < this.tableCount.length) {
+				var nextPage = (humanOffset - document.getElementsByTagName("table").item(i+1).offsetTop);
+
+				if ( (this.ImHere.y < thisPage) && (this.ImHere.y > nextPage) ) {
+					for (c = 0; c < SBB.chapterList.length; c++) {
+						if (shortName === SBB.chapterList[c].shortname) {
+							var prettylabel = SBB.chapterList[c].label;
+						}
+					}
+
+					Mojo.Log.info("======== IF - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId);
+					this.pageNumber = lcId;
+					this.prefsModel.pageNumber = lcId;
+					//UGLY, but works!!
+					break;
+				}
+			}
+			else {
+				Mojo.Log.info("======== ELSE - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId);
+				this.pageNumber = lcId;
+				this.prefsModel.pageNumber = lcId;
+			}
+		}
 	}
 };
 
@@ -430,7 +503,6 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
  * HANDLE RESIZE
  *
  ********************/
-
 BookAssistant.prototype.handleWindowResize = function(event){
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER RESIZE @@");}
 
@@ -472,7 +544,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER SELECTBOOK @@");}
 	this.controller.popupSubmenu({
 		onChoose: this.jumpToChapter.bind(this),
 		placeNear: $('chapMenu'),
-		//placeNear: event.target,
+		popupClass: 'pagePopup',
 		items: this.bookMenuModelItems
 	});
 
@@ -499,6 +571,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Jump to Book @@");}
 	/////////////////////////////////////////////////////////////
 	//
 	if (newindex) {
+		//this.prefsModel = this.prefs.get();
 		this.myIndex = newindex;
 		this.prefsModel.chapterNumber = this.myIndex;
 		this.prefsModel.pageNumber = 0;
@@ -536,8 +609,9 @@ try {
 	////////////////////////////////////////////////////
 	// Scroll to the exact last location in a page!
 	if (this.prefsModel.wasChapterJump !== true) {
-		if (this.debugMe===true) {Mojo.Log.info("~_~_~_~_~_~_~_~  this.prefs.pagePosition", this.prefsModel.pagePosition);}
+		if (this.debugMe===true) {Mojo.Log.info("~_~_~_~_~_~_~_~  this.prefsModel.pagePosition", this.prefsModel.pagePosition);}
 		this.controller.getSceneScroller().mojo.scrollTo(0, this.prefsModel.pagePosition, this.prefsModel.scrollingEffect, false);
+		//this.prefsModel = this.prefs.get();
 		this.prefsModel.pagePosition = 0;
 		this.prefsModel.wasChapterJump = false;
 		this.prefsModel.wasBookmarkJump = false;
@@ -545,12 +619,14 @@ try {
 	}
 	else if (this.prefsModel.wasChapterJump === true) {
 		this.controller.getSceneScroller().mojo.scrollTo(0, 0, this.prefsModel.scrollingEffect, false);
+		//this.prefsModel = this.prefs.get();
 		this.prefsModel.pagePosition = 0;
 		this.prefsModel.wasChapterJump = false;
 		this.prefsModel.wasBookmarkJump = false;
 		this.prefs.put(this.prefsModel);
 	}
 	else {
+		//this.prefsModel = this.prefs.get();
 		this.prefsModel.pagePosition = 0;
 		this.prefsModel.wasChapterJump = false;
 		this.prefsModel.wasBookmarkJump = false;
@@ -560,7 +636,7 @@ try {
 
 	//////////////////////////////////
 	// Build the new chapterMenuModel (page numbers)
-	this.chapterMenuModelItems = [];
+	this.pagenumberMenuModelItems = [];
 
 	this.tableCount = document.getElementsByTagName("table");
 
@@ -575,7 +651,7 @@ try {
 
 		labelStr = "Page " + lcName;
 		cmdStr = lcId;
-		this.chapterMenuModelItems.push({
+		this.pagenumberMenuModelItems.push({
 			label: labelStr,
 			command: cmdStr
 		});
@@ -608,15 +684,13 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Get Book Failure @@");}
 BookAssistant.prototype.selectPage = function (event) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Select Chapter @@");}
 Mojo.Log.info("@@ ENTER Select Chapter @@");
-	try {
-		this.controller.popupSubmenu({
-			onChoose: this.jumpToPage.bind(this),
-			//placeNear: event.target,
-			placeNear: $('pageMenu'),
-			popupClass: '.pagePopup',
-			items: this.chapterMenuModelItems
-		});
-	} catch (error) {Mojo.Log.error("Select Book Error", error);}
+
+	this.controller.popupSubmenu({
+		onChoose: this.jumpToPage.bind(this),
+		placeNear: $('pageMenu'),
+		popupClass: 'pagePopup',
+		items: this.pagenumberMenuModelItems
+	});
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Select Chapter @@");}
 };
@@ -661,6 +735,7 @@ var jumpto = "";
 
 		if (this.debugMe===true) {Mojo.Log.info("++++++++++++++++++ ImHere X:", ImHere.top, "ImHere Y:", ImHere.left);}
 
+		//this.prefsModel = this.prefs.get();
 		this.prefsModel.chapterNumber = this.myIndex;
 		this.prefsModel.pageNumber = this.pageNumber;
 		this.prefs.put(this.prefsModel);
@@ -681,12 +756,10 @@ BookAssistant.prototype.selectBookmark = function(event) {
 try {
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER selectBookmark");}
 
-	Mojo.Log.info("selectBookmark - event.target:", event.target);
-	//Mojo.Log.info("selectBookmark - event:", event);
-
 	this.controller.popupSubmenu({
 		onChoose: this.readBookmark.bind(this),
 		placeNear: $('bookmarkMenu'),
+		popupClass: 'pagePopup',
 		items: this.bookmarkMenuModelItems
 	});
 
@@ -704,20 +777,26 @@ BookAssistant.prototype.readBookmark = function(event) {
 try {
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER readBookmark");}
 
-	Mojo.Log.info("readBookmark START:", event);
-	this.theBookmark = event;
+	if (event === 'addBookmark') {
+		this.addBookmark();
+	}
+	else {
+		if (event){
+			Mojo.Log.info("readBookmark START:", event);
+			this.theBookmark = event;
 
-	var sqlbm = "SELECT * FROM 'SBB_Bookmarks_Table' WHERE ID = " + this.theBookmark;
+			var sqlbm = "SELECT * FROM 'SBB_Bookmarks_Table' WHERE ID = " + this.theBookmark;
+	
+			SBB.db.transaction(function (transaction) {
 
-	SBB.db.transaction(function (transaction) {
-
-	transaction.executeSql(
-		sqlbm,
-		[], 
-		this.jumpToBookmark.bind(this),
-		this.dbErrorHandler.bind(this));
-	}.bind(this));
-
+			transaction.executeSql(
+				sqlbm,
+				[], 
+				this.jumpToBookmark.bind(this),
+				this.dbErrorHandler.bind(this));
+			}.bind(this));
+		}
+	}
 	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE readBookmark");}
 } catch (error) {Mojo.Log.error(">>>>> BookAssistant - readBookmark", error);}
 };
@@ -740,7 +819,6 @@ try {
 		this.bmpn = row.pageNumber;
 		this.bmpp = row.pagePosition;
 		Mojo.Log.info("jumpToBookmark - results RAW:", row.id, row.chapterNumber, row.pageNumber, row.pagePosition);
-		//Mojo.Log.info("jumpToBookmark - results THIS:", this.bmid, this.bmcn, this.bmpn, this.bmpp);
 	}
 
 	Mojo.Log.info("jumpToBookmark - results THIS:", this.bmid, this.bmcn, this.bmpn, this.bmpp);
@@ -755,7 +833,8 @@ try {
 	this.prefsModel.wasChapterJump = false;
 	this.prefs.put(this.prefsModel);*/
 
-	this.prefsModel = {};
+	//this.prefsModel = {};
+	//this.prefsModel = this.prefs.get();
 	this.prefsModel.chapterNumber = this.bmcn;
 	this.prefsModel.pageNumber = this.bmpn;
 	this.prefsModel.pagePosition = this.bmpp;
@@ -764,7 +843,6 @@ try {
 	Mojo.Log.info("jumpToBookmark - results PREFS:", this.prefsModel.chapterNumber, "-", this.prefsModel.pageNumber, "-", this.prefsModel.pagePosition);
 	this.prefs.put(this.prefsModel);
 	Mojo.Controller.stageController.swapScene({transition: Mojo.Transition.crossFade,name: 'book'});
-	//this.activate();
 
 	/*this.controller.popupSubmenu({
 		onChoose: this.jumpToChapter.bind(this),
@@ -790,19 +868,22 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Change Text Size @@", size);}
 
 	////////////////////////////////////////////////////
 	//  ****  Set the color theme while I'm here
-	Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight);
 	switch (this.prefsModel.daynight){
 		case 'day':
 			Mojo.Log.info(" +++ It's DAY time.");
 			this.controller.document.body.className = 'main';
-			$('book-fade').addClassName('my-fade-day top');
-			$('book-fade').removeClassName('my-fade-night top');
+			//$('book-fade').className = 'my-fade-day';
+			$('book-fade').addClassName('my-fade-day');
+			$('book-fade').removeClassName('my-fade-night');
+			Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, $('book-fade').className);
 			break;
 		case 'night':
 			Mojo.Log.info(" +++ It's NIGHT time.");
 			this.controller.document.body.className = 'palm-dark';
-			$('book-fade').addClassName('my-fade-night top');
-			$('book-fade').removeClassName('my-fade-day top');
+			//$('book-fade').className = 'my-fade-night';
+			$('book-fade').addClassName('my-fade-night');
+			$('book-fade').removeClassName('my-fade-day');
+			Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, $('book-fade').className);
 			break;
 	}
 	////////////////////////////////////////////////////
@@ -914,9 +995,10 @@ try {
  * DOUBLE CLICK
  *
  ********************/
-BookAssistant.prototype.doubleClick = function () {
+BookAssistant.prototype.doubleClick = function (event) {
 try {
 
+	//Mojo.Log.info("~~~ DOUBLE CLICK:", event.target.id);
 	//////////////////////////////////
 	// Detect single tap vs double tap
 	if (this.whichWay === 'up') {
@@ -967,6 +1049,7 @@ BookAssistant.prototype.doFullScreen = function(forceSelection, event) {
 		switch (forceSelection) {
 			case 'big':
 				if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", event);}
+				//this.prefsModel = this.prefs.get();
 				this.controller.enableFullScreenMode(true);
 				this.windowHeight = this.controller.window.innerHeight;
 				this.prefsModel.isFullScreen = true;
@@ -975,6 +1058,7 @@ BookAssistant.prototype.doFullScreen = function(forceSelection, event) {
 				break;
 			case 'small':
 				if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", event);}
+				//this.prefsModel = this.prefs.get();
 				this.controller.enableFullScreenMode(false);
 				this.windowHeight = this.controller.window.innerHeight;
 				this.prefsModel.isFullScreen = false;
@@ -986,6 +1070,7 @@ BookAssistant.prototype.doFullScreen = function(forceSelection, event) {
 	else if (forceSelection === false) {
 		if (this.windowHeight !== this.maxScreenHeight) {
 			if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", event);}
+			//this.prefsModel = this.prefs.get();
 			this.controller.enableFullScreenMode(true);
 			this.windowHeight = this.controller.window.innerHeight;
 			this.prefsModel.isFullScreen = true;
@@ -993,6 +1078,7 @@ BookAssistant.prototype.doFullScreen = function(forceSelection, event) {
 		}
 		else if (this.windowHeight === this.maxScreenHeight) {
 			if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", event);}
+			//this.prefsModel = this.prefs.get();
 			this.controller.enableFullScreenMode(false);
 			this.windowHeight = this.controller.window.innerHeight;
 			this.prefsModel.isFullScreen = false;
@@ -1036,9 +1122,17 @@ BookAssistant.prototype.displayList = function (transaction, results) {
 try{
 
 	if (results.rows.length === 0) {
-		this.writeDefaults();
+		Mojo.Log.info("results.rows.length", results.rows.length);
+		this.writeDefaults(transaction, results);
 	}
-	
+
+
+	/*if (results.rows.length > 0) {
+		this.bookmarkMenuModelItems.push({label: "Add Bookmark", command: 'addBookmark'});
+	}*/
+
+	this.bookmarkMenuModelItems = [];
+
 	if (results.rows.length > 0) {
 		for (i = 0; i < results.rows.length; i++) {
 		try{
@@ -1077,6 +1171,7 @@ try {
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER writeDefaults @@");}
 
 	if (results.rows.length === 0) {
+	//if ( ! results.rows) {
 
 		Mojo.Log.info("******* BLANK DB!");
 
@@ -1092,7 +1187,7 @@ try {
 				"INSERT INTO 'SBB_Bookmarks_Table' (chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?)",
 				[SBB.defaultEntries[i].chapterNumber, SBB.defaultEntries[i].pageNumber, SBB.defaultEntries[i].pagePosition],
 				this.dbSuccessHandler.bind(this),
-				this.dbSuccessHandler.bind(this));
+				this.dbErrorHandler.bind(this));
 			}
 		}.bind(this));
 	}
@@ -1113,8 +1208,31 @@ try {
 };
 
 
+/********************
+ *
+ * ADD BOOKMARK
+ *
+ ********************/
+BookAssistant.prototype.addBookmark = function(transaction, results){
+	Mojo.Log.info("Add Bookmark", Object.toJSON(transaction), " -", Object.toJSON(results));
+
+	Mojo.Log.info("+++++ addBookmark:", this.myIndex, this.pageNumber, this.ImHere.y);
+
+	SBB.db.transaction( function(transaction) {
+		transaction.executeSql(
+		"INSERT INTO 'SBB_Bookmarks_Table' (chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?)",
+		[this.myIndex, this.pageNumber, this.ImHere.y],
+		this.dbSuccessHandler.bind(this),
+		//this.displayList.bind(this),
+		//this.bookmarkMenuModelItems.push(),
+		this.dbErrorHandler.bind(this));
+	}.bind(this));
+};
+
+
 BookAssistant.prototype.dbSuccessHandler = function(transaction, results){
 	Mojo.Log.info("dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
+	this.controller.modelChanged(this.bookmarkMenuModelItems);
 };
 BookAssistant.prototype.dbErrorHandler = function(transaction, errors){
 	Mojo.Log.info("dbErrorHandler", Object.toJSON(transaction), " -", Object.toJSON(errors));

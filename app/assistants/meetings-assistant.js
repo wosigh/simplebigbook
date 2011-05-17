@@ -26,11 +26,10 @@ MeetingsAssistant.prototype.setup = function () {
 	this.prefsModel.get();
 
 	this.textfieldAttributes = {
-		hintText: ' ',
+		hintText: '"City, State" and/or "Zipcode"',
 		multiline: false,
 		enterSubmits: true,
-		focus: true,
-		modifierState: Mojo.Widget.numLock
+		focus: true
 	};
 	this.textfieledModel = {
 		value: '',

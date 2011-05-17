@@ -60,23 +60,23 @@ body.main {
 	border: 0px solid black;
 }
 
-.main .left {
+.left {
 	text-align: left;
 }
 
-.main .center {
+.center {
 	text-align: center;
 }
 
-.main .right {
+.right {
 	text-align: right;
 }
 
-.main .small {
+.small {
 	font-size: small;
 }
 
-.main .tightBorders {
+.tightBorders {
 	margin:0px 0px 0px 0px;
 	padding:0px 0px 0px 0px;
 }
@@ -138,12 +138,37 @@ body.main {
  * WIDGETS
  ******************/ 
 .pagePopup {
-	font-size: small;
+	font-size: huge;
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 	vertical-align: middle;
-	text-align:center;
+	text-align: center;
 }
+
+/*.palm-popup-container {
+	min-width: 180px;
+	margin: 5px 0 0 0;
+	padding: 0;
+	z-index: 199500;
+	position: fixed;
+	top: 80px;
+	left: 20px;
+	border-width: 24px;
+	-webkit-box-sizing: border-box;
+	-webkit-border-image: url(../images/palm-popup-background.png) 24 24 24 24 stretch stretch;
+}
+
+.palm-popup-wrapper {
+	margin: -24px;
+}
+
+.palm-popup-content {
+	margin: 17px 8px 18px 8px;
+	padding: 0px;
+	max-height: 368px;
+	z-index: 1;
+	overflow: hidden;
+}*/
 
 
 /*******************

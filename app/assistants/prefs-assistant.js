@@ -20,18 +20,29 @@ Mojo.Log.info("                ", Mojo.Controller.appInfo.title, "-", Mojo.Contr
  */
 
 function PrefsAssistant() {
-	this.debugMe = false;
+	this.debugMe = true;
 }
 
 PrefsAssistant.prototype.setup = function () {
 try{
 	//  ****  Get the preferences from cookie
-	if (! (this.prefs)) {
-		Mojo.Log.info("********* NO COOKIE LOADED!");
+	//if (! (this.prefsModel)) {
+	//	Mojo.Log.info("********* NO COOKIE LOADED!");
 		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 		this.prefsModel = this.prefs.get();
-	}
+	//}
 	//  ****  End of getting Preferences from cookie
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: textsize", this.prefsModel.textsize);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: chapterNumber", this.prefsModel.chapterNumber);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: pageNumber", this.prefsModel.pageNumber);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: pagePosition", this.prefsModel.pagePosition);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: screenSize", this.prefsModel.screenSize);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: isFullScreen", this.prefsModel.isFullScreen);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: wasChapterJump", this.prefsModel.wasChapterJump);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: scrollingEffect", this.prefsModel.scrollingEffect);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: dockPhraseSpeed", this.prefsModel.dockPhraseSpeed);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: daynight", this.prefsModel.daynight);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: wasBookmarkJump", this.prefsModel.wasBookmarkJump);}
 
 	// Attributes for Text Size radio selector
 	this.radioAttributes = {
@@ -128,6 +139,10 @@ PrefsAssistant.prototype.activate = function (event) {
 
 
 PrefsAssistant.prototype.deactivate = function (event) {
+	this.prefs.put(this.prefsModel);
+	//this.prefstest = this.prefs.get();
+	//Mojo.Log.info("=-=-=-=--=-=-", this.prefstest.screenSize, "+", this.prefsModel.screenSize);
+	//this.prefstest = null;
 };
 
 
