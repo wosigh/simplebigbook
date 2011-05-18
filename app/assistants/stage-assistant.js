@@ -62,12 +62,16 @@ StageAssistant.prototype.cleanup = function (event) {};
 		items: [
 			{label: $L("Dock Test"), command: 'cmd-Dock'},//, shortcut: 'd'},
 			{label: $L("Search"), command: 'cmd-Search'},//, shortcut: 's'},
-			{label: $L("Add Bookmark"), command: 'cmd-AddBookmarks'},//, shortcut: 'b'},
-			{label: $L("Edit Bookmarks"), command: 'cmd-Bookmarks'},//, shortcut: 'b'},
-			{label: $L("12 Step Organizations"), command: 'cmd-Organizations'},//, shortcut: 'o'},
-			{label: $L("Meetings"), command: 'cmd-Meetings'},//, shortcut: 'r'},
-			{label: $L("Preferences"), command: 'cmd-Preferences'},//, shortcut: 'p'},
-			{label: $L("Help & About"), command: 'cmd-HelpAbout'}// shortcut: 'h'}
+			{label: $L("Bookmarks..."), items: [
+				{label: $L("Add Bookmark"), command: 'cmd-AddBookmarks'},//, shortcut: 'b'},
+				{label: $L("Edit Bookmarks"), command: 'cmd-Bookmarks'},//, shortcut: 'b'}
+				]},
+			{label: $L("Help..."), items: [
+					{label: $L("12 Step Organizations"), command: 'cmd-Organizations'},//, shortcut: 'o'},
+					{label: $L("Meetings"), command: 'cmd-Meetings'},//, shortcut: 'r'},
+					{label: $L("Help & About"), command: 'cmd-HelpAbout'}// shortcut: 'h'}
+				 ]},
+			{label: $L("Preferences"), command: 'cmd-Preferences'},//, shortcut: 'p'}
 		]
 	};
 
@@ -81,13 +85,17 @@ StageAssistant.prototype.cleanup = function (event) {};
 		visible: true,
 		items: [
 			{label: $L("Search"), command: 'cmd-Search'},//, shortcut: 's'},
-			{label: $L("Add Bookmark"), command: 'cmd-AddBookmarks'},//, shortcut: 'b'},
-			{label: $L("Edit Bookmarks"), command: 'cmd-Bookmarks'},//, shortcut: 'b'},
+			{label: $L("Bookmarks..."), items: [
+				{label: $L("Add Bookmark"), command: 'cmd-AddBookmarks'},//, shortcut: 'b'},
+				{label: $L("Edit Bookmarks"), command: 'cmd-Bookmarks'},//, shortcut: 'b'}
+				]},
 			{label: $L("Quote Generator"), command: 'cmd-Dock'},//, shortcut: 's'},
-			{label: $L("12 Step Organizations"), command: 'cmd-Organizations'},//, shortcut: 'o'},
-			{label: $L("Meetings"), command: 'cmd-Meetings'},//, shortcut: 'r'},
-			{label: $L("Preferences"), command: 'cmd-Preferences'},//, shortcut: 'p'},
-			{label: $L("Help & About"), command: 'cmd-HelpAbout'}// shortcut: 'h'}
+			{label: $L("Help..."), items: [
+					{label: $L("12 Step Organizations"), command: 'cmd-Organizations'},//, shortcut: 'o'},
+					{label: $L("Meetings"), command: 'cmd-Meetings'},//, shortcut: 'r'},
+					{label: $L("Help & About"), command: 'cmd-HelpAbout'}// shortcut: 'h'}
+				 ]},
+			{label: $L("Preferences"), command: 'cmd-Preferences'},//, shortcut: 'p'}
 		]
 	};
 

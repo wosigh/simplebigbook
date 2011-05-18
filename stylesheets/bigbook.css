@@ -138,14 +138,15 @@ body.main {
  * WIDGETS
  ******************/ 
 .pagePopup {
-	font-size: huge;
+	font-size: small;
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 	vertical-align: middle;
 	text-align: center;
 }
 
-/*.palm-popup-container {
+.palm-popup-container {
+	font-size: small;
 	min-width: 180px;
 	margin: 5px 0 0 0;
 	padding: 0;
@@ -155,21 +156,29 @@ body.main {
 	left: 20px;
 	border-width: 24px;
 	-webkit-box-sizing: border-box;
-	-webkit-border-image: url(../images/palm-popup-background.png) 24 24 24 24 stretch stretch;
 }
 
 .palm-popup-wrapper {
+	font-size: small;
 	margin: -24px;
 }
 
 .palm-popup-content {
+	font-size: small;
 	margin: 17px 8px 18px 8px;
 	padding: 0px;
 	max-height: 368px;
 	z-index: 1;
 	overflow: hidden;
-}*/
+}
 
+
+div.palm-row-wrapper {
+   font-size:x-small;
+}
+.palm-popup-container {
+   font-size:x-small;
+}
 
 /*******************
  * DOCK STYLES
