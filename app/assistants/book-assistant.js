@@ -104,20 +104,6 @@ BookAssistant.prototype.setup = function () {
 		wasBookmarkJump:false,
 		wasChapterJump:false
 	};
-
-	//Mojo.Log.info(Object.toJSON(this.prefsModel));
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: chapterNumber", this.prefsModel.chapterNumber);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: cookieVersion", this.prefsModel.cookieVersion);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: daynight", this.prefsModel.daynight);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: dockPhraseSpeed", this.prefsModel.dockPhraseSpeed);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: isFullScreen", this.prefsModel.isFullScreen);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: pageNumber", this.prefsModel.pageNumber);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: pagePosition", this.prefsModel.pagePosition);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: screenSize", this.prefsModel.screenSize);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: scrollingEffect", this.prefsModel.scrollingEffect);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: textsize", this.prefsModel.textsize);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: wasBookmarkJump", this.prefsModel.wasBookmarkJump);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: wasChapterJump", this.prefsModel.wasChapterJump);}
 	////////////////////////////////////////////////////
 
 	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
@@ -533,19 +519,19 @@ BookAssistant.prototype.initialPopulate = function(transaction, results){
 	this.bookmarkMenuModelItems = [];
 
 	if (!SBB.db) {
-		//Mojo.Log.info("==== SBB.db ISN'T LOADED.");
 		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
 	}
 
-	SBB.db.transaction(function (transaction) {
-		//Mojo.Log.info("==== activate - YES, SBB.db IS LOADED.");
-		transaction.executeSql(
-			"SELECT * FROM 'SBB_Bookmarks_Table'",
-			[],
-			this.displayList.bind(this),
-			this.createMyTable.bind(this)
-		);
-	}.bind(this));
+	SBB.db.transaction(
+		function (transaction) {
+			transaction.executeSql(
+				"SELECT * FROM 'SBB_Bookmarks_Table'",
+				[],
+				this.displayList.bind(this),
+				this.createMyTable.bind(this)
+			);
+		}.bind(this)
+	);
 };
 
 
@@ -795,7 +781,6 @@ try {
 
 	if (event){
 		if (event !== 'addBookmark') {
-			//Mojo.Log.info("readBookmark START:", event);
 			this.theBookmark = event;
 
 			var sqlbm = "SELECT * FROM 'SBB_Bookmarks_Table' WHERE ID = " + this.theBookmark;
@@ -826,34 +811,23 @@ try {
 
 	for (i = 0; i < results.rows.length; i++) {
 		row = results.rows.item(i);
-		//Mojo.Log.info("Successfully read bookmark");
 		this.bmid = row.id;
 		this.bmcn = row.chapterNumber;
 		this.bmpn = row.pageNumber;
 		this.bmpp = row.pagePosition;
-		//Mojo.Log.info("jumpToBookmark - results RAW:", row.id, "+", row.chapterNumber, "+", row.pageNumber, "+", row.pagePosition);
 	}
 
-	Mojo.Log.info("jumpToBookmark - results THIS:", this.bmid, "+", this.bmcn, "+", this.bmpn, "+", this.bmpp);
+	//Mojo.Log.info("jumpToBookmark - results THIS:", this.bmid, "+", this.bmcn, "+", this.bmpn, "+", this.bmpp);
 
 	/////////////////////////////////////////////////////////////
 	//Need to KilllClick here or really ugly loop happens
 	this.killlClick();
 
-	/*this.prefsModel.chapterNumber = 6;
-	this.prefsModel.pageNumber = 'howitworks_p59';
-	this.prefsModel.pagePosition = 0;
-	this.prefsModel.wasChapterJump = false;
-	this.prefs.put(this.prefsModel);*/
-
-	//this.prefsModel = {};
-	//this.prefsModel = this.prefs.get();
 	this.prefsModel.chapterNumber = this.bmcn;
 	this.prefsModel.pageNumber = this.bmpn;
 	this.prefsModel.pagePosition = this.bmpp;
 	this.prefsModel.wasChapterJump = false;
 	this.prefsModel.wasBookmarkJump = true;
-	//Mojo.Log.info("jumpToBookmark - results PREFS:", this.prefsModel.chapterNumber, "+", this.prefsModel.pageNumber, "+", this.prefsModel.pagePosition);
 	this.prefs.put(this.prefsModel);
 	Mojo.Controller.stageController.swapScene({transition: Mojo.Transition.crossFade,name: 'book'});
 
@@ -1004,7 +978,6 @@ try {
 BookAssistant.prototype.doubleClick = function (event) {
 try {
 
-	//Mojo.Log.info("~~~ DOUBLE CLICK:", event.target.id);
 	//////////////////////////////////
 	// Detect single tap vs double tap
 	if (this.whichWay === 'up') {
@@ -1187,9 +1160,6 @@ try {
 		SBB.defaultEntries = [];
 		SBB.defaultEntries[0] = {chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'-1026'};
 		SBB.defaultEntries[1] = {chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'-12890'};
-		//SBB.defaultEntries[1] = {chapterNumber: '9', pageNumber: 'towives_p112',  pagePosition:'-8230'};
-
-		//Mojo.Log.info("*******  DEFAULT ENTRIES:", SBB.defaultEntries.length);
 
 		SBB.db.transaction(
 			function(transaction) {
@@ -1218,8 +1188,6 @@ try {
  *
  ********************/
 BookAssistant.prototype.addBookmark = function(transaction, results){
-	//Mojo.Log.info("Add Bookmark", Object.toJSON(transaction), " -", Object.toJSON(results));
-	//Mojo.Log.info("+++++ addBookmark:", this.myIndex, this.pageNumber, this.ImHere.y);
 
 	SBB.db.transaction(
 		function(transaction) {
