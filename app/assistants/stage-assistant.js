@@ -57,23 +57,39 @@ StageAssistant.prototype.cleanup = function (event) {};
 		omitDefaultItems: true
 	};
 
+	//shortcut: 's'},
+	
 	StageAssistant.myMenuModel = {
 		visible: true,
 		items: [
-			{label: $L("Dock Test"), command: 'cmd-Dock'},//, shortcut: 'd'},
-			{label: $L("Search"), command: 'cmd-Search'},//, shortcut: 's'},
+			//{label: $L("Dock Test"), command: 'cmd-Dock'},
+			{label: $L("Search"), command: 'cmd-Search'},
 			{label: $L("Bookmarks..."), items: [
-				{label: $L("Add Bookmark"), command: 'cmd-AddBookmarks'},//, shortcut: 'b'},
-				{label: $L("Edit Bookmarks"), command: 'cmd-Bookmarks'},//, shortcut: 'b'}
+				{label: $L("Add Bookmark"), command: 'cmd-AddBookmarks'},
+				{label: $L("Edit Bookmarks"), command: 'cmd-Bookmarks'}
 				]},
 			{label: $L("Help..."), items: [
-					{label: $L("12 Step Organizations"), command: 'cmd-Organizations'},//, shortcut: 'o'},
-					{label: $L("Meetings"), command: 'cmd-Meetings'},//, shortcut: 'r'},
-					{label: $L("Help & About"), command: 'cmd-HelpAbout'}// shortcut: 'h'}
-				 ]},
-			{label: $L("Preferences"), command: 'cmd-Preferences'},//, shortcut: 'p'}
+					{label: $L("12 Step Organizations"), command: 'cmd-Organizations'},
+					{label: $L("Meetings"), command: 'cmd-Meetings'},
+					{label: $L("Help & About"), command: 'cmd-HelpAbout'}
+				]},
+			{label: $L("Preferences"), command: 'cmd-Preferences'}
 		]
 	};
+
+	/*StageAssistant.myMenuModel = {
+		visible: true,
+		items: [
+			//{label: $L("Dock Test"), command: 'cmd-Dock'},
+			{label: $L("Search"), command: 'cmd-Search'},
+			{label: $L("Add Bookmark"), command: 'cmd-AddBookmarks'},
+			{label: $L("Edit Bookmarks"), command: 'cmd-Bookmarks'},
+			{label: $L("12 Step Organizations"), command: 'cmd-Organizations'},
+			{label: $L("Meetings"), command: 'cmd-Meetings'},
+			{label: $L("Help & About"), command: 'cmd-HelpAbout'},
+			{label: $L("Preferences"), command: 'cmd-Preferences'}
+		]
+	};*/
 
 	////////////////////////////////////////////////////
 	//  ****  Setup for Main Application Menu with Quote Generator
@@ -86,7 +102,7 @@ StageAssistant.prototype.cleanup = function (event) {};
 		items: [
 			{label: $L("Search"), command: 'cmd-Search'},//, shortcut: 's'},
 			{label: $L("Bookmarks..."), items: [
-				{label: $L("Add Bookmark"), command: 'cmd-AddBookmarks'},//, shortcut: 'b'},
+				{label: $L("Add Bookmark"), command: 'cmd-AddBookmarks'},//, shortcut: 'a'},
 				{label: $L("Edit Bookmarks"), command: 'cmd-Bookmarks'},//, shortcut: 'b'}
 				]},
 			{label: $L("Quote Generator"), command: 'cmd-Dock'},//, shortcut: 's'},

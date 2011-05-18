@@ -5,13 +5,19 @@ var dockStageName = 'dock';
 
 function AppAssistant() {
 	this.debugMe = false;
+
+	SBB.dbName = "SBB_Bookmarks";
+	SBB.dbVersion = "0.1";
+	SBB.dbDisplayName = "Simple Big Book Bookmarks";
+	SBB.dbSize = 200000;
+
 }
 
 AppAssistant.prototype.handleLaunch = function(params) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER AA-HANDLELAUNCH @@");}
 
 try {
-	Mojo.Log.info("APP ASSIST PARAMS:", params);
+	//Mojo.Log.info("APP ASSIST PARAMS:", params);
 
 	if (!params) {
 		var stageProxy = this.controller.getStageProxy(mainStageName);

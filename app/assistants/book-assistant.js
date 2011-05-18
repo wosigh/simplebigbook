@@ -318,6 +318,7 @@ try {
 	//  Make the bookmark model for the popup
 
 	this.initialPopulate();
+	//DatabaseWork.initialPopulate();
 	////////////////////////////////////////////////////
 
 
@@ -457,7 +458,7 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
 						}
 					}
 
-					//Mojo.Log.info("======== IF - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId, this.ImHere.y);
+					Mojo.Log.info("======== IF - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId, this.ImHere.y);
 					this.pageNumber = lcId;
 					this.prefsModel.pageNumber = lcId;
 					//UGLY, but works!!
@@ -1194,7 +1195,12 @@ BookAssistant.prototype.addBookmark = function(transaction, results){
 			transaction.executeSql(
 				"INSERT INTO 'SBB_Bookmarks_Table' (chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?)",
 				[this.myIndex, this.pageNumber, this.ImHere.y],
-				this.dbSuccessHandler.bind(this),
+				//this.dbSuccessHandler.bind(this),
+				function (transaction, results) {
+					var newBP = this.pageNumber.substr(this.pageNumber.indexOf("_p") + 2);
+					if (newBP.indexOf('_top') >= 0) {newBP = newBP.replace('_top', '');}
+					Mojo.Controller.getAppController().showBanner("Added bookmark to page " + newBP,{source: 'notification'});
+				}.bind(this),
 				this.dbErrorHandler.bind(this)
 			);
 		}.bind(this)
@@ -1208,10 +1214,9 @@ BookAssistant.prototype.addBookmark = function(transaction, results){
  *
  ********************/
 BookAssistant.prototype.dbSuccessHandler = function(transaction, results){
-	//Mojo.Log.info("dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
+	Mojo.Log.info(">>>>> BookAssistant - dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
 	this.initialPopulate();
-
 };
 BookAssistant.prototype.dbErrorHandler = function(transaction, errors){
-	Mojo.Log.error("dbErrorHandler", Object.toJSON(transaction), " -", Object.toJSON(errors));
+	Mojo.Log.error(">>>>> BookAssistant - dbErrorHandler", Object.toJSON(transaction), " -", Object.toJSON(errors));
 };
