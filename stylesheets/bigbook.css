@@ -110,7 +110,7 @@ body.main {
 }
 
 .border {
-	border: 0px solid blue;
+	border: 1px solid blue;
 }
 
 
@@ -123,12 +123,12 @@ body.main {
 }
 
 .list-text {
-	margin: 5px 0px 5px 0px;
-	padding: 5px 0px 5px 0px;
+	/*margin: 15px 0px 15px 0px;*/
+	/*padding: 5px 0px 5px 0px;*/
 	vertical-align: middle;
 	text-align:center;
-	/*font-size:18px;*/
-	font-size:small;
+	font-size:18px;
+	/*font-size:small;*/
 }
 .myoutercontainer { position:relative }
 .myinnercontainer { position:absolute; top:50%; }

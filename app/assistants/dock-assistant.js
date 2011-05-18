@@ -427,6 +427,9 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 		while (this.prettyPhrase.indexOf('- ') >= 0) {
 			this.prettyPhrase = this.prettyPhrase.replace('- ', '');
 		}
+		while (this.prettyPhrase.indexOf(' -') >= 0) {
+			this.prettyPhrase = this.prettyPhrase.replace(' -', '');
+		}
 		while (this.prettyPhrase.indexOf('*') >= 0) {
 			this.prettyPhrase = this.prettyPhrase.replace('*', '');
 		}

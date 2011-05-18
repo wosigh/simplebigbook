@@ -104,7 +104,8 @@ BookAssistant.prototype.setup = function () {
 		wasBookmarkJump:false,
 		wasChapterJump:false
 	};
-	Mojo.Log.info(Object.toJSON(this.prefsModel));
+
+	//Mojo.Log.info(Object.toJSON(this.prefsModel));
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: chapterNumber", this.prefsModel.chapterNumber);}
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: cookieVersion", this.prefsModel.cookieVersion);}
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS DEFAULTS: daynight", this.prefsModel.daynight);}
@@ -123,13 +124,13 @@ BookAssistant.prototype.setup = function () {
 	prefstest = this.prefs.get();
 
 	if (prefstest === undefined) {
-		Mojo.Log.info("NEW COOKIE!");
+		//Mojo.Log.info("NEW COOKIE!");
 		this.prefs.put(this.prefsModel);
 		this.prefsModel = this.prefs.get();
 		prefstest = null;
 	}
 	else {
-		Mojo.Log.info("COOKIE ALREADY HERE!");
+		//Mojo.Log.info("COOKIE ALREADY HERE!");
 		this.prefsModel = this.prefs.get();
 		//prefstest = null;
 	//}
@@ -138,7 +139,7 @@ BookAssistant.prototype.setup = function () {
 
 	if (this.prefs) {
 			prefstest = this.prefs.get();
-			Mojo.Log.info("+++++", prefstest, "+", this.prefsModel, "|");
+			//Mojo.Log.info("+++++", prefstest, "+", this.prefsModel, "|");
 		if (prefstest) {
 			if (this.debugMe===true) {Mojo.Log.info("+++++ Checking Old Prefs...");}
 
@@ -339,14 +340,14 @@ try {
 	if (this.debugMe===true) {Mojo.Log.info("activating book, about to jump to search");}
 	highsearch = false;
 	if (searchBook !== false) {
-		Mojo.Log.info("  *****  ACTIVE in IF", searchPage, highsearch, searchBook);
+		//Mojo.Log.info("  *****  ACTIVE in IF", searchPage, highsearch, searchBook);
 		setTimeout(function () {
 			this.jumpToChapter(searchBook);
 			searchBook = false;
 		}.bind(this), 150);
 	} 
 	else {
-		Mojo.Log.info("  *****  ACTIVE in ELSE", searchPage, highsearch, searchBook);
+		//Mojo.Log.info("  *****  ACTIVE in ELSE", searchPage, highsearch, searchBook);
 		if (searchPage !== false) {
 			setTimeout(function () {
 				this.jumpToPage(searchPage);
@@ -425,7 +426,7 @@ try {
  *
  ********************/
 BookAssistant.prototype.handleCommand = function(event) {
-	Mojo.Log.info("BookAssistant - handleCommand:", event.command);
+	//Mojo.Log.info("BookAssistant - handleCommand:", event.command);
 	switch (event.command) {
 		case 'cmd-AddBookmarks':
 			this.addBookmark(event);
@@ -470,7 +471,7 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
 						}
 					}
 
-					Mojo.Log.info("======== IF - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId);
+					//Mojo.Log.info("======== IF - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId, this.ImHere.y);
 					this.pageNumber = lcId;
 					this.prefsModel.pageNumber = lcId;
 					//UGLY, but works!!
@@ -478,7 +479,7 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
 				}
 			}
 			else {
-				Mojo.Log.info("======== ELSE - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId);
+				//Mojo.Log.info("======== ELSE - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId, "+", this.ImHere.y);
 				this.pageNumber = lcId;
 				this.prefsModel.pageNumber = lcId;
 			}
@@ -532,12 +533,12 @@ BookAssistant.prototype.initialPopulate = function(transaction, results){
 	this.bookmarkMenuModelItems = [];
 
 	if (!SBB.db) {
-		Mojo.Log.info("==== SBB.db ISN'T LOADED.");
+		//Mojo.Log.info("==== SBB.db ISN'T LOADED.");
 		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
 	}
 
 	SBB.db.transaction(function (transaction) {
-		Mojo.Log.info("==== activate - YES, SBB.db IS LOADED.");
+		//Mojo.Log.info("==== activate - YES, SBB.db IS LOADED.");
 		transaction.executeSql(
 			"SELECT * FROM 'SBB_Bookmarks_Table'",
 			[],
@@ -559,7 +560,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER SELECTBOOK @@");}
 	this.controller.popupSubmenu({
 		onChoose: this.jumpToChapter.bind(this),
 		placeNear: $('chapMenu'),
-		popupClass: 'palm-menu-panel',
+		popupClass: 'pagePopup',
 		items: this.bookMenuModelItems
 	});
 
@@ -581,7 +582,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Jump to Book @@");}
 	//Need to KilllClick here or really ugly loop happens
 	this.killlClick();
 
-	Mojo.Log.info("jumpToChapter - newindex:", newindex);
+	//Mojo.Log.info("jumpToChapter - newindex:", newindex);
 	
 	/////////////////////////////////////////////////////////////
 	//
@@ -698,12 +699,12 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Get Book Failure @@");}
  ********************/
 BookAssistant.prototype.selectPage = function (event) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Select Chapter @@");}
-Mojo.Log.info("@@ ENTER Select Chapter @@");
+//Mojo.Log.info("@@ ENTER Select Chapter @@");
 
 	this.controller.popupSubmenu({
 		onChoose: this.jumpToPage.bind(this),
 		placeNear: $('pageMenu'),
-		//popupClass: 'pagePopup',
+		popupClass: 'pagePopup',
 		items: this.pagenumberMenuModelItems
 	});
 
@@ -774,7 +775,7 @@ try {
 	this.controller.popupSubmenu({
 		onChoose: this.readBookmark.bind(this),
 		placeNear: $('bookmarkMenu'),
-		//popupClass: 'pagePopup',
+		popupClass: 'pagePopup',
 		items: this.bookmarkMenuModelItems
 	});
 
@@ -794,7 +795,7 @@ try {
 
 	if (event){
 		if (event !== 'addBookmark') {
-			Mojo.Log.info("readBookmark START:", event);
+			//Mojo.Log.info("readBookmark START:", event);
 			this.theBookmark = event;
 
 			var sqlbm = "SELECT * FROM 'SBB_Bookmarks_Table' WHERE ID = " + this.theBookmark;
@@ -825,12 +826,12 @@ try {
 
 	for (i = 0; i < results.rows.length; i++) {
 		row = results.rows.item(i);
-		Mojo.Log.info("Successfully read bookmark");
+		//Mojo.Log.info("Successfully read bookmark");
 		this.bmid = row.id;
 		this.bmcn = row.chapterNumber;
 		this.bmpn = row.pageNumber;
 		this.bmpp = row.pagePosition;
-		Mojo.Log.info("jumpToBookmark - results RAW:", row.id, "+", row.chapterNumber, "+", row.pageNumber, "+", row.pagePosition);
+		//Mojo.Log.info("jumpToBookmark - results RAW:", row.id, "+", row.chapterNumber, "+", row.pageNumber, "+", row.pagePosition);
 	}
 
 	Mojo.Log.info("jumpToBookmark - results THIS:", this.bmid, "+", this.bmcn, "+", this.bmpn, "+", this.bmpp);
@@ -852,7 +853,7 @@ try {
 	this.prefsModel.pagePosition = this.bmpp;
 	this.prefsModel.wasChapterJump = false;
 	this.prefsModel.wasBookmarkJump = true;
-	Mojo.Log.info("jumpToBookmark - results PREFS:", this.prefsModel.chapterNumber, "+", this.prefsModel.pageNumber, "+", this.prefsModel.pagePosition);
+	//Mojo.Log.info("jumpToBookmark - results PREFS:", this.prefsModel.chapterNumber, "+", this.prefsModel.pageNumber, "+", this.prefsModel.pagePosition);
 	this.prefs.put(this.prefsModel);
 	Mojo.Controller.stageController.swapScene({transition: Mojo.Transition.crossFade,name: 'book'});
 
@@ -875,20 +876,20 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Change Text Size @@", size);}
 	//  ****  Set the color theme while I'm here
 	switch (this.prefsModel.daynight){
 		case 'day':
-			Mojo.Log.info(" +++ It's DAY time.");
+			//Mojo.Log.info(" +++ It's DAY time.");
 			this.controller.document.body.className = 'main';
 			//$('book-fade').className = 'my-fade-day';
 			$('book-fade').addClassName('my-fade-day');
 			$('book-fade').removeClassName('my-fade-night');
-			Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, $('book-fade').className);
+			//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, $('book-fade').className);
 			break;
 		case 'night':
-			Mojo.Log.info(" +++ It's NIGHT time.");
+			//Mojo.Log.info(" +++ It's NIGHT time.");
 			this.controller.document.body.className = 'palm-dark';
 			//$('book-fade').className = 'my-fade-night';
 			$('book-fade').addClassName('my-fade-night');
 			$('book-fade').removeClassName('my-fade-day');
-			Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, $('book-fade').className);
+			//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, $('book-fade').className);
 			break;
 	}
 	////////////////////////////////////////////////////
@@ -1184,10 +1185,11 @@ try {
 		Mojo.Log.info("******* BLANK DB!");
 
 		SBB.defaultEntries = [];
-		SBB.defaultEntries[0] = {chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'-1033'};
-		SBB.defaultEntries[1] = {chapterNumber: '9', pageNumber: 'towives_p112',  pagePosition:'-8230'};
+		SBB.defaultEntries[0] = {chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'-1026'};
+		SBB.defaultEntries[1] = {chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'-12890'};
+		//SBB.defaultEntries[1] = {chapterNumber: '9', pageNumber: 'towives_p112',  pagePosition:'-8230'};
 
-		Mojo.Log.info("*******  DEFAULT ENTRIES:", SBB.defaultEntries.length);
+		//Mojo.Log.info("*******  DEFAULT ENTRIES:", SBB.defaultEntries.length);
 
 		SBB.db.transaction(
 			function(transaction) {
@@ -1216,9 +1218,8 @@ try {
  *
  ********************/
 BookAssistant.prototype.addBookmark = function(transaction, results){
-	Mojo.Log.info("Add Bookmark", Object.toJSON(transaction), " -", Object.toJSON(results));
-
-	Mojo.Log.info("+++++ addBookmark:", this.myIndex, this.pageNumber, this.ImHere.y);
+	//Mojo.Log.info("Add Bookmark", Object.toJSON(transaction), " -", Object.toJSON(results));
+	//Mojo.Log.info("+++++ addBookmark:", this.myIndex, this.pageNumber, this.ImHere.y);
 
 	SBB.db.transaction(
 		function(transaction) {
@@ -1239,10 +1240,10 @@ BookAssistant.prototype.addBookmark = function(transaction, results){
  *
  ********************/
 BookAssistant.prototype.dbSuccessHandler = function(transaction, results){
-	Mojo.Log.info("dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
+	//Mojo.Log.info("dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
 	this.initialPopulate();
 
 };
 BookAssistant.prototype.dbErrorHandler = function(transaction, errors){
-	Mojo.Log.info("dbErrorHandler", Object.toJSON(transaction), " -", Object.toJSON(errors));
+	Mojo.Log.error("dbErrorHandler", Object.toJSON(transaction), " -", Object.toJSON(errors));
 };
