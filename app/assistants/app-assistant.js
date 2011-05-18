@@ -67,7 +67,7 @@ AppAssistant.prototype.handleCommand = function (event) {
 try {
 	if (event.type === Mojo.Event.command) {
 		if (this.debugMe===true) {Mojo.Log.info("AppAss handleCommand", event.command);}
-		Mojo.Log.info("AppAss handleCommand", event.command);
+		//Mojo.Log.info("AppAss handleCommand", event.command);
 		switch (event.command) {
 			case 'cmd-Dock':
 				this.controller.getStageController('book').pushScene({name: 'dock', transition: Mojo.Transition.crossFade}, this);

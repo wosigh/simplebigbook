@@ -45,14 +45,12 @@ function BookAssistant() {
 	this.pageNumber = false;
 	this.scroller = null;
 	this.isVisible = true;
-	//this.ImHere = undefined;
 	this.ImThisBig = null;
 	this.percentDown = null;
 	this.DI = Mojo.Environment.DeviceInfo;
 	this.firstResize = true;
-	this.headerAdjustment = 56;
+	this.headerAdjustment = 56;	//88 //32 //78
 	this.whichWay = null;
-	//88 //32 //78
 }
 
 /********************
@@ -86,7 +84,6 @@ BookAssistant.prototype.setup = function () {
 	/*this.deleteprefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 	this.deleteprefs.remove();
 	this.deleteprefs = null;*/
-	//break;
 
 	////////////////////////////////////////////////////
 	//  ****  Default model for preferences cookie
@@ -394,9 +391,9 @@ try {
 	if (this.debugMe===true) {Mojo.Log.info("@@ APP CLOSING - this.prefsModel.pagePosition", this.prefsModel.pagePosition);}
 
 	if ( (this.prefsModel.wasChapterJump !== true) && (this.prefsModel.wasBookmarkJump === false) ){
-		//this.prefsModel = this.prefs.get();
 		this.prefsModel.pagePosition = this.ImHere.y;
 		this.prefsModel.wasChapterJump = false;
+		this.prefsModel.wasBookmarkJump = false;
 		this.prefs.put(this.prefsModel);
 		if (this.debugMe===true) {Mojo.Log.info("@@ APP CLOSING NOT JUMP - this.prefsModel.pagePosition", this.prefsModel.pagePosition, "this.prefsModel.wasChapterJump", this.prefsModel.wasChapterJump);}
 	}
@@ -436,7 +433,11 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
 		this.ImHere = position;
 		this.ImThisBig = $('bookdata').clientHeight;
 		this.percentDown = ((0 - this.ImHere.y) / this.ImThisBig);
-		if (this.debugMe===true) {Mojo.Log.info("this.ImHere", this.ImHere.y, "this.ImThisBig", this.ImThisBig, "this.percentDown:", this.percentDown);}
+		if (this.debugMe===true) {Mojo.Log.info("scrollStarted - this.ImHere", this.ImHere.y, "this.ImThisBig", this.ImThisBig, "this.percentDown:", this.percentDown);}
+
+		this.prefsModel.wasBookmarkJump = false;
+		this.prefs.put(this.prefsModel);
+
 
 		this.tableCount = document.getElementsByTagName("table");
 		//Mojo.Log.info("=== this.tableCount:", this.tableCount.length, "-", this.maxScreenHeight);
@@ -458,7 +459,7 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
 						}
 					}
 
-					Mojo.Log.info("======== IF - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId, this.ImHere.y);
+					//Mojo.Log.info("======== IF - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId, this.ImHere.y);
 					this.pageNumber = lcId;
 					this.prefsModel.pageNumber = lcId;
 					//UGLY, but works!!
@@ -483,8 +484,13 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
 BookAssistant.prototype.handleWindowResize = function(event){
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER RESIZE @@");}
 
-	this.NewThisBig = $('bookdata').clientHeight;
-	this.wasResized = true;
+	if (this.prefsModel.wasBookmarkJump === false) {
+		this.NewThisBig = $('bookdata').clientHeight;
+		this.wasResized = true;
+	}
+	
+	//this.prefsModel.wasBookmarkJump = false;
+	//this.prefs.put(this.prefsModel);
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE RESIZE @@");}
 };
@@ -597,39 +603,37 @@ BookAssistant.prototype.getChapterSuccess = function (transport) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER getChapterSuccess @@");}
 try {
 
-	//Mojo.Log.info("++++ getChapterSuccess TRANSPORT:", Object.toJSON(transport));
-	
 	////////////////////////////////////////
 	// Put the response into the scene
 	if (search_string !== false) {
 		var temp = transport.transport.responseText;
 		this.highlightSearchTerms(search_string, temp);
-	} else {
+	}
+	else {
 		$('bookdata').innerHTML = transport.transport.responseText;
 	}
 
 
 	////////////////////////////////////////////////////
 	// Scroll to the exact last location in a page!
-	if (this.prefsModel.wasChapterJump !== true) {
-		if (this.debugMe===true) {Mojo.Log.info("~_~_~_~_~_~_~_~  this.prefsModel.pagePosition", this.prefsModel.pagePosition);}
+	if (this.prefsModel.wasChapterJump === false) {
+		if (this.debugMe===true) {Mojo.Log.info("~_~_~_~_~_~_~_~  FALSE - this.prefsModel.pagePosition", this.prefsModel.pagePosition, this.prefsModel.scrollingEffect);}
 		this.controller.getSceneScroller().mojo.scrollTo(0, this.prefsModel.pagePosition, this.prefsModel.scrollingEffect, false);
-		//this.prefsModel = this.prefs.get();
 		this.prefsModel.pagePosition = 0;
 		this.prefsModel.wasChapterJump = false;
-		this.prefsModel.wasBookmarkJump = false;
+		//this.prefsModel.wasBookmarkJump = false;
 		this.prefs.put(this.prefsModel);
 	}
 	else if (this.prefsModel.wasChapterJump === true) {
+		if (this.debugMe===true) {Mojo.Log.info("~_~_~_~_~_~_~_~  TRUE - this.prefsModel.pagePosition", this.prefsModel.pagePosition, this.prefsModel.scrollingEffect);}
 		this.controller.getSceneScroller().mojo.scrollTo(0, 0, this.prefsModel.scrollingEffect, false);
-		//this.prefsModel = this.prefs.get();
 		this.prefsModel.pagePosition = 0;
 		this.prefsModel.wasChapterJump = false;
 		this.prefsModel.wasBookmarkJump = false;
 		this.prefs.put(this.prefsModel);
 	}
 	else {
-		//this.prefsModel = this.prefs.get();
+		if (this.debugMe===true) {Mojo.Log.info("~_~_~_~_~_~_~_~  ELSE - this.prefsModel.pagePosition", this.prefsModel.pagePosition, this.prefsModel.scrollingEffect);}
 		this.prefsModel.pagePosition = 0;
 		this.prefsModel.wasChapterJump = false;
 		this.prefsModel.wasBookmarkJump = false;
@@ -1200,6 +1204,7 @@ BookAssistant.prototype.addBookmark = function(transaction, results){
 					var newBP = this.pageNumber.substr(this.pageNumber.indexOf("_p") + 2);
 					if (newBP.indexOf('_top') >= 0) {newBP = newBP.replace('_top', '');}
 					Mojo.Controller.getAppController().showBanner("Added bookmark to page " + newBP,{source: 'notification'});
+					this.initialPopulate();
 				}.bind(this),
 				this.dbErrorHandler.bind(this)
 			);
