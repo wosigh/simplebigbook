@@ -62,6 +62,13 @@ BookAssistant.prototype.setup = function () {
 	try{
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER SETUP @@");}
 
+	this.bookFade = this.controller.get('book-fade');
+	this.bookData = this.controller.get('bookdata');
+	this.chapMenu = this.controller.get('chapMenu');
+	this.pageMenu = this.controller.get('pageMenu');
+	this.bookmarkMenu = this.controller.get('bookmarkMenu');
+	this.hightlight = this.controller.get('highlight');
+	
 	//DI = Mojo.Environment.DeviceInfo;
 	//Mojo.Log.info(DI.platformVersion, " -", DI.platformVersionDot, " -", DI.platformVersionMajor, " -", DI.platformVersionMinor);
 
@@ -275,6 +282,7 @@ BookAssistant.prototype.setup = function () {
 	this.wholeScreenScroller = this.controller.getSceneScroller();
 	this.scrollWasStarted = this.scrollStarted.bind(this);
 	////////////////////////////////////////////////////
+	
 
 	} catch (error) {Mojo.Log.error(">>>>> BookAssistant - setup ERROR", error);}
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE SETUP @@");}
@@ -300,8 +308,8 @@ try {
 	this.controller.document.addEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 
 	//this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
-	//Mojo.Event.listen($('bookdata'), Mojo.Event.tap, this.doubleClickHandler);
-	//$('bookdata').addEventListener('tap', this.doubleClickHandler, true);
+	//Mojo.Event.listen(this.bookData, Mojo.Event.tap, this.doubleClickHandler);
+	//this.bookData.addEventListener('tap', this.doubleClickHandler, true);
 
 	this.appClosingHandler = this.appClosingRoutine.bindAsEventListener(this);
 	window.document.addEventListener(Mojo.Event.deactivate, this.appClosingHandler, true);
@@ -357,7 +365,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Deactivate @@");}
 	this.controller.stopListening(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
 	//this.controller.getSceneScroller().removeEventListener(Mojo.Event.scrollStarting, this.doubleClickHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
-	$('bookdata').removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
+	this.bookData.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Deactivate @@");}
 };
@@ -374,7 +382,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Cleanup @@");}
 	this.controller.stopListening(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
 	//this.controller.getSceneScroller().removeEventListener(Mojo.Event.scrollStarting, this.doubleClickHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
-	$('bookdata').removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
+	this.bookData.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Cleanup @@");}
 };
@@ -431,7 +439,7 @@ BookAssistant.prototype.scrollStarted = function(event){
 BookAssistant.prototype.moved = function(scrollEnding, position){
 	if (scrollEnding) {
 		this.ImHere = position;
-		this.ImThisBig = $('bookdata').clientHeight;
+		this.ImThisBig = this.bookData.clientHeight;
 		this.percentDown = ((0 - this.ImHere.y) / this.ImThisBig);
 		if (this.debugMe===true) {Mojo.Log.info("scrollStarted - this.ImHere", this.ImHere.y, "this.ImThisBig", this.ImThisBig, "this.percentDown:", this.percentDown);}
 
@@ -485,7 +493,7 @@ BookAssistant.prototype.handleWindowResize = function(event){
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER RESIZE @@");}
 
 	if (this.prefsModel.wasBookmarkJump === false) {
-		this.NewThisBig = $('bookdata').clientHeight;
+		this.NewThisBig = this.bookData.clientHeight;
 		this.wasResized = true;
 	}
 	
@@ -552,7 +560,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER SELECTBOOK @@");}
 
 	this.controller.popupSubmenu({
 		onChoose: this.jumpToChapter.bind(this),
-		placeNear: $('chapMenu'),
+		placeNear: this.chapMenu,
 		popupClass: 'pagePopup',
 		items: this.bookMenuModelItems
 	});
@@ -610,7 +618,7 @@ try {
 		this.highlightSearchTerms(search_string, temp);
 	}
 	else {
-		$('bookdata').innerHTML = transport.transport.responseText;
+		this.bookData.innerHTML = transport.transport.responseText;
 	}
 
 
@@ -677,7 +685,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE getChapterSuccess @@");}
 BookAssistant.prototype.getChapterFailure = function (transport) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Get Book Failure @@");}
 
-	$('bookdata').innerHTML = "Problem getting the file!";
+	this.bookData.innerHTML = "Problem getting the file!";
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Get Book Failure @@");}
 };
@@ -694,7 +702,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Select Chapter @@");}
 
 	this.controller.popupSubmenu({
 		onChoose: this.jumpToPage.bind(this),
-		placeNear: $('pageMenu'),
+		placeNear: this.pageMenu,
 		popupClass: 'pagePopup',
 		items: this.pagenumberMenuModelItems
 	});
@@ -765,7 +773,7 @@ try {
 
 	this.controller.popupSubmenu({
 		onChoose: this.readBookmark.bind(this),
-		placeNear: $('bookmarkMenu'),
+		placeNear: this.bookmarkMenu,
 		popupClass: 'pagePopup',
 		items: this.bookmarkMenuModelItems
 	});
@@ -849,26 +857,27 @@ try {
 BookAssistant.prototype.changeTextSize = function (size) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Change Text Size @@", size);}
 
-	$('bookdata').style.fontSize = size;
+	this.bookData.style.fontSize = size;
 
 	////////////////////////////////////////////////////
 	//  ****  Set the color theme while I'm here
 	switch (this.prefsModel.daynight){
 		case 'day':
 			//Mojo.Log.info(" +++ It's DAY time.");
+			//this.bookFade.className = 'scene-fade my-fade-day top';
+			this.bookFade.removeClassName('my-fade-night');
+			this.bookFade.addClassName('my-fade-day');
 			this.controller.document.body.className = 'main';
-			//$('book-fade').className = 'my-fade-day';
-			$('book-fade').addClassName('my-fade-day');
-			$('book-fade').removeClassName('my-fade-night');
-			//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, $('book-fade').className);
+			Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
 			break;
 		case 'night':
 			//Mojo.Log.info(" +++ It's NIGHT time.");
+			//this.bookFade.className = 'scene-fade my-fade-night top';
+			this.bookFade.removeClassName('my-fade-day');
+			this.bookFade.addClassName('my-fade-night');
 			this.controller.document.body.className = 'palm-dark';
-			//$('book-fade').className = 'my-fade-night';
-			$('book-fade').addClassName('my-fade-night');
-			$('book-fade').removeClassName('my-fade-day');
-			//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, $('book-fade').className);
+			
+			Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
 			break;
 	}
 	////////////////////////////////////////////////////
@@ -914,10 +923,10 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Do Highlight Search Terms @@")
 		bodyText = this.doHighlight(bodyText, searchArray[i]);
 	}
 
-	$('bookdata').innerHTML = bodyText;
+	this.bookData.innerHTML = bodyText;
 	search_string = false;
 	isPhrase = false;
-	highsearch = $("highlight");
+	highsearch = this.highlight;
 
 	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Do Highlight Search Terms @@");}
 
@@ -1088,11 +1097,6 @@ try{
 		this.writeDefaults(transaction, results);
 	}
 
-
-	/*if (results.rows.length > 0) {
-		this.bookmarkMenuModelItems.push({label: "Add Bookmark", command: 'addBookmark'});
-	}*/
-
 	this.bookmarkMenuModelItems = [];
 
 	if (results.rows.length > 0) {
@@ -1101,17 +1105,13 @@ try{
 			row = results.rows.item(i);
 			pn = row.pageNumber.substr(row.pageNumber.indexOf("_p") + 2);
 
-			if (pn.indexOf('_top') >= 0) {
-				pn = pn.replace('_top', '');
-			}
+			if (pn.indexOf('_top') >= 0) {pn = pn.replace('_top', '');}
 
 			//var prettylabel = SBB.chapterList[row.chapterNumber].label + ', Page ' + pn;
 			var prettylabel = 'p' + pn + ', ' + SBB.chapterList[row.chapterNumber].label;
 			buildrow = {label: prettylabel, command: row.id};
 
 			this.bookmarkMenuModelItems.push(buildrow);
-
-			//Mojo.Log.info("--- BUILD listModel.items", prettylabel, row.id, row.chapterNumber, Object.toJSON(buildrow));
 
 		} catch (buildrowerror) {Mojo.Log.error(">>>>> BookAssistant - results.rows ERROR:", buildrowerror);}
 		}

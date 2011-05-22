@@ -20,7 +20,7 @@ Mojo.Log.info("                ", Mojo.Controller.appInfo.title, "-", Mojo.Contr
  */
 
 function PrefsAssistant() {
-	this.debugMe = true;
+	this.debugMe = false;
 }
 
 PrefsAssistant.prototype.setup = function () {

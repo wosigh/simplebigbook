@@ -218,6 +218,47 @@ body.dock
 /*******************
  * ICONS
  ******************/ 
+.overlay-container {
+  position: relative;
+}
+
+.bookmark-icon-overlay {
+  position: absolute;
+  z-index: 1;
+  left: 8px;
+  margin-top: 8px;
+  width: 40px;
+  height: 40px;
+  background: url(../images/bookmark-icon-overlay.png) center center no-repeat;
+}
+
+.bookmark-info {
+	background: url(../images/bookmark-info-icon.png) center center no-repeat;
+}
+
+.bookmark-item {
+	display: inline-block;
+	padding: 0px;
+}
+
+.bookmark-icon-overlay {
+  position: absolute;
+  z-index: 1;
+  left: 8px;
+  margin-top: 8px;
+  width: 40px;
+  height: 40px;
+  background: url(../images/bookmark-icon-overlay.png) center center no-repeat;
+}
+
+.bookmark-icon {
+  padding: 12px 12px 0px 12px;
+  float: left;
+}
+
+.overlay-container {
+  position: relative;
+}
 
 .palm-page-header .icon {
 	background:url(../images/bookicon.png) center center no-repeat;
@@ -232,7 +273,8 @@ body.dock
 }
 
 .main .palm-menu-icon.bookmarksMenuIcon {
-	background-image: url(../images/menu-icon-file.png);
+	/*background-image: url(../images/menu-icon-file.png);*/
+	background-image: url(../images/menu-icon-bookmarks.png);
 }
 
 .icon {
