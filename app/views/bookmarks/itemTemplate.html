@@ -1,0 +1,33 @@
+<!--
+/* SimpleBigBook Copyright (C) 2009  Rick Boatright, John Kiernan
+ *
+ * This file is part of Simple Big Book.
+ *
+ * Simple Big Book is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Simple Big Book is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Simple Big Book.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+ -->
+
+<div class="palm-row bookmark" x-app-url="#{url}" x-mojo-tap-highlight="momentary">
+	<div class="palm-row-wrapper">
+	<!--img class="bookmark-icon right" width="32" height="32" src="images/header-icon-bookmarks.png"></img-->
+		<div class="title">
+			<span class="list-text">ID: #{-id}</span> ||
+			<span class="list-text">Name: #{-name}</span> ||
+			<span class="list-text">ChapNum: #{-chapNum}</span> ||
+			<BR><span class="list-text">PageNum: #{-pageNum}</span> ||
+			<span class="list-text">PagePos: #{-pagePos}</span>
+			<!--div class="bookmark-title truncating-text">#{-name}</div-->
+		</div>
+	</div>
+</div>

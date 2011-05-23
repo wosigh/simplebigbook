@@ -467,7 +467,7 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
 						}
 					}
 
-					//Mojo.Log.info("======== IF - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId, this.ImHere.y);
+					//Mojo.Log.info("======== IF - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId, this.ImHere.y, "+", this.percentDown);
 					this.pageNumber = lcId;
 					this.prefsModel.pageNumber = lcId;
 					//UGLY, but works!!
@@ -475,7 +475,7 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
 				}
 			}
 			else {
-				//Mojo.Log.info("======== ELSE - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId, "+", this.ImHere.y);
+				//Mojo.Log.info("======== ELSE - You're reading:", lcId, "+", shortName, "+", prettylabel, "-", lcId, "+", this.ImHere.y, "+", this.percentDown);
 				this.pageNumber = lcId;
 				this.prefsModel.pageNumber = lcId;
 			}
@@ -561,7 +561,6 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER SELECTBOOK @@");}
 	this.controller.popupSubmenu({
 		onChoose: this.jumpToChapter.bind(this),
 		placeNear: this.chapMenu,
-		popupClass: 'pagePopup',
 		items: this.bookMenuModelItems
 	});
 
@@ -626,6 +625,13 @@ try {
 	// Scroll to the exact last location in a page!
 	if (this.prefsModel.wasChapterJump === false) {
 		if (this.debugMe===true) {Mojo.Log.info("~_~_~_~_~_~_~_~  FALSE - this.prefsModel.pagePosition", this.prefsModel.pagePosition, this.prefsModel.scrollingEffect);}
+
+		if (this.prefsModel.wasBookmarkJump === true) {
+			//this.prefsModel.pagePosition = Math.floor((0 - (this.prefsModel.pagePosition * this.bookData.clientHeight)));
+			this.prefsModel.pagePosition = (0 - (this.prefsModel.pagePosition * this.bookData.clientHeight));
+			//Mojo.Log.info(this.prefsModel.pagePosition, "+", this.bookData.clientHeight, "+", ( 0 - (this.prefsModel.pagePosition * this.bookData.clientHeight)));
+		}
+
 		this.controller.getSceneScroller().mojo.scrollTo(0, this.prefsModel.pagePosition, this.prefsModel.scrollingEffect, false);
 		this.prefsModel.pagePosition = 0;
 		this.prefsModel.wasChapterJump = false;
@@ -703,7 +709,6 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Select Chapter @@");}
 	this.controller.popupSubmenu({
 		onChoose: this.jumpToPage.bind(this),
 		placeNear: this.pageMenu,
-		popupClass: 'pagePopup',
 		items: this.pagenumberMenuModelItems
 	});
 
@@ -774,7 +779,6 @@ try {
 	this.controller.popupSubmenu({
 		onChoose: this.readBookmark.bind(this),
 		placeNear: this.bookmarkMenu,
-		popupClass: 'pagePopup',
 		items: this.bookmarkMenuModelItems
 	});
 
@@ -863,21 +867,18 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Change Text Size @@", size);}
 	//  ****  Set the color theme while I'm here
 	switch (this.prefsModel.daynight){
 		case 'day':
-			//Mojo.Log.info(" +++ It's DAY time.");
-			//this.bookFade.className = 'scene-fade my-fade-day top';
-			this.bookFade.removeClassName('my-fade-night');
-			this.bookFade.addClassName('my-fade-day');
 			this.controller.document.body.className = 'main';
-			Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
+			this.bookFade.className = 'scene-fade my-fade-day top';
+			//this.bookFade.removeClassName('my-fade-night');
+			//this.bookFade.addClassName('my-fade-day');
+			//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
 			break;
 		case 'night':
-			//Mojo.Log.info(" +++ It's NIGHT time.");
-			//this.bookFade.className = 'scene-fade my-fade-night top';
-			this.bookFade.removeClassName('my-fade-day');
-			this.bookFade.addClassName('my-fade-night');
 			this.controller.document.body.className = 'palm-dark';
-			
-			Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
+			this.bookFade.className = 'scene-fade my-fade-night top';
+			//this.bookFade.removeClassName('my-fade-day');
+			//this.bookFade.addClassName('my-fade-night');
+			//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
 			break;
 	}
 	////////////////////////////////////////////////////
@@ -1163,8 +1164,10 @@ try {
 		Mojo.Log.info("******* BLANK DB!");
 
 		SBB.defaultEntries = [];
-		SBB.defaultEntries[0] = {chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'-1026'};
-		SBB.defaultEntries[1] = {chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'-12890'};
+		//SBB.defaultEntries[0] = {chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'-1026'};
+		//SBB.defaultEntries[1] = {chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'-12890'};
+		SBB.defaultEntries[0] = {chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'0.07853283616163154'};
+		SBB.defaultEntries[1] = {chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'0.9553167839940718'};
 
 		SBB.db.transaction(
 			function(transaction) {
@@ -1193,12 +1196,14 @@ try {
  *
  ********************/
 BookAssistant.prototype.addBookmark = function(transaction, results){
-
+//this.percentDown
+//this.ImHere.y
+Mojo.Log.info(this.percentDown, "+", this.ImHere.y);
 	SBB.db.transaction(
 		function(transaction) {
 			transaction.executeSql(
 				"INSERT INTO 'SBB_Bookmarks_Table' (chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?)",
-				[this.myIndex, this.pageNumber, this.ImHere.y],
+				[this.myIndex, this.pageNumber, this.percentDown],
 				//this.dbSuccessHandler.bind(this),
 				function (transaction, results) {
 					var newBP = this.pageNumber.substr(this.pageNumber.indexOf("_p") + 2);
