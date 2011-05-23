@@ -3,7 +3,6 @@
 	{"source": "app/assistants/stage-assistant.js"},
 	{"source": "app/assistants/json-parse.js"},
 	{"source": "javascript/support_info.js"},
-	{"source": "javascript/DatabaseWork.js"},
 
 	{"source": "app/assistants/about-assistant.js",		"scenes": "about"},
 	{"source": "app/assistants/book-assistant.js",		"scenes": "book"},
