@@ -136,7 +136,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER cleanup @@");}
 	clearInterval(this.phraseTimer);
 	this.phraseTimer = '';
 	this.groovyFadeInTimer = '';
-	this.groovyFadeInTimer = '';
+	this.groovyFadeOutTimer = '';
 	this.doThePhrase = '';
 
 	this.fullBright = false;
@@ -169,7 +169,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageDeactivate @@");}
 	clearInterval(this.phraseTimer);
 	this.phraseTimer = '';
 	this.groovyFadeInTimer = '';
-	this.groovyFadeInTimer = '';
+	this.groovyFadeOutTimer = '';
 	this.doThePhrase = '';
 	this.prettyPhrase = '';
 	rawPhrases = [];
@@ -259,7 +259,7 @@ try {
 				rawPhrases = rawPhrases.concat(transport.transport.responseText.split("."));
 			},
 			onFailure: function (transport) {
-				Mojo.Log.info("FAILURE:");
+				Mojo.Log.error("FAILURE:");
 			}
 		});
 	}
@@ -447,7 +447,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 				this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
 				//this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), 8000);
 			}
-			//Mojo.Log.info("SEND:", this.prettyPhrase);
+			Mojo.Log.info("SEND:", this.prettyPhrase);
 			this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
 		}
 	} catch (error) {Mojo.Log.error("THE CLEANER", error);}
@@ -481,18 +481,15 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Mr Dr FIXER @@");}
 			phrase = rawPhrases[(thisQuote - 2)] + "." + rawPhrases[(thisQuote - 1)] + "." + phrase + "." + rawPhrases[(thisQuote + 1)];
 			Mojo.Log.info(phrase);
 			return phrase;
-			//break;
 		case 'starts':
 			Mojo.Log.info("++ THIS STARTS WITH Mr or Dr");
 			phrase = rawPhrases[(thisQuote - 1)] + phrase + "." + rawPhrases[(thisQuote + 1)];
 			Mojo.Log.info(phrase);
 			return phrase;
-			//break;
 		case 'ends':
 			Mojo.Log.info("++ THIS PHRASE ENDED WITH Mr or Dr");
 			phrase = phrase + "." + rawPhrases[(thisQuote + 1)];// + "." + rawPhrases[(thisQuote + 2)];
 			return phrase;
-			//break;
 	}
 
 	//Danger Will Robinson!

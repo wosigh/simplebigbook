@@ -62,7 +62,7 @@ StageAssistant.prototype.cleanup = function (event) {};
 	StageAssistant.myMenuModel = {
 		visible: true,
 		items: [
-			//{label: $L("Dock Test"), command: 'cmd-Dock'},
+			{label: $L("Dock Test"), command: 'cmd-Dock'},
 			{label: $L("Search"), command: 'cmd-Search'},
 			{label: $L("Bookmarks..."), items: [
 				{label: $L("Add Bookmark"), command: 'cmd-AddBookmarks'},

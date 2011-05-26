@@ -33,7 +33,7 @@ wasHighSearch = false;
 forceSelection = false;
 
 function BookAssistant() {
-	this.debugMe = false;
+	this.debugMe = true;
 
 	this.dbName = "SBB_Bookmarks";
 	this.dbVersion = "0.1";
