@@ -30,7 +30,7 @@ search_string = false;
 isPhrase = false;
 highsearch = false;
 wasHighSearch = false;
-forceSelection = false;
+forceSelection = null;
 
 function BookAssistant() {
 	this.debugMe = false;
@@ -185,7 +185,7 @@ BookAssistant.prototype.setup = function () {
 	this.prefs.put(this.prefsModel);
 
 	//this.prefsModel = this.prefs.get();
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: chapterNumber", this.prefsModel.chapterNumber);}
+	/*if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: chapterNumber", this.prefsModel.chapterNumber);}
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: cookieVersion", this.prefsModel.cookieVersion);}
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: daynight", this.prefsModel.daynight);}
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: dockPhraseSpeed", this.prefsModel.dockPhraseSpeed);}
@@ -196,7 +196,7 @@ BookAssistant.prototype.setup = function () {
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: scrollingEffect", this.prefsModel.scrollingEffect);}
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: textsize", this.prefsModel.textsize);}
 	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: wasBookmarkJump", this.prefsModel.wasBookmarkJump);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: wasChapterJump", this.prefsModel.wasChapterJump);}
+	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: wasChapterJump", this.prefsModel.wasChapterJump);}*/
 	// END OF COOKIE SECTION**********************/
 
 	} catch (cookieerror) {Mojo.Log.error(">>>>> BookAssistant - COOKIE CRUMBLED!", cookieerror);}
@@ -205,10 +205,15 @@ BookAssistant.prototype.setup = function () {
 	////////////////////////////////////////////////////
 	// Initial states
 	//
-	if ((this.prefsModel.screenSize === true) && (this.prefsModel.isFullScreen === true)) {
-		this.doFullScreen('big');
+	if ( (this.prefsModel.wasBookmarkJump === true) || (this.prefsModel.wasChapterJump ===true) ) {
+		if (this.prefsModel.isFullScreen === true) {
+			this.doFullScreen('big');
+		}
+		else {
+			this.doFullScreen('small');
+		}
 	}
-	else if ((this.prefsModel.screenSize === true) && (this.prefsModel.wasChapterJump === false)) {
+	else if (this.prefsModel.screenSize === true) { 
 		this.doFullScreen('big');
 	}
 
@@ -306,17 +311,12 @@ try {
 	this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
 	this.controller.document.addEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 
-	//this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
-	//Mojo.Event.listen(this.bookData, Mojo.Event.tap, this.doubleClickHandler);
-	//this.bookData.addEventListener('tap', this.doubleClickHandler, true);
-
 	this.appClosingHandler = this.appClosingRoutine.bindAsEventListener(this);
 	window.document.addEventListener(Mojo.Event.deactivate, this.appClosingHandler, true);
 
 	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 	this.prefsModel = this.prefs.get();
 	this.changeTextSize(this.prefsModel.textsize);
-
 
 	////////////////////////////////////////////////////
 	//  Make the bookmark model for the popup
@@ -331,14 +331,14 @@ try {
 	if (this.debugMe===true) {Mojo.Log.info("activating book, about to jump to search");}
 	highsearch = false;
 	if (searchBook !== false) {
-		Mojo.Log.info("  *****  ACTIVE in IF", searchPage, highsearch, searchBook);
+		//Mojo.Log.info("  *****  ACTIVE in IF", searchPage, highsearch, searchBook);
 		setTimeout(function () {
 			this.jumpToChapter(searchBook);
 			searchBook = false;
 		}.bind(this), 150);
 	} 
 	else {
-		Mojo.Log.info("  *****  ACTIVE in ELSE", searchPage, highsearch, searchBook);
+		//Mojo.Log.info("  *****  ACTIVE in ELSE", searchPage, highsearch, searchBook);
 		if (searchPage !== false) {
 			setTimeout(function () {
 				this.jumpToPage(searchPage);
@@ -360,6 +360,14 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Activate @@");}
  ********************/
 BookAssistant.prototype.deactivate = function (event) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Deactivate @@");}
+	if (this.controller.window.innerHeight === this.maxScreenHeight) {
+		this.prefsModel.isFullScreen = true;
+		this.prefs.put(this.prefsModel);
+	}
+	else {
+		this.prefsModel.isFullScreen = false;
+		this.prefs.put(this.prefsModel);
+	}
 
 	this.controller.stopListening(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
 	//this.controller.getSceneScroller().removeEventListener(Mojo.Event.scrollStarting, this.doubleClickHandler, true);
@@ -859,6 +867,7 @@ try {
 BookAssistant.prototype.changeTextSize = function (size) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Change Text Size @@", size);}
 
+	this.windowHeight = this.controller.window.innerHeight;
 	this.bookData.style.fontSize = size;
 
 	////////////////////////////////////////////////////
@@ -926,7 +935,6 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Do Highlight Search Terms @@")
 	search_string = false;
 	isPhrase = false;
 	highsearch = $('highlight');
-	//highsearch = this.highlight;
 
 	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Do Highlight Search Terms @@");}
 
@@ -996,11 +1004,17 @@ try {
 	// Detect single tap vs double tap
 	if (this.whichWay === 'up') {
 		if (this.click === 1) {
-			//DOUBLE
-			this.doFullScreen(false);
-			this.click = 0;
+			//DOUBLE TAP
+			if (this.controller.window.innerHeight !== this.maxScreenHeight) {
+				this.doFullScreen('big')
+				this.click = 0;
+			}
+			else {
+				this.doFullScreen('small')
+				this.click = 0;
+			}
 		} else {
-			//SINGLE
+			//SINGLE TAP
 			this.click = 1;
 			this.clickInterval = this.controller.window.setInterval(this.killlClick.bind(this), 450);
 		}
@@ -1041,41 +1055,19 @@ BookAssistant.prototype.doFullScreen = function(forceSelection, event) {
 	if (forceSelection) {
 		switch (forceSelection) {
 			case 'big':
-				if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", event);}
-				//this.prefsModel = this.prefs.get();
 				this.controller.enableFullScreenMode(true);
-				this.windowHeight = this.controller.window.innerHeight;
 				this.prefsModel.isFullScreen = true;
 				this.prefs.put(this.prefsModel);
-				forceSelection = false;
+				forceSelection = null;
+				if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", this.prefsModel.isFullScreen);}
 				break;
 			case 'small':
-				if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", event);}
-				//this.prefsModel = this.prefs.get();
 				this.controller.enableFullScreenMode(false);
-				this.windowHeight = this.controller.window.innerHeight;
 				this.prefsModel.isFullScreen = false;
 				this.prefs.put(this.prefsModel);
-				forceSelection = false;
+				forceSelection = null;
+				if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", this.prefsModel.isFullScreen);}
 				break;
-		}
-	}
-	else if (forceSelection === false) {
-		if (this.windowHeight !== this.maxScreenHeight) {
-			if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", event);}
-			//this.prefsModel = this.prefs.get();
-			this.controller.enableFullScreenMode(true);
-			this.windowHeight = this.controller.window.innerHeight;
-			this.prefsModel.isFullScreen = true;
-			this.prefs.put(this.prefsModel);
-		}
-		else if (this.windowHeight === this.maxScreenHeight) {
-			if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", event);}
-			//this.prefsModel = this.prefs.get();
-			this.controller.enableFullScreenMode(false);
-			this.windowHeight = this.controller.window.innerHeight;
-			this.prefsModel.isFullScreen = false;
-			this.prefs.put(this.prefsModel);
 		}
 	}
 	else {
