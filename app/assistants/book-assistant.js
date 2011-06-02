@@ -39,6 +39,8 @@ function BookAssistant() {
 	this.dbVersion = "0.1";
 	this.dbDisplayName = "Simple Big Book Bookmarks";
 	this.dbSize = 200000;
+	this.dbTable = "SBB_Bookmarks_Table";
+
 
 	this.maxScreenHeight = Mojo.Environment.DeviceInfo.screenHeight;
 	this.maxScreenWidth = Mojo.Environment.DeviceInfo.screenWidth;
@@ -454,6 +456,11 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
 		this.prefs.put(this.prefsModel);
 
 
+		////////////////////////////////////////////////////
+		// Figure out what Page is being displayed on the screen.
+		// Bottom line: If the line marking a page is about 2/3 
+		// up the screen, it's considered the current page.
+
 		this.tableCount = document.getElementsByTagName("table");
 		//Mojo.Log.info("=== this.tableCount:", this.tableCount.length, "-", this.maxScreenHeight);
 		for (i = 0; i < this.tableCount.length; i++) {
@@ -487,6 +494,7 @@ BookAssistant.prototype.moved = function(scrollEnding, position){
 				this.prefsModel.pageNumber = lcId;
 			}
 		}
+		////////////////////////////////////////////////////
 	}
 };
 
@@ -503,9 +511,6 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER RESIZE @@");}
 		this.NewThisBig = this.bookData.clientHeight;
 		this.wasResized = true;
 	}
-	
-	//this.prefsModel.wasBookmarkJump = false;
-	//this.prefs.put(this.prefsModel);
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE RESIZE @@");}
 };
@@ -589,8 +594,6 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Jump to Book @@");}
 	//Need to KilllClick here or really ugly loop happens
 	this.killlClick();
 
-	//Mojo.Log.info("jumpToChapter - newindex:", newindex);
-	
 	/////////////////////////////////////////////////////////////
 	//
 	if (newindex) {
@@ -711,7 +714,6 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Get Book Failure @@");}
  ********************/
 BookAssistant.prototype.selectPage = function (event) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Select Chapter @@");}
-//Mojo.Log.info("@@ ENTER Select Chapter @@");
 
 	this.controller.popupSubmenu({
 		onChoose: this.jumpToPage.bind(this),
@@ -1101,7 +1103,12 @@ try{
 
 			//var prettylabel = SBB.chapterList[row.chapterNumber].label + ', Page ' + pn;
 			var prettylabel = 'p' + pn + ', ' + SBB.chapterList[row.chapterNumber].label;
-			buildrow = {label: prettylabel, command: row.id};
+			if (row.bookmarkName === prettylabel) {
+				buildrow = {label: prettylabel, command: row.id};
+			}
+			else {
+				buildrow = {label: row.bookmarkName, command: row.id};
+			}
 
 			this.bookmarkMenuModelItems.push(buildrow);
 
@@ -1128,7 +1135,7 @@ BookAssistant.prototype.createMyTable = function(){ try { if (this.debugMe===tru
 	SBB.db.transaction(
 		function (transaction) {
 			transaction.executeSql(
-				"CREATE TABLE IF NOT EXISTS 'SBB_Bookmarks_Table' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, chapterNumber INTEGER, pageNumber TEXT, pagePosition INTEGER)",
+				"CREATE TABLE IF NOT EXISTS 'SBB_Bookmarks_Table' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, bookmarkName TEXT, chapterNumber INTEGER, pageNumber TEXT, pagePosition INTEGER)",
 				[],
 				this.writeDefaults.bind(this),
 				this.dbErrorHandler.bind(this)
@@ -1155,17 +1162,17 @@ try {
 		Mojo.Log.info("******* BLANK DB!");
 
 		SBB.defaultEntries = [];
-		//SBB.defaultEntries[0] = {chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'-1026'};
-		//SBB.defaultEntries[1] = {chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'-12890'};
-		SBB.defaultEntries[0] = {chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'0.07853283616163154'};
-		SBB.defaultEntries[1] = {chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'0.9553167839940718'};
+		SBB.defaultEntries[0] = {bookmarkName: 'The Steps', chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'0.07917297024710035'};
+		SBB.defaultEntries[1] = {bookmarkName: 'Third Step Prayer', chapterNumber: '6', pageNumber: 'howitworks_p63',  pagePosition:'0.40202419907160797'};
+		SBB.defaultEntries[2] = {bookmarkName: 'Seventh Step Prayer', chapterNumber: '7', pageNumber: 'intoaction_p76',  pagePosition:'0.24705882352941178'};
+		SBB.defaultEntries[3] = {bookmarkName: 'Closing', chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'0.9546072134387352'};
 
 		SBB.db.transaction(
 			function(transaction) {
 				for (i = 0; i < SBB.defaultEntries.length; i++) {
 					transaction.executeSql(
-					"INSERT INTO 'SBB_Bookmarks_Table' (chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?)",
-					[SBB.defaultEntries[i].chapterNumber, SBB.defaultEntries[i].pageNumber, SBB.defaultEntries[i].pagePosition],
+					"INSERT INTO 'SBB_Bookmarks_Table' (bookmarkName, chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?, ?)",
+					[SBB.defaultEntries[i].bookmarkName, SBB.defaultEntries[i].chapterNumber, SBB.defaultEntries[i].pageNumber, SBB.defaultEntries[i].pagePosition],
 					this.dbSuccessHandler.bind(this),
 					this.dbErrorHandler.bind(this)
 					);
@@ -1187,19 +1194,24 @@ try {
  *
  ********************/
 BookAssistant.prototype.addBookmark = function(transaction, results){
-//this.percentDown
-//this.ImHere.y
-Mojo.Log.info(this.percentDown, "+", this.ImHere.y);
+	
+	bmpn = this.pageNumber.substr(this.pageNumber.indexOf('_p') + 2);
+
+	if (bmpn.indexOf('_top') >= 0) {bmpn = bmpn.replace('_top', '');}
+
+	var bmlabel = 'p' + bmpn + ', ' + SBB.chapterList[this.myIndex].label;
+	Mojo.Log.info(bmpn, "+", bmlabel);
+
 	SBB.db.transaction(
 		function(transaction) {
 			transaction.executeSql(
-				"INSERT INTO 'SBB_Bookmarks_Table' (chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?)",
-				[this.myIndex, this.pageNumber, this.percentDown],
-				//this.dbSuccessHandler.bind(this),
+				"INSERT INTO 'SBB_Bookmarks_Table' (bookmarkName, chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?, ?)",
+				[bmlabel, this.myIndex, this.pageNumber, this.percentDown],
 				function (transaction, results) {
 					var newBP = this.pageNumber.substr(this.pageNumber.indexOf("_p") + 2);
 					if (newBP.indexOf('_top') >= 0) {newBP = newBP.replace('_top', '');}
 					Mojo.Controller.getAppController().showBanner("Added bookmark to page " + newBP,{source: 'notification'});
+					Mojo.Log.info(this.myIndex, this.pageNumber, this.percentDown);
 					this.initialPopulate();
 				}.bind(this),
 				this.dbErrorHandler.bind(this)
@@ -1216,8 +1228,10 @@ Mojo.Log.info(this.percentDown, "+", this.ImHere.y);
  ********************/
 BookAssistant.prototype.dbSuccessHandler = function(transaction, results){
 	Mojo.Log.info(">>>>> BookAssistant - dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
+	//Mojo.Controller.errorDialog("dbErrorHandler", JSON.stringify(transaction), " -", JSON.stringify(errors));
 	this.initialPopulate();
 };
 BookAssistant.prototype.dbErrorHandler = function(transaction, errors){
 	Mojo.Log.error(">>>>> BookAssistant - dbErrorHandler", Object.toJSON(transaction), " -", Object.toJSON(errors));
+	Mojo.Controller.errorDialog("dbErrorHandler", Object.toJSON(transaction), " -", Object.toJSON(errors));
 };

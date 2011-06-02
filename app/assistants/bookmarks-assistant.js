@@ -28,6 +28,7 @@ function BookmarksAssistant() {
 	this.dbVersion = "0.1";
 	this.dbDisplayName = "Simple Big Book Bookmarks";
 	this.dbSize = 200000;
+	this.dbTable = "SBB_Bookmarks_Table";
 }
 
 
@@ -53,20 +54,27 @@ try{
 
 	////////////////////////////////////////////////////
 	// Setup widgets
+	//this.controller.setupWidget('Bookmarks_List', {
 	this.controller.setupWidget('Bookmarks_List', {
 		itemTemplate: 'bookmarks/itemTemplate',
 		swipeToDelete: true,
 		reorderable: false,
 		emptyTemplate: 'bookmarks/emptyTemplate'
 		}, this.listModel);
+	this.BookmarksListWidget = this.controller.get('Bookmarks_List');
 
 	this.controller.setupWidget('deleteRows', {}, {label: 'Reset ALL Bookmarks'});
+	this.deleteRowsWidget = this.controller.get('deleteRows')
 	////////////////////////////////////////////////////
 
 	////////////////////////////////////////////////////
 	// **** Setup for Application Menu
 	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);
 	////////////////////////////////////////////////////
+
+	this.bookmarkDeleteHandler = this.bookmarkDelete.bind(this);
+	this.bookmarkRenameDialogHandler = this.bookmarkRenameDialog.bind(this);
+	this.clearBookmarksHandler = this.clearBookmarks.bind(this);
 
 	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE SETUP @@");}
 } catch (error) {Mojo.Log.error("BOOKMARKS ASSISTANT SETUP ERROR", error);}
@@ -82,10 +90,11 @@ BookmarksAssistant.prototype.activate = function (event) {
 try {
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Activate @@");}
 
-	this.controller.listen(this.controller.get('Bookmarks_List'), Mojo.Event.listDelete, this.bookmarkDelete.bind(this));
-	//this.controller.listen(this.controller.get('Bookmarks_List'), Mojo.Event.listReorder, this.bookmarkReorder.bind(this));
-
-	this.controller.listen('deleteRows', Mojo.Event.tap, this.deleteRows.bind(this));
+	this.controller.listen(this.BookmarksListWidget, Mojo.Event.listDelete, this.bookmarkDelete.bind(this));
+	this.controller.listen(this.BookmarksListWidget, Mojo.Event.listTap, this.bookmarkRenameDialog.bind(this));
+	//this.controller.listen(this.BookmarksListWidget, Mojo.Event.listReorder, this.bookmarkReorder.bind(this));
+	//this.controller.listen(this.deleteRowsWidget, Mojo.Event.tap, this.deleteRows.bind(this));
+	this.controller.listen(this.deleteRowsWidget, Mojo.Event.tap, this.clearBookmarks.bind(this));
 
 	} catch (error) {Mojo.Log.error("ACTIVE ERROR", error);}
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Activate @@");}
@@ -100,11 +109,11 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Activate @@");}
 BookmarksAssistant.prototype.deactivate = function (event) {
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Deactivate @@");}
 
-	this.controller.stopListening('Bookmarks_List', Mojo.Event.listDelete, this.bookmarkDelete);
-	//this.controller.stopListening('Bookmarks_List', Mojo.Event.listReorder, this.bookmarkReorder);
-	//this.controller.stopListening('Bookmarks_List', Mojo.Event.listReorder, this.bookmarkReorder);
-
-	this.controller.stopListening('deleteRows', Mojo.Event.tap, this.deleteRows);
+	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listDelete, this.bookmarkDeleteHandler);
+	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listTap, this.bookmarkRenameDialogHandler);
+	//this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listReorder, this.bookmarkReorder);
+	//this.controller.stopListening(this.deleteRowsWidget, Mojo.Event.tap, this.deleteRows);
+	this.controller.stopListening(this.deleteRowsWidget, Mojo.Event.tap, this.clearBookmarksHandler);
 
 	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Deactivate @@");}
 };
@@ -118,9 +127,11 @@ BookmarksAssistant.prototype.deactivate = function (event) {
 BookmarksAssistant.prototype.cleanup = function (event) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Cleanup @@");}
 
-	this.controller.stopListening('Bookmarks_List', Mojo.Event.listDelete, this.bookmarkDelete);
-
-	this.controller.stopListening('deleteRows', Mojo.Event.tap, this.deleteRows);
+	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listDelete, this.bookmarkDeleteHandler);
+	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listTap, this.bookmarkRenameDialogHandler);
+	//this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listReorder, this.bookmarkReorder);
+	//this.controller.stopListening(this.deleteRowsWidget, Mojo.Event.tap, this.deleteRows);
+	this.controller.stopListening(this.deleteRowsWidget, Mojo.Event.tap, this.clearBookmarksHandler);
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Cleanup @@");}
 };
@@ -131,9 +142,10 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Cleanup @@");}
  * INITIAL POPULATE
  *
  ********************/
-BookmarksAssistant.prototype.initialPopulate = function(transaction, results){
+BookmarksAssistant.prototype.initialPopulate = function(transaction, results) {
 
-	this.listModel = {showAddItem:true, items:[]};
+	//this.listModel = {showAddItem:true, items:[]};
+	this.listModel = {items:[]};
 
 	if (!SBB.db) {
 		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
@@ -160,6 +172,9 @@ BookmarksAssistant.prototype.initialPopulate = function(transaction, results){
 BookmarksAssistant.prototype.displayList = function (transaction, results) {
 try{
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER displayList @@");}
+	this.listModel.items = [];
+	this.listModel.items.push({});
+	//this.listModel = {showAddItem:true, items:[]};
 	listItems = [];
 
 	if (results.rows.length > 0) {
@@ -179,20 +194,27 @@ try{
 
 			buildrow = {
 				id: row.id,
-				name: prettylabel,
+				name: row.bookmarkName,
 				chapNum: row.chapterNumber,
 				pageNum: row.pageNumber,
 				pagePos: row.pagePosition
 			};
 			listItems[i] = buildrow;
+			this.listModel.items.push(buildrow)
 		}
 		this.listModel.items = listItems;
+		this.controller.modelChanged(this.listModel);
 	}
 	else {
 		Mojo.Log.error(">>>>> displayList EMPTY!");
 	}
-	
-	this.controller.modelChanged(this.listModel, this);
+	results = null;
+	row = null;
+	listItems = [];
+	buildrow = null;
+
+	//this.controller.modelChanged(this.listModel, this);
+	//this.controller.modelChanged(this.listModel);
 
 	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE displayList @@");}
 } catch (displayListError) {Mojo.Log.error("displayList ERROR", displayListError);}
@@ -222,6 +244,63 @@ try {
 		}
 	);*/
 } catch (bookmarkReorderError) {Mojo.Log.error("bookmarkReorder ERROR", bookmarkReorderError);}
+};
+
+
+/********************
+ *
+ * BOOKMARK RENAME
+ *
+ ********************/
+BookmarksAssistant.prototype.bookmarkRenameDialog = function (event) {
+try {
+	//Mojo.Log.info("bookmarkRename:", JSON.stringify(event.item));
+	//Mojo.Log.info("bookmarkRename:", event.item.id, "+", event.item.name, "+", event.item.ChapNum, "+", event.item.PageNum, "+", event.item.PagePos);
+
+	//var targetRow = this.controller.get(event.originalEvent.target);
+	//var selectedInfo = targetRow.match('#name');
+	//var selectedInfo = targetRow.name;
+
+	var urlRef = event.item;
+	var onClose = function(saved) {
+		if (saved) {
+			Mojo.Log.info("onClose = function(saved)");//, "+", Object.toJSON(event));
+		}
+	}.bind(this);
+
+	var params = {task: BookmarkDialogAssistant.editBookmarkTask,
+		urlReference: urlRef,
+		sceneController: this.controller,
+		//bookmarkStore: this.bookmarkStore,
+		onClose: onClose};
+	BookmarkDialogAssistant.showDialog(params);
+
+} catch (bookmarkRenameDialog) {Mojo.Log.error("bookmarkRenameDialog ERROR", bookmarkRenameDialog);}
+};
+
+
+/********************
+ *
+ * BOOKMARK RESET POPUP
+ *
+ ********************/
+BookmarksAssistant.prototype.clearBookmarks = function() {
+
+	var self = this;
+	this.controller.showAlertDialog({
+		onChoose: function(value) {
+			if (value === 'ok') {
+				this.deleteRows();
+			}
+		},
+		title:$L('Clear Bookmarks'),
+		message:$L('Are you sure you want to reset all bookmarks?'),
+		cancelable:true,
+		choices:[
+			{label:$L('Clear Bookmarks'), value:'ok', type:'negative'},
+			{label:$L('Cancel'), value:'cancel'}
+		]
+	});
 };
 
 
@@ -263,6 +342,7 @@ try {
 				"DELETE FROM 'SBB_Bookmarks_Table' WHERE ID > -1",
 				[],
 				function(transaction, results) {Mojo.Log.info("Successfully DELETED");},
+				//this.writeDefaults.bind(this),
 				function(transaction, error) {Mojo.Log.info("FAILED TO DELETE");}
 			);
 		}
@@ -284,20 +364,19 @@ BookmarksAssistant.prototype.writeDefaults = function(event) {
 try {
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER writeDefaults @@");}
 
-//0.07853283616163154
 	SBB.defaultEntries = [];
-	//SBB.defaultEntries[0] = {chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'-1026'};
-	//SBB.defaultEntries[1] = {chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'-12890'};
-	//SBB.defaultEntries[1] = {chapterNumber: '9', pageNumber: 'towives_p112',  pagePosition:'-8227'};
-	SBB.defaultEntries[0] = {chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'0.07917297024710035'};
-	SBB.defaultEntries[1] = {chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'0.9546072134387352'};
+	SBB.defaultEntries[0] = {bookmarkName: 'The Steps', chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'0.07917297024710035'};
+	SBB.defaultEntries[1] = {bookmarkName: 'Third Step Prayer', chapterNumber: '6', pageNumber: 'howitworks_p63',  pagePosition:'0.3975037821482602'};
+	SBB.defaultEntries[2] = {bookmarkName: 'Seventh Step Prayer', chapterNumber: '7', pageNumber: 'intoaction_p76',  pagePosition:'0.24976506212801503'};
+	SBB.defaultEntries[3] = {bookmarkName: 'Closing', chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'0.9546072134387352'};
 
+				//"INSERT INTO 'SBB_Bookmarks_Table' (bookmarkName, chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?, ?)",
 	SBB.db.transaction(
 		function(transaction) {
 			for (i = 0; i < SBB.defaultEntries.length; i++) {
 				transaction.executeSql(
-				"INSERT INTO 'SBB_Bookmarks_Table' (chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?)",
-				[SBB.defaultEntries[i].chapterNumber, SBB.defaultEntries[i].pageNumber, SBB.defaultEntries[i].pagePosition],
+				"INSERT INTO " + this.dbTable + "(bookmarkName, chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?, ?)",
+				[SBB.defaultEntries[i].bookmarkName, SBB.defaultEntries[i].chapterNumber, SBB.defaultEntries[i].pageNumber, SBB.defaultEntries[i].pagePosition],
 				this.dbSuccessHandler.bind(this),
 				this.dbErrorHandler.bind(this)
 				);
@@ -305,6 +384,7 @@ try {
 		}.bind(this)
 	);
 
+	Mojo.Controller.getAppController().showBanner("Reset all bookmarks to defaults.",{source: 'notification'});
 	this.initialPopulate();
 
 	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE writeDefaults @@");}
@@ -318,10 +398,11 @@ try {
  *
  ********************/
 BookmarksAssistant.prototype.dbSuccessHandler = function(transaction, results){
-	Mojo.Log.info(">>>>> BookmarksAssistant - dbSuccessHandler", Object.toJSON(transaction), "-", Object.toJSON(results));
+	Mojo.Log.info(">>>>> BookAssistant - dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
+	//Mojo.Controller.errorDialog("dbErrorHandler", JSON.stringify(transaction), " -", JSON.stringify(errors));
+	this.initialPopulate();
 };
-
 BookmarksAssistant.prototype.dbErrorHandler = function(transaction, errors){
-	Mojo.Log.error(">>>>> BookmarksAssistant - dbErrorHandler", Object.toJSON(transaction), "-", Object.toJSON(errors));
+	Mojo.Log.error(">>>>> BookAssistant - dbErrorHandler", Object.toJSON(transaction), " -", Object.toJSON(errors));
+	Mojo.Controller.errorDialog("dbErrorHandler", Object.toJSON(transaction), " -", Object.toJSON(errors));
 };
-

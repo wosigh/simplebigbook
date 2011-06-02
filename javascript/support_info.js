@@ -29,7 +29,7 @@ _APP_Copyright = '&copy; Copyright 2009 TBC Software.';
 // At least one of these three is required
 _APP_Support_URL = 'http://forums.precentral.net/showthread.php?p=1883868#post1883868';
 _APP_Support_Email = {
-	address: 'SimpleBigBook@vocshop.com',
+	address: 'rick@boatrights.com',
 	subject: 'Support for Simple Big Book'
 }; // label = “Send Email”
 _APP_Support_Phone = '';
