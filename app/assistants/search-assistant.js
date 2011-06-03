@@ -299,6 +299,7 @@ SearchAssistant.prototype.gosearch = function (event) {
 				lcLine = lcLine.substr(0, lnLSpace);
 				lcLine = lcLine.replace(txt[k].toLowerCase(), "<b><u>" + txt[k].toLowerCase() + "</u></b>");
 				lcHtml += "<div class='no-indent'>... " + lcLine + " ...</div><BR>";
+				search_string = lcSrch;
 			}
 		}
 		lcHtml += "</font>";
