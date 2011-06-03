@@ -41,7 +41,6 @@ function BookAssistant() {
 	this.dbSize = 200000;
 	this.dbTable = "SBB_Bookmarks_Table";
 
-
 	this.maxScreenHeight = Mojo.Environment.DeviceInfo.screenHeight;
 	this.maxScreenWidth = Mojo.Environment.DeviceInfo.screenWidth;
 	this.pageNumber = false;
@@ -79,16 +78,15 @@ BookAssistant.prototype.setup = function () {
 	try{
 		obsoleteCookie = new Mojo.Model.Cookie("SimpleBigBook");
 		obsoleteCookie.get();
-		//if (obsoleteCookie !== "undefined") {
-			//Mojo.Log.info("OBSOLETE IS HERE")
-			obsoleteCookie.remove();
-			obsoleteCookie = null;
-		//}
+		obsoleteCookie.remove();
+		obsoleteCookie = null;
 	} catch (obsoletecookieerror) {Mojo.Log.error(">>>>> BookAssistant - OBSOLETE COOKIE CRUMBLED!", obsoletecookieerror);}
 	////////////////////////////////////////////////////
 
 	try {
 
+	////////////////////////////////////////////////////
+	//  ONLY uncomment this for DELETING the cookie
 	/*this.deleteprefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 	this.deleteprefs.remove();
 	this.deleteprefs = null;*/
@@ -126,14 +124,9 @@ BookAssistant.prototype.setup = function () {
 		//prefstest = null;
 	//}
 
-	try {
-
 	if (this.prefs) {
-			prefstest = this.prefs.get();
-			//Mojo.Log.info("+++++", prefstest, "+", this.prefsModel, "|");
+		prefstest = this.prefs.get();
 		if (prefstest) {
-			if (this.debugMe===true) {Mojo.Log.info("+++++ Checking Old Prefs...");}
-
 			if (prefstest.chapterNumber !== "undefined") {
 				this.prefsModel.chapterNumber = prefstest.chapterNumber;
 				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: chapterNumber", this.prefsModel.chapterNumber, "--", prefstest.chapterNumber);}
@@ -181,26 +174,9 @@ BookAssistant.prototype.setup = function () {
 		}
 	}
 	prefstest = null;
-	} catch (prefstesterror) {Mojo.Log.error(">>>>> BookAssistant - COOKIE CRUMBLED!", prefstesterror);}
 	}
 
 	this.prefs.put(this.prefsModel);
-
-	//this.prefsModel = this.prefs.get();
-	/*if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: chapterNumber", this.prefsModel.chapterNumber);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: cookieVersion", this.prefsModel.cookieVersion);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: daynight", this.prefsModel.daynight);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: dockPhraseSpeed", this.prefsModel.dockPhraseSpeed);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: isFullScreen", this.prefsModel.isFullScreen);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: pageNumber", this.prefsModel.pageNumber);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: pagePosition", this.prefsModel.pagePosition);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: screenSize", this.prefsModel.screenSize);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: scrollingEffect", this.prefsModel.scrollingEffect);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: textsize", this.prefsModel.textsize);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: wasBookmarkJump", this.prefsModel.wasBookmarkJump);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: wasChapterJump", this.prefsModel.wasChapterJump);}*/
-	// END OF COOKIE SECTION**********************/
-
 	} catch (cookieerror) {Mojo.Log.error(">>>>> BookAssistant - COOKIE CRUMBLED!", cookieerror);}
 
 
@@ -215,7 +191,7 @@ BookAssistant.prototype.setup = function () {
 			this.doFullScreen('small');
 		}
 	}
-	else if (this.prefsModel.screenSize === true) { 
+	else if (this.prefsModel.screenSize === true) {
 		this.doFullScreen('big');
 	}
 
@@ -288,7 +264,13 @@ BookAssistant.prototype.setup = function () {
 	this.wholeScreenScroller = this.controller.getSceneScroller();
 	this.scrollWasStarted = this.scrollStarted.bind(this);
 	////////////////////////////////////////////////////
-	
+
+	////////////////////////////////////////////////////
+	//  Handlers
+	this.appClosingHandler = this.appClosingRoutine.bindAsEventListener(this);
+	this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
+	this.resizeHandler = this.handleWindowResize.bindAsEventListener(this);
+	////////////////////////////////////////////////////
 
 	} catch (error) {Mojo.Log.error(">>>>> BookAssistant - setup ERROR", error);}
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE SETUP @@");}
@@ -305,42 +287,35 @@ try {
 
 	if (this.controller.stageController.setWindowOrientation) {this.controller.stageController.setWindowOrientation("free");}
 
-	this.controller.listen(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
-
-	this.resizeHandler = this.handleWindowResize.bindAsEventListener(this);
-	this.controller.window.addEventListener('resize', this.resizeHandler, true);
-
-	this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
-	this.controller.document.addEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
-
-	this.appClosingHandler = this.appClosingRoutine.bindAsEventListener(this);
-	window.document.addEventListener(Mojo.Event.deactivate, this.appClosingHandler, true);
-
 	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 	this.prefsModel = this.prefs.get();
 	this.changeTextSize(this.prefsModel.textsize);
 
 	////////////////////////////////////////////////////
-	//  Make the bookmark model for the popup
+	//  Listeners
+	this.controller.listen(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
+	this.controller.window.addEventListener('resize', this.resizeHandler, true);
+	this.controller.document.addEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
+	window.document.addEventListener(Mojo.Event.deactivate, this.appClosingHandler, true);
+	////////////////////////////////////////////////////
 
+
+	////////////////////////////////////////////////////
+	//  Make the bookmark model for the popup
 	this.initialPopulate();
-	//DatabaseWork.initialPopulate();
 	////////////////////////////////////////////////////
 
 
 	////////////////////////////////////////////////////
 	//  Decide to only load or to do search/highlight too.
-	if (this.debugMe===true) {Mojo.Log.info("activating book, about to jump to search");}
 	highsearch = false;
 	if (searchBook !== false) {
-		//Mojo.Log.info("  *****  ACTIVE in IF", searchPage, highsearch, searchBook);
 		setTimeout(function () {
 			this.jumpToChapter(searchBook);
 			searchBook = false;
 		}.bind(this), 150);
 	} 
 	else {
-		//Mojo.Log.info("  *****  ACTIVE in ELSE", searchPage, highsearch, searchBook);
 		if (searchPage !== false) {
 			setTimeout(function () {
 				this.jumpToPage(searchPage);
@@ -372,7 +347,6 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Deactivate @@");}
 	}
 
 	this.controller.stopListening(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
-	//this.controller.getSceneScroller().removeEventListener(Mojo.Event.scrollStarting, this.doubleClickHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 	this.bookData.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 
@@ -389,7 +363,6 @@ BookAssistant.prototype.cleanup = function (event) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Cleanup @@");}
 
 	this.controller.stopListening(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
-	//this.controller.getSceneScroller().removeEventListener(Mojo.Event.scrollStarting, this.doubleClickHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 	this.bookData.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 
@@ -412,7 +385,6 @@ try {
 		this.prefsModel.wasChapterJump = false;
 		this.prefsModel.wasBookmarkJump = false;
 		this.prefs.put(this.prefsModel);
-		if (this.debugMe===true) {Mojo.Log.info("@@ APP CLOSING NOT JUMP - this.prefsModel.pagePosition", this.prefsModel.pagePosition, "this.prefsModel.wasChapterJump", this.prefsModel.wasChapterJump);}
 	}
 
 	if (this.debugMe===true) {Mojo.Log.info("@@ APP CLOSING -", this.ImHere.y, "-- this.prefsModel.pagePosition", this.prefsModel.pagePosition);}
@@ -427,7 +399,6 @@ try {
  *
  ********************/
 BookAssistant.prototype.handleCommand = function(event) {
-	//Mojo.Log.info("BookAssistant - handleCommand:", event.command);
 	switch (event.command) {
 		case 'cmd-AddBookmarks':
 			this.addBookmark(event);
@@ -634,12 +605,8 @@ try {
 	////////////////////////////////////////////////////
 	// Scroll to the exact last location in a page!
 	if (this.prefsModel.wasChapterJump === false) {
-		if (this.debugMe===true) {Mojo.Log.info("~_~_~_~_~_~_~_~  FALSE - this.prefsModel.pagePosition", this.prefsModel.pagePosition, this.prefsModel.scrollingEffect);}
-
 		if (this.prefsModel.wasBookmarkJump === true) {
-			//this.prefsModel.pagePosition = Math.floor((0 - (this.prefsModel.pagePosition * this.bookData.clientHeight)));
 			this.prefsModel.pagePosition = (0 - (this.prefsModel.pagePosition * this.bookData.clientHeight));
-			//Mojo.Log.info(this.prefsModel.pagePosition, "+", this.bookData.clientHeight, "+", ( 0 - (this.prefsModel.pagePosition * this.bookData.clientHeight)));
 		}
 
 		this.controller.getSceneScroller().mojo.scrollTo(0, this.prefsModel.pagePosition, this.prefsModel.scrollingEffect, false);
@@ -649,7 +616,6 @@ try {
 		this.prefs.put(this.prefsModel);
 	}
 	else if (this.prefsModel.wasChapterJump === true) {
-		if (this.debugMe===true) {Mojo.Log.info("~_~_~_~_~_~_~_~  TRUE - this.prefsModel.pagePosition", this.prefsModel.pagePosition, this.prefsModel.scrollingEffect);}
 		this.controller.getSceneScroller().mojo.scrollTo(0, 0, this.prefsModel.scrollingEffect, false);
 		this.prefsModel.pagePosition = 0;
 		this.prefsModel.wasChapterJump = false;
@@ -657,7 +623,6 @@ try {
 		this.prefs.put(this.prefsModel);
 	}
 	else {
-		if (this.debugMe===true) {Mojo.Log.info("~_~_~_~_~_~_~_~  ELSE - this.prefsModel.pagePosition", this.prefsModel.pagePosition, this.prefsModel.scrollingEffect);}
 		this.prefsModel.pagePosition = 0;
 		this.prefsModel.wasChapterJump = false;
 		this.prefsModel.wasBookmarkJump = false;
@@ -668,7 +633,6 @@ try {
 	//////////////////////////////////
 	// Build the new chapterMenuModel (page numbers)
 	this.pagenumberMenuModelItems = [];
-
 	this.tableCount = document.getElementsByTagName("table");
 
 	for (i = 0; i < this.tableCount.length; i++) {
@@ -699,11 +663,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE getChapterSuccess @@");}
  *
  ********************/
 BookAssistant.prototype.getChapterFailure = function (transport) {
-if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Get Book Failure @@");}
-
 	this.bookData.innerHTML = "Problem getting the file!";
-
-if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Get Book Failure @@");}
 };
 
 
@@ -842,8 +802,6 @@ try {
 		this.bmpp = row.pagePosition;
 	}
 
-	//Mojo.Log.info("jumpToBookmark - results THIS:", this.bmid, "+", this.bmcn, "+", this.bmpn, "+", this.bmpp);
-
 	/////////////////////////////////////////////////////////////
 	//Need to KilllClick here or really ugly loop happens
 	this.killlClick();
@@ -896,19 +854,15 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Change Text Size @@", size);}
 };
 
 
-/*
+/********************
+ *
+ * HIGHLIGHT SEARCH TERMS
+ *
  * This is sort of a wrapper function to the doHighlight function.
  * It takes the searchText that you pass, optionally splits it into
  * separate words, and transforms the text on the current web page.
  * Only the "searchText" parameter is required; all other parameters
  * are optional and can be omitted.
- */
-
-
-/********************
- *
- * HIGHLIGHT SEARCH TERMS
- *
  ********************/
 BookAssistant.prototype.highlightSearchTerms = function (searchText, sentbodyText) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Do Highlight Search Terms @@");}
@@ -1000,13 +954,10 @@ try {
  *
  ********************/
 BookAssistant.prototype.doubleClick = function (event) {
-try {
-
 	//////////////////////////////////
 	// Detect single tap vs double tap
 	if (this.whichWay === 'up') {
-		if (this.click === 1) {
-			//DOUBLE TAP
+		if (this.click === 1) {		//DOUBLE TAP
 			if (this.controller.window.innerHeight !== this.maxScreenHeight) {
 				this.doFullScreen('big')
 				this.click = 0;
@@ -1015,14 +966,11 @@ try {
 				this.doFullScreen('small')
 				this.click = 0;
 			}
-		} else {
-			//SINGLE TAP
+		} else {	//SINGLE TAP
 			this.click = 1;
 			this.clickInterval = this.controller.window.setInterval(this.killlClick.bind(this), 450);
 		}
 	}
-
-} catch (error) {Mojo.Log.error(">>>>> BookAssistant - doubleClick ERROR:", error);}
 };
 
 
@@ -1032,14 +980,11 @@ try {
  *
  ********************/
 BookAssistant.prototype.killlClick = function () {
-try {
 	//////////////////////////////////
 	// Clear if only single tap
 	this.click = 0;
 	this.controller.window.clearInterval(this.clickInterval);
 	this.clickInterval = null;
-
-} catch (error) {Mojo.Log.error("KilllClick", error);}
 };
 
 
@@ -1049,11 +994,6 @@ try {
  *
  ********************/
 BookAssistant.prototype.doFullScreen = function(forceSelection, event) {
-	////////////////////////////////////////
-	// Do full screen detection / work
-
-	if (this.debugMe===true) {Mojo.Log.info("---------------- FULL SCREEN -", forceSelection, "--", event);}
-
 	if (forceSelection) {
 		switch (forceSelection) {
 			case 'big':
@@ -1072,9 +1012,6 @@ BookAssistant.prototype.doFullScreen = function(forceSelection, event) {
 				break;
 		}
 	}
-	else {
-		Mojo.Log.error("doFullScreen - HIT ELSE - You should never see this.");
-	}
 };
 
 
@@ -1087,7 +1024,6 @@ BookAssistant.prototype.displayList = function (transaction, results) {
 try{
 
 	if (results.rows.length === 0) {
-		//Mojo.Log.info("results.rows.length", results.rows.length);
 		this.writeDefaults(transaction, results);
 	}
 
@@ -1101,8 +1037,8 @@ try{
 
 			if (pn.indexOf('_top') >= 0) {pn = pn.replace('_top', '');}
 
-			//var prettylabel = SBB.chapterList[row.chapterNumber].label + ', Page ' + pn;
 			var prettylabel = 'p' + pn + ', ' + SBB.chapterList[row.chapterNumber].label;
+
 			if (row.bookmarkName === prettylabel) {
 				buildrow = {label: prettylabel, command: row.id};
 			}
@@ -1228,7 +1164,6 @@ BookAssistant.prototype.addBookmark = function(transaction, results){
  ********************/
 BookAssistant.prototype.dbSuccessHandler = function(transaction, results){
 	Mojo.Log.info(">>>>> BookAssistant - dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
-	//Mojo.Controller.errorDialog("dbErrorHandler", JSON.stringify(transaction), " -", JSON.stringify(errors));
 	this.initialPopulate();
 };
 BookAssistant.prototype.dbErrorHandler = function(transaction, errors){

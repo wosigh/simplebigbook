@@ -343,7 +343,6 @@ SearchAssistant.prototype.gosearch = function (event) {
  * JUMP TO PAGE
  *
  ********************/
-
 function jumptopage(pnID) {
 	pagesplit = pnID.split(",");
 	searchBook = pagesplit[0];
@@ -357,7 +356,6 @@ function jumptopage(pnID) {
  * TRIM ALL
  *
  ********************/
-
 function trimAll(sString) {
 	while (sString.substring(0, 1) === ' ') {
 		sString = sString.substring(1, sString.length);

@@ -240,6 +240,22 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE stageActivate @@");}
 
 /********************
  *
+ * TRIM ALL
+ *
+ ********************/
+function trimAll(sString) {
+	while (sString.substring(0, 1) === ' ') {
+		sString = sString.substring(1, sString.length);
+	}
+	while (sString.substring(sString.length - 1, sString.length) === ' ') {
+		sString = sString.substring(0, sString.length - 1);
+	}
+	return sString;
+}
+
+
+/********************
+ *
  * GATHER PHRASES
  *
  ********************/
@@ -267,6 +283,7 @@ try {
 	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE gatherPhrases @@", rawPhrases.length);}
 } catch (error) {Mojo.Log.error("ALL PAGES", error);}
 };
+
 
 /********************
  *
@@ -447,7 +464,9 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 				this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
 				//this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), 8000);
 			}
-			Mojo.Log.info("SEND:", this.prettyPhrase);
+			Mojo.Log.info("BEFORE:", this.prettyPhrase);
+			this.prettyPhrase = trimAll(this.prettyPhrase);
+			Mojo.Log.info("AFTER:", this.prettyPhrase);
 			this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
 		}
 	} catch (error) {Mojo.Log.error("THE CLEANER", error);}
@@ -455,7 +474,6 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE getRandomBookPhrases @@");}
 } catch (error) {Mojo.Log.error("ALL PAGES", error);}
 };
-
 
 
 /********************
