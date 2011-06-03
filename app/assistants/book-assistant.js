@@ -1165,7 +1165,7 @@ try {
 		SBB.defaultEntries[0] = {bookmarkName: 'The Steps', chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'0.07917297024710035'};
 		SBB.defaultEntries[1] = {bookmarkName: 'Third Step Prayer', chapterNumber: '6', pageNumber: 'howitworks_p63',  pagePosition:'0.40202419907160797'};
 		SBB.defaultEntries[2] = {bookmarkName: 'Seventh Step Prayer', chapterNumber: '7', pageNumber: 'intoaction_p76',  pagePosition:'0.24705882352941178'};
-		SBB.defaultEntries[3] = {bookmarkName: 'Closing', chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'0.9546072134387352'};
+		SBB.defaultEntries[3] = {bookmarkName: 'Road of Happy Destiny', chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'0.9546072134387352'};
 
 		SBB.db.transaction(
 			function(transaction) {
