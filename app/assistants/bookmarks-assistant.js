@@ -29,6 +29,8 @@ function BookmarksAssistant() {
 	this.dbDisplayName = "Simple Big Book Bookmarks";
 	this.dbSize = 200000;
 	this.dbTable = "SBB_Bookmarks_Table";
+
+	this.wasDeactivated = 0;
 }
 
 
@@ -41,10 +43,10 @@ BookmarksAssistant.prototype.setup = function () {
 try{
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER SETUP @@");}
 
-	/*if (! (this.prefs)) {
+	if (! (this.prefs)) {
 		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 		this.prefsModel = this.prefs.get();
-	}*/
+	}
 
 	////////////////////////////////////////////////////
 	//  Make the bookmark model for the popup
@@ -144,7 +146,6 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Cleanup @@");}
  ********************/
 BookmarksAssistant.prototype.initialPopulate = function(transaction, results) {
 
-	//this.listModel = {showAddItem:true, items:[]};
 	this.listModel = {items:[]};
 
 	if (!SBB.db) {
@@ -172,10 +173,11 @@ BookmarksAssistant.prototype.initialPopulate = function(transaction, results) {
 BookmarksAssistant.prototype.displayList = function (transaction, results) {
 try{
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER displayList @@");}
-	this.listModel.items = [];
-	this.listModel.items.push({});
-	//this.listModel = {showAddItem:true, items:[]};
-	listItems = [];
+	//this.listModel.items = null;
+	//this.listModel = {items:[]};
+	//this.listModel = "";
+	//this.listModel.items = [];
+	//this.controller.modelChanged(this.listModel, this);
 
 	if (results.rows.length > 0) {
 		for (i = 0; i < results.rows.length; i++) {
@@ -183,13 +185,11 @@ try{
 
 			lcName = row.pageNumber.substr(row.pageNumber.indexOf("_p") + 2);
 
-			// Filter out "_top" for display in the popup menu.
+			// Filter out "_top".
 			if (lcName.indexOf('_top') >= 0) {lcName = lcName.replace('_top', '');}
 
 			if (row.chapterNumber) {
-				//var prettylabel = SBB.chapterList[row.chapterNumber].label + ', Page ' + lcName;
-				//var prettylabel = 'Page ' + lcName + '<br>' + SBB.chapterList[row.chapterNumber].label;
-				var prettylabel = 'Page ' + lcName + ', ' + SBB.chapterList[row.chapterNumber].label;
+				var prettyLabel = 'Page ' + lcName + ', ' + SBB.chapterList[row.chapterNumber].label;
 			}
 
 			buildrow = {
@@ -199,22 +199,17 @@ try{
 				pageNum: row.pageNumber,
 				pagePos: row.pagePosition
 			};
-			listItems[i] = buildrow;
 			this.listModel.items.push(buildrow)
+			buildrow = null;
+			row = null;
+			lcName = null;
+			prettyLabel = null;
 		}
-		this.listModel.items = listItems;
 		this.controller.modelChanged(this.listModel);
 	}
 	else {
 		Mojo.Log.error(">>>>> displayList EMPTY!");
 	}
-	results = null;
-	row = null;
-	listItems = [];
-	buildrow = null;
-
-	//this.controller.modelChanged(this.listModel, this);
-	//this.controller.modelChanged(this.listModel);
 
 	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE displayList @@");}
 } catch (displayListError) {Mojo.Log.error("displayList ERROR", displayListError);}
@@ -254,28 +249,23 @@ try {
  ********************/
 BookmarksAssistant.prototype.bookmarkRenameDialog = function (event) {
 try {
-	//Mojo.Log.info("bookmarkRename:", JSON.stringify(event.item));
-	//Mojo.Log.info("bookmarkRename:", event.item.id, "+", event.item.name, "+", event.item.ChapNum, "+", event.item.PageNum, "+", event.item.PagePos);
-
-	//var targetRow = this.controller.get(event.originalEvent.target);
-	//var selectedInfo = targetRow.match('#name');
-	//var selectedInfo = targetRow.name;
-
 	var urlRef = event.item;
 	var onClose = function(saved) {
 		if (saved) {
-			Mojo.Log.info("onClose = function(saved)");//, "+", Object.toJSON(event));
+			//Mojo.Log.info("onClose = function(saved)");
+			this.controller.modelChanged(this.listModel);
 		}
 	}.bind(this);
 
-	var params = {task: BookmarkDialogAssistant.editBookmarkTask,
+	var params = {
+		task: BookmarkDialogAssistant.editBookmarkTask,
 		urlReference: urlRef,
 		sceneController: this.controller,
-		//bookmarkStore: this.bookmarkStore,
-		onClose: onClose};
+		onClose: onClose
+	};
 	BookmarkDialogAssistant.showDialog(params);
 
-} catch (bookmarkRenameDialog) {Mojo.Log.error("bookmarkRenameDialog ERROR", bookmarkRenameDialog);}
+} catch (bookmarkRenameDialogError) {Mojo.Log.error("bookmarkRenameDialog ERROR", bookmarkRenameDialogError);}
 };
 
 
@@ -293,11 +283,11 @@ BookmarksAssistant.prototype.clearBookmarks = function() {
 				this.deleteRows();
 			}
 		},
-		title:$L('Clear Bookmarks'),
+		title:$L('Reset Bookmarks'),
 		message:$L('Are you sure you want to reset all bookmarks?'),
 		cancelable:true,
 		choices:[
-			{label:$L('Clear Bookmarks'), value:'ok', type:'negative'},
+			{label:$L('Reset Bookmarks'), value:'ok', type:'negative'},
 			{label:$L('Cancel'), value:'cancel'}
 		]
 	});
@@ -342,7 +332,6 @@ try {
 				"DELETE FROM 'SBB_Bookmarks_Table' WHERE ID > -1",
 				[],
 				function(transaction, results) {Mojo.Log.info("Successfully DELETED");},
-				//this.writeDefaults.bind(this),
 				function(transaction, error) {Mojo.Log.info("FAILED TO DELETE");}
 			);
 		}
@@ -375,9 +364,10 @@ try {
 		function(transaction) {
 			for (i = 0; i < SBB.defaultEntries.length; i++) {
 				transaction.executeSql(
-				"INSERT INTO " + this.dbTable + "(bookmarkName, chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?, ?)",
+				"INSERT INTO " + this.dbTable + " (bookmarkName, chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?, ?)",
 				[SBB.defaultEntries[i].bookmarkName, SBB.defaultEntries[i].chapterNumber, SBB.defaultEntries[i].pageNumber, SBB.defaultEntries[i].pagePosition],
 				this.dbSuccessHandler.bind(this),
+				//this.initialPopulate(),
 				this.dbErrorHandler.bind(this)
 				);
 			}
@@ -385,7 +375,8 @@ try {
 	);
 
 	Mojo.Controller.getAppController().showBanner("Reset all bookmarks to defaults.",{source: 'notification'});
-	this.initialPopulate();
+
+	this.controller.modelChanged(this.listModel, this);
 
 	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE writeDefaults @@");}
 } catch (error) {Mojo.Log.error("writeDefaults ERROR", error);}
@@ -399,8 +390,6 @@ try {
  ********************/
 BookmarksAssistant.prototype.dbSuccessHandler = function(transaction, results){
 	Mojo.Log.info(">>>>> BookAssistant - dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
-	//Mojo.Controller.errorDialog("dbErrorHandler", JSON.stringify(transaction), " -", JSON.stringify(errors));
-	this.initialPopulate();
 };
 BookmarksAssistant.prototype.dbErrorHandler = function(transaction, errors){
 	Mojo.Log.error(">>>>> BookAssistant - dbErrorHandler", Object.toJSON(transaction), " -", Object.toJSON(errors));

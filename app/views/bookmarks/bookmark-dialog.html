@@ -1,10 +1,10 @@
 <div class="palm-dialog-content">
-    	<!--div class="bookmark-dialog-icon-container"> 
-       		<div id="imageicondiv"></div>
-       	</div-->
-             
-	<!--div class="palm-dialog-separator"></div-->
+	<div class="bookmark-dialog-icon-container center" style="padding: 0 0 1em 0;font-size:16pt;font-weight:bold;"> 
+		<div class="pageiconsubtitle" id="pageiconsubtitle">#{title}</div>
+	</div>                                
 
+	<div class="palm-dialog-separator"></div>
+	
 	<div class="textfield-group" x-mojo-focus-highlight="true">
 		<div class="title">
 			<div class="label" x-mojo-loc=''>Title</div>
@@ -12,20 +12,13 @@
 		</div>        
 	</div>
 
-	<!--div class="textfield-group" x-mojo-focus-highlight="true">
-		<div class="title truncating-text">    
-			<div class="label" x-mojo-loc=''>URL</div>
-			<div id="urlField" class="truncating-text" x-mojo-element="TextField"></div>
-		</div>                                                                 
-	</div-->
-</div>
 
-
-<div class="palm-dialog-buttons">
-	<div id='actionButton' class="palm-button" x-mojo-tap-highlight="immediate">
-		<div class="palm-button-wrapper">#{actionBtnTitle}</div>
-	</div>
-	<div id='cancelBookmarkButton' class="palm-button secondary" x-mojo-tap-highlight="immediate">
-		<div class="palm-button-wrapper" x-mojo-loc=''>Cancel</div>
+	<div class="palm-dialog-buttons">
+		<div id='actionButton' class="palm-button" x-mojo-tap-highlight="immediate">
+			<div class="palm-button-wrapper">#{actionBtnTitle}</div>
+		</div>
+		<div id='cancelBookmarkButton' class="palm-button secondary" x-mojo-tap-highlight="immediate">
+			<div class="palm-button-wrapper" x-mojo-loc=''>Cancel</div>
+		</div>
 	</div>
 </div>

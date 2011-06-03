@@ -146,7 +146,8 @@ BookmarkDialogAssistant.prototype.cleanup = function() {
 BookmarkDialogAssistant.showDialog = function(params) {
 
 	var assistant = new BookmarkDialogAssistant(params);
-	var title = params.urlReference.name || '';	
+	//var title = params.urlReference.name || '';
+	var title = "Rename Bookmark";
 	
 	return params.sceneController.showDialog({
 		template: 'bookmarks/bookmark-dialog',
