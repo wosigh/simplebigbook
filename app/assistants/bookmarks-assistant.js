@@ -26,7 +26,7 @@ function BookmarksAssistant() {
 
 	this.dbName = "SBB_Bookmarks";
 	this.dbVersion = "0.1";
-	this.dbDisplayName = "Simple Big Book Bookmarks";
+	this.dbDisplayName = "Simple Big Book";
 	this.dbSize = 200000;
 	this.dbTable = "SBB_Bookmarks_Table";
 

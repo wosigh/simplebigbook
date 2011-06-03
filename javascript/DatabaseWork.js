@@ -5,7 +5,7 @@ var DatabaseWork = {
 		//this.listModel = {items:[]};
 		this.dbName = "SBB_Bookmarks";
 		this.dbVersion = "0.1";
-		this.dbDisplayName = "0.1";
+		this.dbDisplayName = "Simple Big Book";
 		this.dbSize = 200000;
 	},
 //});

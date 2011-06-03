@@ -6,10 +6,10 @@ var dockStageName = 'dock';
 function AppAssistant() {
 	this.debugMe = false;
 
-	SBB.dbName = "SBB_Bookmarks";
+	/*SBB.dbName = "SBB_Bookmarks";
 	SBB.dbVersion = "0.1";
-	SBB.dbDisplayName = "Simple Big Book Bookmarks";
-	SBB.dbSize = 200000;
+	SBB.dbDisplayName = "Simple Big Book";
+	SBB.dbSize = 200000;*/
 
 }
 
@@ -17,7 +17,12 @@ AppAssistant.prototype.handleLaunch = function(params) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER AA-HANDLELAUNCH @@");}
 
 try {
-	//Mojo.Log.info("APP ASSIST PARAMS:", params);
+	Mojo.Log.info(">>>>> LAUNCH PARAMS:", "'", params, "'");
+
+	/*if (!SBB.db) {
+		Mojo.Log.info(">>>>> LOADING SBB.DB");
+		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
+	}*/
 
 	if (!params) {
 		var stageProxy = this.controller.getStageProxy(mainStageName);
@@ -29,22 +34,19 @@ try {
 			}
 		}
 	        else if (mainStageController) {
-			Mojo.Log.info("+++ LAUNCHING NORMAL MODE IF +++");
 			mainStageController.popScenesTo(mainStageName);
 			mainStageController.activate();
 		}
 		else {
-			Mojo.Log.info("+++ LAUNCHING NORMAL MODE ELSE +++");
-			this.controller.createStageWithCallback({name: mainStageName, lightweight: false}, this.launchFirstScene.bind(this));
+			this.controller.createStageWithCallback({name: mainStageName}, this.launchFirstScene.bind(this));
 		}
 	}
 
 	// launch dockmode
 	else if (params.dockMode) {
-		Mojo.Log.info("+++ LAUNCHING DOCK MODE +++");
 		var dockStageController = this.controller.getStageController(dockStageName);
 		if (!dockStageController) {
-			this.controller.createStageWithCallback({name: dockStageName, lightweight: false}, this.launchDockScene.bind(this), "dockMode");
+			this.controller.createStageWithCallback({name: dockStageName}, this.launchDockScene.bind(this), "dockMode");
 		}
 	}
 
@@ -53,11 +55,11 @@ try {
 };
 
 AppAssistant.prototype.launchFirstScene = function(controller) {
-		controller.pushScene(mainStageName);
+	controller.pushScene(mainStageName);
 };
 
 AppAssistant.prototype.launchDockScene = function(controller) {
-		controller.pushScene(dockStageName);
+	controller.pushScene(dockStageName);
 };
 
 AppAssistant.prototype.cleanup = function (event) {
@@ -67,7 +69,6 @@ AppAssistant.prototype.handleCommand = function (event) {
 try {
 	if (event.type === Mojo.Event.command) {
 		if (this.debugMe===true) {Mojo.Log.info("AppAss handleCommand", event.command);}
-		//Mojo.Log.info("AppAss handleCommand", event.command);
 		switch (event.command) {
 			case 'cmd-Dock':
 				this.controller.getStageController('book').pushScene({name: 'dock', transition: Mojo.Transition.crossFade}, this);
