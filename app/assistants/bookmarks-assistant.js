@@ -50,6 +50,7 @@ try{
 
 	////////////////////////////////////////////////////
 	//  Make the bookmark model for the popup
+	this.listModel = {items:[]};
 
 	this.initialPopulate();
 	////////////////////////////////////////////////////
@@ -146,8 +147,6 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Cleanup @@");}
  ********************/
 BookmarksAssistant.prototype.initialPopulate = function(transaction, results) {
 
-	this.listModel = {items:[]};
-
 	if (!SBB.db) {
 		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
 	}
@@ -173,11 +172,7 @@ BookmarksAssistant.prototype.initialPopulate = function(transaction, results) {
 BookmarksAssistant.prototype.displayList = function (transaction, results) {
 try{
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER displayList @@");}
-	//this.listModel.items = null;
-	//this.listModel = {items:[]};
-	//this.listModel = "";
-	//this.listModel.items = [];
-	//this.controller.modelChanged(this.listModel, this);
+	this.listModel.items = [];
 
 	if (results.rows.length > 0) {
 		for (i = 0; i < results.rows.length; i++) {
@@ -331,8 +326,8 @@ try {
 			transaction.executeSql(
 				"DELETE FROM 'SBB_Bookmarks_Table' WHERE ID > -1",
 				[],
-				function(transaction, results) {Mojo.Log.info("Successfully DELETED");},
-				function(transaction, error) {Mojo.Log.info("FAILED TO DELETE");}
+				function(transaction, results) {Mojo.Log.info("Successfully RESET");},
+				function(transaction, error) {Mojo.Log.info("FAILED TO RESET");}
 			);
 		}
 	);
@@ -367,7 +362,6 @@ try {
 				"INSERT INTO " + this.dbTable + " (bookmarkName, chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?, ?)",
 				[SBB.defaultEntries[i].bookmarkName, SBB.defaultEntries[i].chapterNumber, SBB.defaultEntries[i].pageNumber, SBB.defaultEntries[i].pagePosition],
 				this.dbSuccessHandler.bind(this),
-				//this.initialPopulate(),
 				this.dbErrorHandler.bind(this)
 				);
 			}
@@ -376,7 +370,9 @@ try {
 
 	Mojo.Controller.getAppController().showBanner("Reset all bookmarks to defaults.",{source: 'notification'});
 
+	this.listModel.items = [];
 	this.controller.modelChanged(this.listModel, this);
+	this.initialPopulate();
 
 	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE writeDefaults @@");}
 } catch (error) {Mojo.Log.error("writeDefaults ERROR", error);}
