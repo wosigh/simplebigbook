@@ -286,7 +286,7 @@ SearchAssistant.prototype.gosearch = function (event) {
 		lcHtml = "<font size='2'>";
 
 		for (k = 0; k < txt.length; k++) {
-			if (this.debugMe === true) {Mojo.Log.info("** KKKK", k, txt.length);}
+			//if (this.debugMe === true) {Mojo.Log.info("** KKKK", k, txt.length);}
 
 			lcLower = thisPage.toLowerCase();
 			lnAt = lcLower.indexOf(txt[k].toLowerCase());
@@ -297,33 +297,25 @@ SearchAssistant.prototype.gosearch = function (event) {
 				lcLine = lcLine.substr(lnSpace + 1);
 				lnLSpace = lcLine.lastIndexOf(" ");
 				lcLine = lcLine.substr(0, lnLSpace);
-				lcLine = lcLine.replace(txt[k].toLowerCase(), "<b>" + txt[k].toLowerCase() + "</b>");
-				lcHtml += "... " + lcLine + " ...<br>";
-				search_string = lcSrch;
-				//if (this.debugMe === true) {Mojo.Log.info("** KKKK222", k, txt.length, lnCntr, lcLine, search_string);}
+				lcLine = lcLine.replace(txt[k].toLowerCase(), "<b><u>" + txt[k].toLowerCase() + "</u></b>");
+				lcHtml += "<div class='no-indent'>... " + lcLine + " ...</div><BR>";
 			}
 		}
 		lcHtml += "</font>";
 
-		//Mojo.Log.info("```````` lnCntr", lnCntr);
-		
-		
 		if ((this.radioValue === 2 && lnCntr === txt.length) || (this.radioValue !== 2 && lnCntr > 0)) {
-			
-			
-			
-			
 			$('linklist').style.display = "block";
-			
+
 			if (('_p' + pagetxt[0] + '_top') === ('_p' + pagetxt_top)) {
-				lcBut = '<div class="palm-row center"><div class="palm-button primary" id="' + chaplink + '_p' + pagetxt + '_top" onClick="jumptopage(this.id)"><font size="4">' + whichchap + ", page: " + pagetxt + '</font></div></div>';
+				lcBut = '<div class="palm-row center"><div class="palm-button primary" id="' + chaplink + '_p' + pagetxt + '_top" onClick="jumptopage(this.id)"><font size="4">' + whichchap + ", page: " + pagetxt + '</font></div>';
 			} else {
-				lcBut = '<div class="palm-row center"><div class="palm-button primary" id="' + chaplink + '_p' + pagetxt + '" onClick="jumptopage(this.id)"><font size="4">' + whichchap + ", page: " + pagetxt + '</font></div></div>';
+				lcBut = '<div class="palm-row center"><div class="palm-button primary" id="' + chaplink + '_p' + pagetxt + '" onClick="jumptopage(this.id)"><font size="4">' + whichchap + ", page: " + pagetxt + '</font></div>';
 			}
 
-			
-			
-			lcLine = lcBut + lcHtml + "<hr width=75%>";
+			lcLine = lcBut + lcHtml + "</div>";//"<hr width=75%>";
+
+			this.linklistModel.listTitle = "Search Results: " + (items.length + 1) + "";
+
 			items.push({
 				listdata: lcLine
 			});
@@ -332,10 +324,12 @@ SearchAssistant.prototype.gosearch = function (event) {
 	}
 
 	if (items.length === 0) {
+		this.linklistModel.listTitle = "Search Results: 0";
 		items.push({
 			listdata: "No matches found"
 		});
 	}
+	
 	$('linklist').style.display = "block";
 	this.linklistModel.items = items;
 	this.controller.modelChanged(this.linklistModel);
