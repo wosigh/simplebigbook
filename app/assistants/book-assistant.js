@@ -109,7 +109,8 @@ BookAssistant.prototype.setup = function () {
 		scrollingEffect:true,
 		textsize:'18px',
 		wasBookmarkJump:false,
-		wasChapterJump:false
+		wasChapterJump:false,
+		showScrim:true
 	};
 	////////////////////////////////////////////////////
 
@@ -174,6 +175,10 @@ BookAssistant.prototype.setup = function () {
 			if (prefstest.wasChapterJump !== "undefined") {
 				this.prefsModel.wasChapterJump = prefstest.wasChapterJump;
 				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: wasChapterJump", this.prefsModel.wasChapterJump, "--", prefstest.wasChapterJump);}
+			}
+			if (prefstest.showScrim !== "undefined") {
+				this.prefsModel.showScrim = prefstest.showScrim;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: showScrim", this.prefsModel.showScrim, "--", prefstest.showScrim);}
 			}
 		}
 	}
@@ -504,10 +509,14 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER RESIZE @@");}
 	if (this.bookMenuGroup.style.display === 'none') {
 		this.bookMenuGroup.style.display = 'block';
 		this.bookFade.style.display = 'block';
+		this.prefsModel.showScrim = true;
+		this.prefs.put(this.prefsmodel);
 	}
 	else {
 		this.bookMenuGroup.style.display = 'none';
 		this.bookFade.style.display = 'none';
+		this.prefsModel.showScrim = false;
+		this.prefs.put(this.prefsModel);
 	}
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE RESIZE @@");}
@@ -862,17 +871,21 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Change Text Size @@", size);}
 	switch (this.prefsModel.daynight){
 		case 'day':
 			this.controller.document.body.className = 'main';
-			this.bookFade.className = 'scene-fade my-fade-day top';
-			//this.bookFade.removeClassName('my-fade-night');
-			//this.bookFade.addClassName('my-fade-day');
-			//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
+			if (this.prefsModel.showScrim === true) {
+				this.bookFade.className = 'scene-fade my-fade-day top';
+				//this.bookFade.removeClassName('my-fade-night');
+				//this.bookFade.addClassName('my-fade-day');
+				//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
+			}
 			break;
 		case 'night':
 			this.controller.document.body.className = 'palm-dark';
-			this.bookFade.className = 'scene-fade my-fade-night top';
-			//this.bookFade.removeClassName('my-fade-day');
-			//this.bookFade.addClassName('my-fade-night');
-			//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
+			if (this.prefsModel.showScrim === true) {
+				this.bookFade.className = 'scene-fade my-fade-night top';
+				//this.bookFade.removeClassName('my-fade-day');
+				//this.bookFade.addClassName('my-fade-night');
+				//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
+			}
 			break;
 	}
 	////////////////////////////////////////////////////
