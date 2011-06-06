@@ -357,7 +357,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Deactivate @@");}
 		this.prefs.put(this.prefsModel);
 	}
 
-	this.controller.stopListening(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
+	this.controller.stopListening(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollStartedHandler);
 	this.controller.document.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 	this.bookData.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 
@@ -373,7 +373,7 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Deactivate @@");}
 BookAssistant.prototype.cleanup = function (event) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Cleanup @@");}
 
-	this.controller.stopListening(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
+	this.controller.stopListening(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollStartedHandler);
 	this.controller.document.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 	this.bookData.removeEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 
