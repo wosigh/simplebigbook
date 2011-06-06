@@ -68,6 +68,7 @@ BookAssistant.prototype.setup = function () {
 	this.chapMenu = this.controller.get('chapMenu');
 	this.pageMenu = this.controller.get('pageMenu');
 	this.bookmarkMenu = this.controller.get('bookmarkMenu');
+	this.bookMenuGroup = this.controller.get('bookMenuGroup');
 	
 	//Mojo.Log.info(this.DI.platformVersion, " -", this.DI.platformVersionDot, " -", this.DI.platformVersionMajor, " -", this.DI.platformVersionMinor);
 	//Mojo.Log.info(this.DI.bluetoothAvailable, " -", this.DI.carrierName, " -", this.DI.coreNaviButton, " -", this.DI.keyboardAvailable);
@@ -265,7 +266,7 @@ BookAssistant.prototype.setup = function () {
 	////////////////////////////////////////////////////
 	//  Capture scroller movement and location
 	this.wholeScreenScroller = this.controller.getSceneScroller();
-	this.scrollWasStarted = this.scrollStarted.bind(this);
+	this.scrollStartedHandler = this.scrollStarted.bind(this);
 	////////////////////////////////////////////////////
 
 	////////////////////////////////////////////////////
@@ -273,6 +274,7 @@ BookAssistant.prototype.setup = function () {
 	this.appClosingHandler = this.appClosingRoutine.bindAsEventListener(this);
 	this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
 	this.resizeHandler = this.handleWindowResize.bindAsEventListener(this);
+	this.holdBookHandler = this.holdBook.bindAsEventListener(this);
 	////////////////////////////////////////////////////
 
 	} catch (error) {Mojo.Log.error(">>>>> BookAssistant - setup ERROR", error);}
@@ -296,7 +298,8 @@ try {
 
 	////////////////////////////////////////////////////
 	//  Listeners
-	this.controller.listen(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollWasStarted);
+	this.controller.listen(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollStartedHandler);
+	this.controller.listen(this.wholeScreenScroller, Mojo.Event.hold, this.holdBookHandler);
 	this.controller.window.addEventListener('resize', this.resizeHandler, true);
 	this.controller.document.addEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 	window.document.addEventListener(Mojo.Event.deactivate, this.appClosingHandler, true);
@@ -484,6 +487,27 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER RESIZE @@");}
 	if (this.prefsModel.wasBookmarkJump === false) {
 		this.NewThisBig = this.bookData.clientHeight;
 		this.wasResized = true;
+	}
+
+if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE RESIZE @@");}
+};
+
+
+/********************
+ *
+ * HOLD BOOK
+ *
+ ********************/
+BookAssistant.prototype.holdBook = function(event){
+if (this.debugMe===true) {Mojo.Log.info("@@ ENTER RESIZE @@");}
+
+	if (this.bookMenuGroup.style.display === 'none') {
+		this.bookMenuGroup.style.display = 'block';
+		this.bookFade.style.display = 'block';
+	}
+	else {
+		this.bookMenuGroup.style.display = 'none';
+		this.bookFade.style.display = 'none';
 	}
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE RESIZE @@");}
