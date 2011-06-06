@@ -69,11 +69,11 @@ BookAssistant.prototype.setup = function () {
 	this.pageMenu = this.controller.get('pageMenu');
 	this.bookmarkMenu = this.controller.get('bookmarkMenu');
 	
-	Mojo.Log.info(this.DI.platformVersion, " -", this.DI.platformVersionDot, " -", this.DI.platformVersionMajor, " -", this.DI.platformVersionMinor);
-	Mojo.Log.info(this.DI.bluetoothAvailable, " -", this.DI.carrierName, " -", this.DI.coreNaviButton, " -", this.DI.keyboardAvailable);
-	Mojo.Log.info(this.DI.keyboardSlider, " -", this.DI.keyboardType, " -", this.DI.maximumCardWidth, " -", this.DI.maximumCardHeight);
-	Mojo.Log.info(this.DI.minimumCardWidth, " -", this.DI.minimumCardHeight, " -", this.DI.modelName, " -", this.DI.modelNameAscii);
-	Mojo.Log.info(this.DI.serialNumber, " -", this.DI.touchableRows, " -", this.DI.wifiAvailable);
+	//Mojo.Log.info(this.DI.platformVersion, " -", this.DI.platformVersionDot, " -", this.DI.platformVersionMajor, " -", this.DI.platformVersionMinor);
+	//Mojo.Log.info(this.DI.bluetoothAvailable, " -", this.DI.carrierName, " -", this.DI.coreNaviButton, " -", this.DI.keyboardAvailable);
+	//Mojo.Log.info(this.DI.keyboardSlider, " -", this.DI.keyboardType, " -", this.DI.maximumCardWidth, " -", this.DI.maximumCardHeight);
+	//Mojo.Log.info(this.DI.minimumCardWidth, " -", this.DI.minimumCardHeight, " -", this.DI.modelName, " -", this.DI.modelNameAscii);
+	//Mojo.Log.info(this.DI.serialNumber, " -", this.DI.touchableRows, " -", this.DI.wifiAvailable);
 
 	/*******  COOKIE SECTION  *******/
 	////////////////////////////////////////////////////
