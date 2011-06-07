@@ -22,7 +22,8 @@ function DockAssistant() {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER DocAssistant @@");}
 
 	this.debugMe = false;
-	this.prettyPhrase = 'undefined';
+	//this.prettyPhrase = 'undefined';
+	this.prettyPhrase = null;
 	this.fullBright = false;
 	this.groovyTimer = 0.0;
 	this.firstRun = true;
@@ -41,7 +42,9 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE DocAssistant @@");}
 DockAssistant.prototype.setup = function () {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER setup @@");}
 
-	this.gatherPhrases();
+	if (! rawPhrases.length > 0) {
+		this.gatherPhrases();
+	}
 
 	//  ****  Setup for Application Menu
 	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);
@@ -100,20 +103,26 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE activate @@");}
 DockAssistant.prototype.deactivate = function (event) {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER deactivate @@");}
 
+	this.bookPhrases.style.display = "none";
+	this.bookPhrases.style.color = "rgba(250, 250, 250, 0.0)";
+	this.bookPhrases.innerHTML = "";
+
+	rawPhrases = [];
+
 	clearTimeout(this.groovyFadeInTimer);
 	clearTimeout(this.groovyFadeOutTimer);
 	clearTimeout(this.doThePhrase);
-	clearInterval(this.phraseTimer);
-	this.phraseTimer = '';
-	this.groovyFadeInTimer = '';
-	this.groovyFadeInTimer = '';
-	this.doThePhrase = '';
+	//clearInterval(this.phraseTimer);
+	clearTimeout(this.phraseTimer);
+	this.phraseTimer = null;
+	this.groovyFadeInTimer = null;
+	this.groovyFadeInTimer = null;
+	this.groovyTimer = null;
+
+	this.doThePhrase = null;
 
 	this.fullBright = false;
-	this.prettyPhrase = '';
-	this.groovyTimer = 0.0;
-	this.bookPhrases.innerHTML = "";
-	this.bookPhrases.style.color = "rgba(250, 250, 250, 0.0)";
+	this.prettyPhrase = null;
 	//this.controller.document.removeEventListener(Mojo.Event.tap, this.screenTapHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.stageActivate, this.stageActivateHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
@@ -130,20 +139,24 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE deactivate @@");}
 DockAssistant.prototype.cleanup = function (event) {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER cleanup @@");}
 
+	this.bookPhrases.innerHTML = "";
+	this.bookPhrases.style.color = "rgba(250, 250, 250, 0.0)";
+
+	rawPhrases = [];
+
 	clearTimeout(this.groovyFadeInTimer);
 	clearTimeout(this.groovyFadeOutTimer);
 	clearTimeout(this.doThePhrase);
-	clearInterval(this.phraseTimer);
-	this.phraseTimer = '';
-	this.groovyFadeInTimer = '';
-	this.groovyFadeOutTimer = '';
-	this.doThePhrase = '';
+	//clearInterval(this.phraseTimer);
+	clearTimeout(this.phraseTimer);
+	this.phraseTimer = null;
+	this.groovyFadeInTimer = null;
+	this.groovyFadeOutTimer = null;
+	this.doThePhrase = null;
 
 	this.fullBright = false;
-	this.prettyPhrase = '';
+	this.prettyPhrase = null;
 	this.groovyTimer = 0.0;
-	this.bookPhrases.innerHTML = "";
-	this.bookPhrases.style.color = "rgba(250, 250, 250, 0.0)";
 	//this.controller.document.removeEventListener(Mojo.Event.tap, this.screenTapHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.stageActivate, this.stageActivateHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
@@ -163,27 +176,24 @@ DockAssistant.prototype.handleCommand = function(event) {};
 DockAssistant.prototype.stageDeactivate = function (event) {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageDeactivate @@");}
 
+	this.bookPhrases.style.display = "none";
+	this.bookPhrases.style.color = "rgba(250, 250, 250, 0.0)";
+	this.bookPhrases.innerHTML = "";
+
+	rawPhrases = [];
+
 	clearTimeout(this.groovyFadeInTimer);
 	clearTimeout(this.groovyFadeOutTimer);
 	clearTimeout(this.doThePhrase);
-	clearInterval(this.phraseTimer);
-	this.phraseTimer = '';
-	this.groovyFadeInTimer = '';
-	this.groovyFadeOutTimer = '';
-	this.doThePhrase = '';
-	this.prettyPhrase = '';
-	rawPhrases = [];
-
-	this.fullBright = false;
+	//clearInterval(this.phraseTimer);
+	clearTimeout(this.phraseTimer);
+	this.phraseTimer = null;
+	this.groovyFadeInTimer = null;
+	this.groovyFadeOutTimer = null;
 	this.groovyTimer = 0.0;
-	this.bookPhrases.innerHTML = "";
-	this.bookPhrases.style.color = "rgba(250, 250, 250, 0.0)";
-
-	//Mojo.Log.info("rawPhrases.length:", rawPhrases.length);
-	//if (rawPhrases.length > 0) {
-	//	rawPhrases = [];
-	//}
-	//Mojo.Log.info("rawPhrases.length:", rawPhrases.length);
+	this.doThePhrase = null;
+	this.prettyPhrase = null;
+	this.fullBright = false;
 
 	//this.controller.document.removeEventListener(Mojo.Event.stageActivate, this.stageActivateHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
@@ -207,15 +217,9 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE stageDeactivate @@");}
 DockAssistant.prototype.stageActivate = function (event) {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageActivate @@");}
 
-		//Mojo.Log.info("rawPhrases.length:", rawPhrases.length);
-		if (rawPhrases.length <= 0) {
-			//Mojo.Log.info("Yep.  Gotta reload. -", rawPhrases.length);
-			this.gatherPhrases();
-		}
-		else {
-			Mojo.Log.info("WTF?  Should've reloaded. -", rawPhrases.length);
-		}
-		//Mojo.Log.info("rawPhrases.length:", rawPhrases.length);
+	if (! rawPhrases.length > 0) {
+		this.gatherPhrases();
+	}
 
 	if (this.firstRun === false) {
 
@@ -240,16 +244,43 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE stageActivate @@");}
 
 /********************
  *
- * TRIM ALL
+ * SANITIZER
  *
  ********************/
-function trimAll(sString) {
-	while (sString.substring(0, 1) === ' ') {
-		sString = sString.substring(1, sString.length);
-	}
-	while (sString.substring(sString.length - 1, sString.length) === ' ') {
-		sString = sString.substring(0, sString.length - 1);
-	}
+function sanitizer(sString) {
+	try {
+		if (sString.indexOf('palm-divider') >= 0) {
+			sString = sString.replace(sString.substring(sString.indexOf('<table'), (sString.indexOf('table>') + 6)), '');
+		}
+
+		sString = sString.replace(/<.*?>/g, '');
+
+		sString = sString.replace(/^\s+|\s+$/g,'').replace(/\s+/g,' ');
+
+		if (sString.indexOf('?') > 0) {
+			// Just end at "?"
+			sString = sString.substring(0, (sString.indexOf('?') + 1));
+		}
+		else if (sString.indexOf('!') > 0) {
+			// Just end at "!"
+			sString = sString.substring(0, (sString.indexOf('!') + 1));
+		}
+		else {
+			//Otherwise put the "." back in.
+			//Mojo.Log.info("PERIOD:", sString.lastIndexOf("."))
+			if (sString.lastIndexOf(".") < 0) {
+				sString = sString + ".";
+			}
+		}
+
+		while (sString.indexOf('"') >= 0) {sString = sString.replace('"', '');}
+		while (sString.indexOf('[') >= 0) {sString = sString.replace('[', '');}
+		while (sString.indexOf(']') >= 0) {sString = sString.replace(']', '');}
+		while (sString.indexOf('- ') >= 0) {sString = sString.replace('- ', '');}
+		while (sString.indexOf(' -') >= 0) {sString = sString.replace(' -', '');}
+		while (sString.indexOf('*') >= 0) {sString = sString.replace('*', '');}
+
+	} catch (sanitizerError) {Mojo.Log.error(">>>>>>> THE SANITIZER", sanitizerError, "+", sString);}
 	return sString;
 }
 
@@ -300,26 +331,28 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 	//this.prettyPhrase = null;
 
 	this.doThePhrase = setTimeout(function () {
-	try { 
+	try {
 		if (rawPhrases) {
-			while (thisQuote > rawPhrases.length) {
-				//if (this.debugMe === true) {Mojo.Log.info("BAD QUOTE NUMBER rawPhrases:", rawPhrases.length, " - thisQuote:", thisQuote);}
+			while (thisQuote > (rawPhrases.length - 1)) {
 				thisQuote = Math.floor(Math.random() * 10000);
 			}
 		}
 		
-		try{ 
-		if (rawPhrases[thisQuote].length < 12) {
-			if (this.debugMe === true) {Mojo.Log.info("FIRST BAD LENGTH!", rawPhrases[thisQuote].length);}
-			this.getRandomBookPhrases();
-		}
-		else if (rawPhrases[thisQuote].indexOf('footnote-ignore') >= 0) {
-			this.getRandomBookPhrases();
-		}
-		else {
-			this.prettyPhrase = rawPhrases[thisQuote];
-		}
-		} catch (error) {Mojo.Log.error("THE BIG DECISION", error);}
+		try{
+			//Mojo.Log.info("------- BEFORE STRIP:", rawPhrases[thisQuote], "+", thisQuote);
+
+			if ( (! rawPhrases[thisQuote]) || (! rawPhrases) || (rawPhrases[thisQuote].length <= 0) ) {
+				this.prettyPhrase = null;
+				this.getRandomBookPhrases()
+			}
+
+			this.prettyPhrase = sanitizer(rawPhrases[thisQuote]);
+
+			if (this.prettyPhrase.length < 12) {
+				if (this.debugMe === true) {Mojo.Log.info("FIRST BAD LENGTH!", this.prettyPhrase.length);}
+				this.getRandomBookPhrases();
+			}
+		} catch (SendToSanitizerError) {Mojo.Log.error(">>>>>>> Send To Sanitizer", SendToSanitizerError);}
 		
 		
 		if (this.debugMe === true) {Mojo.Log.info("PHRASE TO USE:", thisQuote, " -", this.prettyPhrase);}
@@ -328,10 +361,10 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 		// Ends in "A", Starts with "A", Previous ends in "A"
 		
 		//This starts, previous ends
-		if (thisQuote > 0) {
+		/*if (thisQuote > 0) {
 			if (this.prettyPhrase.indexOf('A') === 0) {
 				if (rawPhrases[thisQuote].indexOf('A') === (rawPhrases[(thisQuote -1)].length -1)) {
-					Mojo.Log.info("++ PREVIOUS ENDS WITH A");
+					//Mojo.Log.info("++ PREVIOUS ENDS WITH A");
 					if (rawPhrases[(thisQuote - 2)]) {
 						this.prettyPhrase = rawPhrases[(thisQuote - 2)] + rawPhrases[(thisQuote - 1)] + "." + this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)];
 					}
@@ -340,19 +373,22 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 					}
 				}
 			}
-		}
+		}*/
 		//This ends, next starts
 		if (thisQuote > 0) {
 			if (this.prettyPhrase.indexOf('A') === this.prettyPhrase.length -1) {
-				if (rawPhrases[(thisQuote + 1)].indexOf('A') === 0) {
-					Mojo.Log.info("++ NEXT STARTS WITH A");
+				Mojo.Log.error("MEGA-BUSTED:", this.prettyPhrase);
+				this.prettyPhrase = null;
+				this.getRandomBookPhrases();
+				/*if (rawPhrases[(thisQuote + 1)].indexOf('A') === 0) {
+					//Mojo.Log.info("++ NEXT STARTS WITH A");
 					if (rawPhrases[(thisQuote + 2)]) {
 						this.prettyPhrase = this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)] + "." + rawPhrases[(thisQuote + 2)];
 					}
 					else {
 						this.prettyPhrase = this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)];
 					}
-				}
+				}*/
 			}
 		}
 		/////////////////////////////////////////////////////
@@ -366,93 +402,21 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 		// ends with 
 		if (thisQuote > 0) {
 			if ((this.prettyPhrase.indexOf('Dr') === (this.prettyPhrase.length - 2)) || (this.prettyPhrase.indexOf('Mr') === (this.prettyPhrase.length - 2))) {
-				Mojo.Log.info("ENDS DOCTOR -", rawPhrases[(thisQuote - 1)]);
-				this.prettyPhrase = this.MrDrFixer(this.prettyPhrase, 'ends');
+				this.prettyPhrase = this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)];
 			}
 		}
 		//starts with
 		else if ((this.prettyPhrase.indexOf('Dr') === 0) || (this.prettyPhrase.indexOf('Mr') === 0) ) {
-			Mojo.Log.info("STARTS DOCTOR -", rawPhrases[(thisQuote - 1)]);
-			this.prettyPhrase = this.MrDrFixer(this.prettyPhrase, 'starts');
+			this.prettyPhrase = rawPhrases[(thisQuote - 1)] + this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)];
 		}
 		//previous ends with
 		else if (thisQuote > 0) {
 			if ( (rawPhrases[(thisQuote - 1)].indexOf('Dr') === (rawPhrases[(thisQuote - 1)].length - 2)) || (rawPhrases[(thisQuote - 1)].indexOf('Mr') === (rawPhrases[(thisQuote - 1)].length - 2)) ){
-				Mojo.Log.info("PREVIOUS DOCTOR -", rawPhrases[(thisQuote - 1)]);
-				this.prettyPhrase = this.MrDrFixer(this.prettyPhrase, 'previous');
+				this.prettyPhrase = rawPhrases[(thisQuote - 2)] + "." + rawPhrases[(thisQuote - 1)] + "." + this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)];
 			}
-		}
-		else {
-			Mojo.Log.info(this.prettyPhrase);// = this.prettyPhrase;
 		}
 		/////////////////////////////////////////////////////
 
-
-		////////////////////////////////////////////
-		//  Strip HTML nd make prettyPhrase PRETTY!
-		
-		try {
-		//Flat-out nuke the page headers
-		while (this.prettyPhrase.indexOf('palm-divider labeled') >= 0) {
-			this.prettyPhrase = this.prettyPhrase.replace(this.prettyPhrase.substring(this.prettyPhrase.indexOf('<table'), (this.prettyPhrase.indexOf('table>') + 6)), '');
-			//Mojo.Log.info("TABLE:", this.prettyPhrase);
-		}
-
-		// strip all remining HTML markup
-		while (this.prettyPhrase.indexOf('<') >= 0) {
-			this.prettyPhrase = this.prettyPhrase.replace(this.prettyPhrase.substring(this.prettyPhrase.indexOf('<'), (this.prettyPhrase.indexOf('>') + 1)), '');
-			//Mojo.Log.info("HTML:", this.prettyPhrase);
-		}
-
-		// Strip "undefined"... :-\
-		if (this.prettyPhrase.indexOf('undefined') > 0) {
-			this.prettyPhrase = this.prettyPhrase.replace('undefined', '');
-		}
-		
-		// Just end at "?"
-		if (this.prettyPhrase.indexOf('?') > 0) {
-			this.prettyPhrase = this.prettyPhrase.substring(0, (this.prettyPhrase.indexOf('?') + 1));
-			if (this.debugMe === true) {Mojo.Log.info("NEW PHRASE - ? -", this.prettyPhrase);}
-		}
-		
-		// Just end at "!"
-		if (this.prettyPhrase.indexOf('!') > 0) {
-			this.prettyPhrase = this.prettyPhrase.substring(0, (this.prettyPhrase.indexOf('!') + 1));
-			if (this.debugMe === true) {Mojo.Log.info("NEW PHRASE - ! -", this.prettyPhrase);}
-		}
-
-		// DON'T add a period back to phrases that end in "?" or "!"
-		if ((this.prettyPhrase.indexOf('?') > 0) || (this.prettyPhrase.indexOf('!') > 0)) {
-			Mojo.Log.info(this.prettyPhrase);// = this.prettyPhrase;
-		}
-		else {
-			this.prettyPhrase = this.prettyPhrase + ".";
-		}
-
-		if (this.debugMe === true) {Mojo.Log.info(this.prettyPhrase);}
-
-		while (this.prettyPhrase.indexOf('"') >= 0) {
-			this.prettyPhrase = this.prettyPhrase.replace('"', '');
-			//this.prettyPhrase = this.prettyPhrase + '"';
-		}
-		while (this.prettyPhrase.indexOf('[') >= 0) {
-			this.prettyPhrase = this.prettyPhrase.replace('[', '');
-		}
-		while (this.prettyPhrase.indexOf(']') >= 0) {
-			this.prettyPhrase = this.prettyPhrase.replace(']', '');
-		}
-		while (this.prettyPhrase.indexOf('- ') >= 0) {
-			this.prettyPhrase = this.prettyPhrase.replace('- ', '');
-		}
-		while (this.prettyPhrase.indexOf(' -') >= 0) {
-			this.prettyPhrase = this.prettyPhrase.replace(' -', '');
-		}
-		while (this.prettyPhrase.indexOf('*') >= 0) {
-			this.prettyPhrase = this.prettyPhrase.replace('*', '');
-		}
-		} catch (error) {Mojo.Log.error("THE STRIPER", error);}
-
-		if (this.debugMe === true) {Mojo.Log.info("this.prettyPhrase:", this.prettyPhrase.length, "-", this.prettyPhrase.indexOf('!'), "-", this.prettyPhrase);}
 
 		if ((this.prettyPhrase.length < 12) || (this.prettyPhrase.length > 142)) {
 			if (this.debugMe === true) {Mojo.Log.info("SECOND BAD SIZE!", this.prettyPhrase.length);}
@@ -460,60 +424,15 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 		}
 		else {
 			this.firstRun = false;
-			if (! this.phraseTimer) {
-				this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
-				//this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), 8000);
-			}
-			Mojo.Log.info("BEFORE:", this.prettyPhrase);
-			this.prettyPhrase = trimAll(this.prettyPhrase);
-			Mojo.Log.info("AFTER:", this.prettyPhrase);
+			this.prettyPhrase = sanitizer(this.prettyPhrase);
+			//Mojo.Log.info("------- SEND FINAL:", this.prettyPhrase);
+
 			this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
 		}
-	} catch (error) {Mojo.Log.error("THE CLEANER", error);}
+	} catch (doThePhraseError) {Mojo.Log.error(">>>>>>> doThePhrase", doThePhraseError);}
 	}.bind(this), 10);
 if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE getRandomBookPhrases @@");}
 } catch (error) {Mojo.Log.error("ALL PAGES", error);}
-};
-
-
-/********************
- *
- * "Mr" & "Dr" Fixer
- *
- ********************/
-DockAssistant.prototype.MrDrFixer = function (phrase, where) {
-if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Mr Dr FIXER @@");}
-
-	///////////////////////////////////////////////////////////////
-	// If you're here, one of these is true:
-	// 1) Current phrase starts with "Mr" or "Dr"
-	// 2) Current phrase ends with "Mr" or "Dr"
-	// 3) Previous phrase ended with "Mr" or "Dr"
-	//
-	// No need for further checking.
-	//
-
-	switch (where) {
-		case 'previous':
-			Mojo.Log.info("++ PREVIOUS ENDS WITH Mr or Dr");
-			phrase = rawPhrases[(thisQuote - 2)] + "." + rawPhrases[(thisQuote - 1)] + "." + phrase + "." + rawPhrases[(thisQuote + 1)];
-			Mojo.Log.info(phrase);
-			return phrase;
-		case 'starts':
-			Mojo.Log.info("++ THIS STARTS WITH Mr or Dr");
-			phrase = rawPhrases[(thisQuote - 1)] + phrase + "." + rawPhrases[(thisQuote + 1)];
-			Mojo.Log.info(phrase);
-			return phrase;
-		case 'ends':
-			Mojo.Log.info("++ THIS PHRASE ENDED WITH Mr or Dr");
-			phrase = phrase + "." + rawPhrases[(thisQuote + 1)];// + "." + rawPhrases[(thisQuote + 2)];
-			return phrase;
-	}
-
-	//Danger Will Robinson!
-	return phrase;
-
-//if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE A.A. FIXER @@");}
 };
 
 
@@ -523,7 +442,6 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Mr Dr FIXER @@");}
  *
  ********************/
 DockAssistant.prototype.groovyFadeDecision = function (element, phrase) {
-try {
 	if (this.fullBright === true) {
 		this.groovyTimer = 100;
 		this.groovyFadeOut(element, phrase);
@@ -532,28 +450,6 @@ try {
 		this.groovyTimer = 0;
 		this.setThePhrase(element, phrase);
 	}
-} catch (error) {Mojo.Log.error("GROOVY FADE DECISION", error);}
-};
-
-
-/********************
- *
- * FADE OUT
- *
- ********************/
-DockAssistant.prototype.groovyFadeOut = function (element, phrase) {
-try {
-	if (this.groovyTimer > 0) {
-		element.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
-		this.groovyTimer--;
-		this.groovyFadeOutTimer = setTimeout(this.groovyFadeOut.bind(this, element, phrase), 16);
-	}
-	else {
-		element.style.color = "rgba(250, 250, 250, 0.0)";
-		this.fullBright = false;
-		this.setThePhrase(element, phrase);
-	}
-} catch (error) {Mojo.Log.error("GROOVY FADE OUT", error);}
 };
 
 
@@ -564,8 +460,30 @@ try {
  ********************/
 DockAssistant.prototype.setThePhrase = function (element, phrase) {
 	element.innerHTML = phrase;
-	this.bookPhrases.style.display = "block";
 	this.groovyFadeIn(element, phrase);
+};
+
+
+/********************
+ *
+ * FADE OUT
+ *
+ ********************/
+DockAssistant.prototype.groovyFadeOut = function (element, phrase) {
+	if (this.groovyTimer > 0) {
+		element.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
+		this.groovyTimer--;
+		this.groovyFadeOutTimer = setTimeout(this.groovyFadeOut.bind(this, element, phrase), 16);
+	}
+	else {
+		this.bookPhrases.style.display = "none";
+		element.style.color = "rgba(250, 250, 250, 0.0)";
+		this.fullBright = false;
+		this.setThePhrase(element, phrase);
+		//clearInterval(this.phraseTimer);
+		clearTimeout(this.phraseTimer);
+		this.phraseTimer = null;
+	}
 };
 
 
@@ -575,7 +493,9 @@ DockAssistant.prototype.setThePhrase = function (element, phrase) {
  *
  ********************/
 DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
-try {
+
+	this.bookPhrases.style.display = "block";
+
 	if (this.groovyTimer < 100) {
 		element.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
 		this.groovyTimer++;
@@ -583,6 +503,11 @@ try {
 	}
 	else {
 		this.fullBright = true;
+
+		if (! this.phraseTimer) {
+			//this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
+			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
+			//this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), 1000);
+		}
 	}
-} catch (error) {Mojo.Log.error("GROOVY FADE IN", error);}
 };
