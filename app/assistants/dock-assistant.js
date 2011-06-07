@@ -49,21 +49,17 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER setup @@");}
 	//  ****  Setup for Application Menu
 	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);
 
-	this.isVisible = true;
+	//this.isVisible = true;
 	this.controller.document.body.className = 'dock';
 	this.bookPhrases = this.controller.get('bookPhrases');
 	this.bookPhrases.innerHTML = this.getRandomBookPhrases();
 
 	//  ****  Get the preferences from cookie
 	if (! (this.prefs)) {
-		//Mojo.Log.info("********* NO COOKIE LOADED!");
 		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 		this.prefsModel = this.prefs.get();
 	}
 	//  ****  End of getting Preferences from cookie
-
-	//Mojo.Log.info("+++ SETUP - this.phraseTimer:", this.phraseTimer);
-
 
 if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE setup @@");}
 };

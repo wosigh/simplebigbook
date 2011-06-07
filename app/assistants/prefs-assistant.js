@@ -87,12 +87,24 @@ try{
 		disabled: false
 	};
 
+	//this.controller.setupWidget("minTimeSelectorWidget",
 	this.dockPhraseSpeedAttributes = {
+		choices: [
+			{label: "30 seconds", value: 30000},
+			{label: "1 Minute", value: 60000},
+			{label: "2 Minutes", value: 120000},
+			{label: "3 Minutes", value: 240000},
+			{label: "4 Minutes", value: 300000},
+			{label: "5 Minutes", value: 360000}
+		]
+	},
+
+	/*this.dockPhraseSpeedAttributes = {
 		trueValue: 12000,
 		trueLabel: 'Fast',
 		falseValue: 36000,
 		falseLabel: 'Slow'
-	};
+	};*/
 
 	this.dockPhraseSpeedModel = { 
 		value: this.prefsModel.dockPhraseSpeed,
@@ -182,6 +194,7 @@ PrefsAssistant.prototype.updateScrollEffect = function(event) {
 };
 
 PrefsAssistant.prototype.updateDockPhraseSpeed = function(event) {
+	Mojo.Log.info(event.value);
 	this.prefsModel.dockPhraseSpeed = event.value;
 	this.prefs.put(this.prefsModel);
 	if (this.debugMe===true) {Mojo.Log.info("updateDockPhraseSpeed", event.value, "-- this.prefsModel.updateDockPhraseSpeed", this.prefsModel.dockPhraseSpeed);}

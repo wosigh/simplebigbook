@@ -101,7 +101,7 @@ BookAssistant.prototype.setup = function () {
 		chapterNumber:0,
 		cookieVersion: 2,
 		daynight:'day',
-		dockPhraseSpeed:30000,
+		dockPhraseSpeed:60000,
 		isFullScreen:false,
 		pageNumber:0,
 		pagePosition:false,
