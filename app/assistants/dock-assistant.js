@@ -108,7 +108,6 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER deactivate @@");}
 	this.groovyFadeInTimer = '';
 	this.groovyFadeInTimer = '';
 	this.doThePhrase = '';
-	this.bookPhrases.style.display = "none";
 
 	this.fullBright = false;
 	this.prettyPhrase = '';
@@ -139,7 +138,6 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER cleanup @@");}
 	this.groovyFadeInTimer = '';
 	this.groovyFadeOutTimer = '';
 	this.doThePhrase = '';
-	this.bookPhrases.style.display = "none";
 
 	this.fullBright = false;
 	this.prettyPhrase = '';
@@ -174,7 +172,6 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageDeactivate @@");}
 	this.groovyFadeOutTimer = '';
 	this.doThePhrase = '';
 	this.prettyPhrase = '';
-	this.bookPhrases.style.display = "none";
 	rawPhrases = [];
 
 	this.fullBright = false;
@@ -225,7 +222,6 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageActivate @@");}
 		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 		this.prefsModel = this.prefs.get();
 		this.bookPhrases.innerHTML = this.getRandomBookPhrases();
-		this.bookPhrases.style.display = "none";
 
 		this.controller.document.removeEventListener(Mojo.Event.stageActivate, this.stageActivateHandler, true);
 		//this.controller.document.removeEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
@@ -335,7 +331,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 		if (thisQuote > 0) {
 			if (this.prettyPhrase.indexOf('A') === 0) {
 				if (rawPhrases[thisQuote].indexOf('A') === (rawPhrases[(thisQuote -1)].length -1)) {
-					//Mojo.Log.info("++ PREVIOUS ENDS WITH A");
+					Mojo.Log.info("++ PREVIOUS ENDS WITH A");
 					if (rawPhrases[(thisQuote - 2)]) {
 						this.prettyPhrase = rawPhrases[(thisQuote - 2)] + rawPhrases[(thisQuote - 1)] + "." + this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)];
 					}
@@ -349,7 +345,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 		if (thisQuote > 0) {
 			if (this.prettyPhrase.indexOf('A') === this.prettyPhrase.length -1) {
 				if (rawPhrases[(thisQuote + 1)].indexOf('A') === 0) {
-					//Mojo.Log.info("++ NEXT STARTS WITH A");
+					Mojo.Log.info("++ NEXT STARTS WITH A");
 					if (rawPhrases[(thisQuote + 2)]) {
 						this.prettyPhrase = this.prettyPhrase + "." + rawPhrases[(thisQuote + 1)] + "." + rawPhrases[(thisQuote + 2)];
 					}
@@ -370,25 +366,25 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 		// ends with 
 		if (thisQuote > 0) {
 			if ((this.prettyPhrase.indexOf('Dr') === (this.prettyPhrase.length - 2)) || (this.prettyPhrase.indexOf('Mr') === (this.prettyPhrase.length - 2))) {
-				//Mojo.Log.info("ENDS DOCTOR -", rawPhrases[(thisQuote - 1)]);
+				Mojo.Log.info("ENDS DOCTOR -", rawPhrases[(thisQuote - 1)]);
 				this.prettyPhrase = this.MrDrFixer(this.prettyPhrase, 'ends');
 			}
 		}
 		//starts with
 		else if ((this.prettyPhrase.indexOf('Dr') === 0) || (this.prettyPhrase.indexOf('Mr') === 0) ) {
-			//Mojo.Log.info("STARTS DOCTOR -", rawPhrases[(thisQuote - 1)]);
+			Mojo.Log.info("STARTS DOCTOR -", rawPhrases[(thisQuote - 1)]);
 			this.prettyPhrase = this.MrDrFixer(this.prettyPhrase, 'starts');
 		}
 		//previous ends with
 		else if (thisQuote > 0) {
 			if ( (rawPhrases[(thisQuote - 1)].indexOf('Dr') === (rawPhrases[(thisQuote - 1)].length - 2)) || (rawPhrases[(thisQuote - 1)].indexOf('Mr') === (rawPhrases[(thisQuote - 1)].length - 2)) ){
-				//Mojo.Log.info("PREVIOUS DOCTOR -", rawPhrases[(thisQuote - 1)]);
+				Mojo.Log.info("PREVIOUS DOCTOR -", rawPhrases[(thisQuote - 1)]);
 				this.prettyPhrase = this.MrDrFixer(this.prettyPhrase, 'previous');
 			}
 		}
-		/*else {
+		else {
 			Mojo.Log.info(this.prettyPhrase);// = this.prettyPhrase;
-		}*/
+		}
 		/////////////////////////////////////////////////////
 
 
@@ -427,14 +423,11 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 
 		// DON'T add a period back to phrases that end in "?" or "!"
 		if ((this.prettyPhrase.indexOf('?') > 0) || (this.prettyPhrase.indexOf('!') > 0)) {
-			//Mojo.Log.info(this.prettyPhrase);// = this.prettyPhrase;
+			Mojo.Log.info(this.prettyPhrase);// = this.prettyPhrase;
 		}
 		else {
 			this.prettyPhrase = this.prettyPhrase + ".";
 		}
-		/*if ((this.prettyPhrase.indexOf('?') < 0) || (this.prettyPhrase.indexOf('!') < 0)) {
-			this.prettyPhrase = this.prettyPhrase + ".";
-		}*/
 
 		if (this.debugMe === true) {Mojo.Log.info(this.prettyPhrase);}
 
@@ -471,20 +464,10 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 				this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
 				//this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), 8000);
 			}
-
-			if (this.prettyPhrase != 'undefined') {
-				//Mojo.Log.info("BEFORE:", this.prettyPhrase);
-				this.prettyPhrase = trimAll(this.prettyPhrase);
-				//Mojo.Log.info("AFTER:", this.prettyPhrase);
-
-				this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
-			}
-			else {
-				Mojo.Log.error("UNDEFINED:", this.prettyPhrase);
-				//this.doThePhrase === null;
-				this.getRandomBookPhrases();
-			}
-	
+			Mojo.Log.info("BEFORE:", this.prettyPhrase);
+			this.prettyPhrase = trimAll(this.prettyPhrase);
+			Mojo.Log.info("AFTER:", this.prettyPhrase);
+			this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
 		}
 	} catch (error) {Mojo.Log.error("THE CLEANER", error);}
 	}.bind(this), 10);
@@ -512,18 +495,18 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Mr Dr FIXER @@");}
 
 	switch (where) {
 		case 'previous':
-			//Mojo.Log.info("++ PREVIOUS ENDS WITH Mr or Dr");
-			phrase = trimAll(rawPhrases[(thisQuote - 2)] + "." + rawPhrases[(thisQuote - 1)] + "." + phrase + "." + rawPhrases[(thisQuote + 1)]);
+			Mojo.Log.info("++ PREVIOUS ENDS WITH Mr or Dr");
+			phrase = rawPhrases[(thisQuote - 2)] + "." + rawPhrases[(thisQuote - 1)] + "." + phrase + "." + rawPhrases[(thisQuote + 1)];
 			Mojo.Log.info(phrase);
 			return phrase;
 		case 'starts':
-			//Mojo.Log.info("++ THIS STARTS WITH Mr or Dr");
-			phrase = trimAll(rawPhrases[(thisQuote - 1)] + phrase + "." + rawPhrases[(thisQuote + 1)]);
+			Mojo.Log.info("++ THIS STARTS WITH Mr or Dr");
+			phrase = rawPhrases[(thisQuote - 1)] + phrase + "." + rawPhrases[(thisQuote + 1)];
 			Mojo.Log.info(phrase);
 			return phrase;
 		case 'ends':
-			//Mojo.Log.info("++ THIS PHRASE ENDED WITH Mr or Dr");
-			phrase = trimAll(phrase + "." + rawPhrases[(thisQuote + 1)]);
+			Mojo.Log.info("++ THIS PHRASE ENDED WITH Mr or Dr");
+			phrase = phrase + "." + rawPhrases[(thisQuote + 1)];// + "." + rawPhrases[(thisQuote + 2)];
 			return phrase;
 	}
 
@@ -547,7 +530,7 @@ try {
 	}
 	else {
 		this.groovyTimer = 0;
-		this.groovyFadeIn(element, phrase);
+		this.setThePhrase(element, phrase);
 	}
 } catch (error) {Mojo.Log.error("GROOVY FADE DECISION", error);}
 };
@@ -566,13 +549,23 @@ try {
 		this.groovyFadeOutTimer = setTimeout(this.groovyFadeOut.bind(this, element, phrase), 16);
 	}
 	else {
-		//Mojo.Log.info("FADE OUT ELSE", this.fullBright);
 		element.style.color = "rgba(250, 250, 250, 0.0)";
 		this.fullBright = false;
-		this.bookPhrases.style.display = "none";
-		this.groovyFadeIn(element, phrase);
+		this.setThePhrase(element, phrase);
 	}
 } catch (error) {Mojo.Log.error("GROOVY FADE OUT", error);}
+};
+
+
+/********************
+ *
+ * SET THE PHRASE
+ *
+ ********************/
+DockAssistant.prototype.setThePhrase = function (element, phrase) {
+	element.innerHTML = phrase;
+	this.bookPhrases.style.display = "block";
+	this.groovyFadeIn(element, phrase);
 };
 
 
@@ -583,16 +576,12 @@ try {
  ********************/
 DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
 try {
-	this.bookPhrases.style.display = "block";
-	element.innerHTML = phrase;
-
 	if (this.groovyTimer < 100) {
 		element.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
 		this.groovyTimer++;
 		this.groovyFadeInTimer = setTimeout(this.groovyFadeIn.bind(this, element, phrase), 16);
 	}
 	else {
-		//Mojo.Log.info("FADE IN ELSE", this.fullBright);
 		this.fullBright = true;
 	}
 } catch (error) {Mojo.Log.error("GROOVY FADE IN", error);}
