@@ -110,7 +110,8 @@ BookAssistant.prototype.setup = function () {
 		textsize:'18px',
 		wasBookmarkJump:false,
 		wasChapterJump:false,
-		showScrim:true
+		showScrim:true,
+		launchParams:''
 	};
 	////////////////////////////////////////////////////
 
@@ -179,6 +180,10 @@ BookAssistant.prototype.setup = function () {
 			if (prefstest.showScrim !== "undefined") {
 				this.prefsModel.showScrim = prefstest.showScrim;
 				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: showScrim", this.prefsModel.showScrim, "--", prefstest.showScrim);}
+			}
+			if (prefstest.launchParams !== "undefined") {
+				this.prefsModel.launchParams = prefstest.launchParams;
+				if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS: launchParams", this.prefsModel.launchParams, "--", prefstest.launchParams);}
 			}
 		}
 	}

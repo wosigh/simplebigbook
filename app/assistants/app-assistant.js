@@ -24,6 +24,15 @@ try {
 		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
 	}*/
 
+	if (! (this.prefs)) {
+		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
+		this.prefsModel = this.prefs.get();
+		this.prefsModel.launchParams = params;
+		this.prefs.put(this.prefsModel);
+	}
+
+	
+	
 	if (!params) {
 		var stageProxy = this.controller.getStageProxy(mainStageName);
 		var mainStageController = this.controller.getStageController(mainStageName);

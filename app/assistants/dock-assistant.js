@@ -22,7 +22,6 @@ function DockAssistant() {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER DocAssistant @@");}
 
 	this.debugMe = false;
-	//this.prettyPhrase = 'undefined';
 	this.prettyPhrase = null;
 	this.fullBright = false;
 	this.groovyTimer = 0.0;
@@ -42,24 +41,26 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE DocAssistant @@");}
 DockAssistant.prototype.setup = function () {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER setup @@");}
 
-	if (! rawPhrases.length > 0) {
-		this.gatherPhrases();
-	}
-
-	//  ****  Setup for Application Menu
-	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);
-
-	//this.isVisible = true;
-	this.controller.document.body.className = 'dock';
-	this.bookPhrases = this.controller.get('bookPhrases');
-	this.bookPhrases.innerHTML = this.getRandomBookPhrases();
-
 	//  ****  Get the preferences from cookie
 	if (! (this.prefs)) {
 		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 		this.prefsModel = this.prefs.get();
 	}
 	//  ****  End of getting Preferences from cookie
+
+	if (rawPhrases.length <= 0) {
+		this.gatherPhrases();
+	}
+
+	//  ****  Setup for Application Menu
+	if (! this.prefsModel.launchParams.dockMode) {
+		this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);
+	}
+
+	this.controller.document.body.className = 'dock';
+	this.bookPhrases = this.controller.get('bookPhrases');
+	this.bookPhrases.innerHTML = this.getRandomBookPhrases();
+
 
 if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE setup @@");}
 };
@@ -74,12 +75,12 @@ DockAssistant.prototype.activate = function (event) {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER activate @@");}
 
 
-	if (this.controller.stageController.setWindowOrientation) {
-		this.controller.stageController.setWindowOrientation("free");
-	}
+	//if (this.controller.stageController.setWindowOrientation) {
+	//	this.controller.stageController.setWindowOrientation("free");
+	//}
 
-	/*this.screenTapHandler = this.getRandomBookPhrases.bindAsEventListener(this);
-	this.controller.document.addEventListener(Mojo.Event.tap, this.screenTapHandler, true);*/
+	//this.screenTapHandler = this.getRandomBookPhrases.bindAsEventListener(this);
+	//this.controller.document.addEventListener(Mojo.Event.tap, this.screenTapHandler, true);
 
 	this.stageDeactivateHandler = this.stageDeactivate.bindAsEventListener(this);
 	this.controller.document.addEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
@@ -191,11 +192,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageDeactivate @@");}
 	this.prettyPhrase = null;
 	this.fullBright = false;
 
-	//this.controller.document.removeEventListener(Mojo.Event.stageActivate, this.stageActivateHandler, true);
 	this.controller.document.removeEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
-
-	//this.stageDeactivateHandler = this.stageDeactivate.bindAsEventListener(this);
-	//this.controller.document.addEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
 
 	this.stageActivateHandler = this.stageActivate.bindAsEventListener(this);
 	this.controller.document.addEventListener(Mojo.Event.stageActivate, this.stageActivateHandler, true);
@@ -213,7 +210,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE stageDeactivate @@");}
 DockAssistant.prototype.stageActivate = function (event) {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageActivate @@");}
 
-	if (! rawPhrases.length > 0) {
+	if (rawPhrases.length <= 0) {
 		this.gatherPhrases();
 	}
 
@@ -224,13 +221,9 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageActivate @@");}
 		this.bookPhrases.innerHTML = this.getRandomBookPhrases();
 
 		this.controller.document.removeEventListener(Mojo.Event.stageActivate, this.stageActivateHandler, true);
-		//this.controller.document.removeEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
 
 		this.stageDeactivateHandler = this.stageDeactivate.bindAsEventListener(this);
 		this.controller.document.addEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
-
-		//this.stageActivateHandler = this.stageActivate.bindAsEventListener(this);
-		//this.controller.document.addEventListener(Mojo.Event.stageActivate, this.stageActivateHandler, true);
 	}
 
 if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE stageActivate @@");}
@@ -243,7 +236,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE stageActivate @@");}
  * SANITIZER
  *
  ********************/
-function sanitizer(sString) {
+DockAssistant.prototype.sanitizer = function (sString) {
 	try {
 		if (sString.indexOf('palm-divider') >= 0) {
 			sString = sString.replace(sString.substring(sString.indexOf('<table'), (sString.indexOf('table>') + 6)), '');
@@ -276,9 +269,18 @@ function sanitizer(sString) {
 		while (sString.indexOf(' -') >= 0) {sString = sString.replace(' -', '');}
 		while (sString.indexOf('*') >= 0) {sString = sString.replace('*', '');}
 
+		if (sString.length < 12) {
+			if (this.debugMe === true) {Mojo.Log.info("FIRST BAD LENGTH!", sString.length);}
+				//this.prettyPhrase = null;
+				clearTimeout(this.doThePhrase);
+				this.getRandomBookPhrases();
+		}
+
+	return sString;
+	
 	} catch (sanitizerError) {Mojo.Log.error(">>>>>>> THE SANITIZER", sanitizerError, "+", sString);}
 	return sString;
-}
+};
 
 
 /********************
@@ -321,10 +323,7 @@ DockAssistant.prototype.getRandomBookPhrases = function () {
 try {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 
-	if (rawPhrases) {if (this.debugMe === true) {Mojo.Log.info("START rawPhrases:", rawPhrases.length);}}
-
 	thisQuote = Math.floor(Math.random() * 10000);
-	//this.prettyPhrase = null;
 
 	this.doThePhrase = setTimeout(function () {
 	try {
@@ -333,25 +332,21 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 				thisQuote = Math.floor(Math.random() * 10000);
 			}
 		}
-		
+
+if (this.debugMe === true) {Mojo.Log.info("START rawPhrases:", rawPhrases.length, "+", thisQuote);}
+
 		try{
-			//Mojo.Log.info("------- BEFORE STRIP:", rawPhrases[thisQuote], "+", thisQuote);
+			if (this.debugMe === true) {Mojo.Log.info("------- BEFORE STRIP:", rawPhrases[thisQuote].length, "+", thisQuote, "+", rawPhrases[thisQuote]);}
 
 			if ( (! rawPhrases[thisQuote]) || (! rawPhrases) || (rawPhrases[thisQuote].length <= 0) ) {
 				this.prettyPhrase = null;
-				this.getRandomBookPhrases()
-			}
-
-			this.prettyPhrase = sanitizer(rawPhrases[thisQuote]);
-
-			if (this.prettyPhrase.length < 12) {
-				if (this.debugMe === true) {Mojo.Log.info("FIRST BAD LENGTH!", this.prettyPhrase.length);}
+				clearTimeout(this.doThePhrase);
 				this.getRandomBookPhrases();
 			}
-		} catch (SendToSanitizerError) {Mojo.Log.error(">>>>>>> Send To Sanitizer", SendToSanitizerError);}
-		
-		
-		if (this.debugMe === true) {Mojo.Log.info("PHRASE TO USE:", thisQuote, " -", this.prettyPhrase);}
+
+			this.prettyPhrase = this.sanitizer(rawPhrases[thisQuote]);
+
+		} catch (SendToSanitizerError) {Mojo.Log.error(">>>>>>> Send To Sanitizer", SendToSanitizerError, "thisQuote:", thisQuote, "rawPhrases:", rawPhrases.length);}
 
 		/////////////////////////////////////////////////////
 		// Ends in "A", Starts with "A", Previous ends in "A"
@@ -371,10 +366,11 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 			}
 		}*/
 		//This ends, next starts
-		if (thisQuote > 0) {
+try {		if (thisQuote > 0) {
 			if (this.prettyPhrase.indexOf('A') === this.prettyPhrase.length -1) {
 				Mojo.Log.error("MEGA-BUSTED:", this.prettyPhrase);
 				this.prettyPhrase = null;
+				clearTimeout(this.doThePhrase);
 				this.getRandomBookPhrases();
 				/*if (rawPhrases[(thisQuote + 1)].indexOf('A') === 0) {
 					//Mojo.Log.info("++ NEXT STARTS WITH A");
@@ -388,6 +384,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 			}
 		}
 		/////////////////////////////////////////////////////
+		} catch (rawPhrasesError) {Mojo.Log.error(">>>>>>> rawPhrasesError", rawPhrasesError, "thisQuote:", thisQuote, "rawPhrases:", rawPhrases.length, this.prettyPhrase);}
 
 
 		/////////////////////////////////////////////////////
@@ -416,16 +413,18 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 
 		if ((this.prettyPhrase.length < 12) || (this.prettyPhrase.length > 142)) {
 			if (this.debugMe === true) {Mojo.Log.info("SECOND BAD SIZE!", this.prettyPhrase.length);}
+			this.prettyPhrase = null;
+			clearTimeout(this.doThePhrase);
 			this.getRandomBookPhrases();
 		}
 		else {
 			this.firstRun = false;
-			this.prettyPhrase = sanitizer(this.prettyPhrase);
-			//Mojo.Log.info("------- SEND FINAL:", this.prettyPhrase);
+			this.prettyPhrase = this.sanitizer(this.prettyPhrase);
+			if (this.debugMe === true) {Mojo.Log.info("------- SEND FINAL:", this.prettyPhrase.length, "+", this.prettyPhrase);}
 
 			this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
 		}
-	} catch (doThePhraseError) {Mojo.Log.error(">>>>>>> doThePhrase", doThePhraseError);}
+	} catch (doThePhraseError) {Mojo.Log.error(">>>>>>> doThePhrase", doThePhraseError, "thisQuote:", thisQuote, "rawPhrases:", rawPhrases.length, "this.prettyPhrase:", this.prettyPhrase);}
 	}.bind(this), 10);
 if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE getRandomBookPhrases @@");}
 } catch (error) {Mojo.Log.error("ALL PAGES", error);}
@@ -502,8 +501,8 @@ DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
 
 		if (! this.phraseTimer) {
 			//this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
-			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
-			//this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), 1000);
+			//this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
+			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), 1000);
 		}
 	}
 };
