@@ -292,20 +292,18 @@ DockAssistant.prototype.gatherPhrases = function () {
 try {
 	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER gatherPhrases @@", rawPhrases.length);}
 
-	if (!rawPhrases.length > 0) {
+	if (rawPhrases.length <= 0) {
 		if (this.debugMe === true) {Mojo.Log.info("BEFORE rawPhrases:", rawPhrases.length);}
 
 		//var lcUrl = "bustedphrases.html";
 		var lcUrl = "books/fulltext.html";
 		new Ajax.Request(lcUrl, {
 			method: 'get',
-			onComplete: {},
-			onSuccess: function (transport) {
+			onComplete: function (transport) {
 				rawPhrases = rawPhrases.concat(transport.transport.responseText.split("."));
 			},
-			onFailure: function (transport) {
-				Mojo.Log.error("FAILURE:");
-			}
+			onSuccess: function (transport) {if (this.debugMe === true) {Mojo.Log.info("FINISHED PARSING TEXT");}},
+			onFailure: function (transport) {Mojo.Log.error("FAILURE:");}
 		});
 	}
 
@@ -327,13 +325,17 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 
 	this.doThePhrase = setTimeout(function () {
 	try {
-		if (rawPhrases) {
+		if (this.debugMe === true) {Mojo.Log.info("START - rawPhrases:", rawPhrases.length, "thisQuote:", thisQuote);}
+		if (rawPhrases.length > 0) {
 			while (thisQuote > (rawPhrases.length - 1)) {
 				thisQuote = Math.floor(Math.random() * 10000);
 			}
 		}
+		else {
+			this.gatherPhrases();
+		}
 
-if (this.debugMe === true) {Mojo.Log.info("START rawPhrases:", rawPhrases.length, "+", thisQuote);}
+		if (this.debugMe === true) {Mojo.Log.info("START - rawPhrases:", rawPhrases.length, "thisQuote:", thisQuote);}
 
 		try{
 			if (this.debugMe === true) {Mojo.Log.info("------- BEFORE STRIP:", rawPhrases[thisQuote].length, "+", thisQuote, "+", rawPhrases[thisQuote]);}
@@ -471,6 +473,7 @@ DockAssistant.prototype.groovyFadeOut = function (element, phrase) {
 		this.groovyFadeOutTimer = setTimeout(this.groovyFadeOut.bind(this, element, phrase), 16);
 	}
 	else {
+		if (this.debugMe === true) {Mojo.Log.info("@@ FINISH FADE OUT @@");}
 		this.bookPhrases.style.display = "none";
 		element.style.color = "rgba(250, 250, 250, 0.0)";
 		this.fullBright = false;
@@ -497,6 +500,7 @@ DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
 		this.groovyFadeInTimer = setTimeout(this.groovyFadeIn.bind(this, element, phrase), 16);
 	}
 	else {
+		if (this.debugMe === true) {Mojo.Log.info("@@ FINISH FADE IN @@");}
 		this.fullBright = true;
 
 		if (! this.phraseTimer) {
