@@ -97,7 +97,7 @@ try{
 			{label: "4 Minutes", value: 300000},
 			{label: "5 Minutes", value: 360000}
 		]
-	},
+	};
 
 	/*this.dockPhraseSpeedAttributes = {
 		trueValue: 12000,

@@ -67,7 +67,7 @@ try{
 	this.BookmarksListWidget = this.controller.get('Bookmarks_List');
 
 	this.controller.setupWidget('deleteRows', {}, {label: 'Reset ALL Bookmarks'});
-	this.deleteRowsWidget = this.controller.get('deleteRows')
+	this.deleteRowsWidget = this.controller.get('deleteRows');
 	////////////////////////////////////////////////////
 
 	////////////////////////////////////////////////////
@@ -194,7 +194,7 @@ try{
 				pageNum: row.pageNumber,
 				pagePos: row.pagePosition
 			};
-			this.listModel.items.push(buildrow)
+			this.listModel.items.push(buildrow);
 			buildrow = null;
 			row = null;
 			lcName = null;
@@ -350,9 +350,10 @@ try {
 
 	SBB.defaultEntries = [];
 	SBB.defaultEntries[0] = {bookmarkName: 'The Steps', chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'0.07917297024710035'};
-	SBB.defaultEntries[1] = {bookmarkName: 'Third Step Prayer', chapterNumber: '6', pageNumber: 'howitworks_p63',  pagePosition:'0.3975037821482602'};
-	SBB.defaultEntries[2] = {bookmarkName: 'Seventh Step Prayer', chapterNumber: '7', pageNumber: 'intoaction_p76',  pagePosition:'0.24976506212801503'};
-	SBB.defaultEntries[3] = {bookmarkName: 'Road of Happy Destiny', chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'0.9546072134387352'};
+	SBB.defaultEntries[1] = {bookmarkName: 'The Promises', chapterNumber: '7', pageNumber: 'intoaction_p83',  pagePosition:'0.7117332494495124'};
+	SBB.defaultEntries[2] = {bookmarkName: 'Third Step Prayer', chapterNumber: '6', pageNumber: 'howitworks_p63',  pagePosition:'0.40202419907160797'};
+	SBB.defaultEntries[3] = {bookmarkName: 'Seventh Step Prayer', chapterNumber: '7', pageNumber: 'intoaction_p76',  pagePosition:'0.2467442592010066'};
+	SBB.defaultEntries[4] = {bookmarkName: 'Road of Happy Destiny', chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'0.9546072134387352'};
 
 				//"INSERT INTO 'SBB_Bookmarks_Table' (bookmarkName, chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?, ?)",
 	SBB.db.transaction(

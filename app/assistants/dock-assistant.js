@@ -348,6 +348,13 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 
 			this.prettyPhrase = this.sanitizer(rawPhrases[thisQuote]);
 
+			//testPhrase = this.prettyPhrase.concat(this.prettyPhrase.split(" "));
+			//testPhrase = this.prettyPhrase.split(" ");
+			//Mojo.Log.info("testPhrase:", testPhrase.length);
+			//for (i = 0; i < testPhrase.length; i++) {
+			//	Mojo.Log.info("testPhrase:", testPhrase[i]);
+			//}
+
 		} catch (SendToSanitizerError) {Mojo.Log.error(">>>>>>> Send To Sanitizer", SendToSanitizerError, "thisQuote:", thisQuote, "rawPhrases:", rawPhrases.length);}
 
 		/////////////////////////////////////////////////////
@@ -458,6 +465,7 @@ DockAssistant.prototype.groovyFadeDecision = function (element, phrase) {
 DockAssistant.prototype.setThePhrase = function (element, phrase) {
 	element.innerHTML = phrase;
 	this.groovyFadeIn(element, phrase);
+	//this.testerThing(element, phrase);
 };
 
 
@@ -510,3 +518,67 @@ DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
 		}
 	}
 };
+
+
+/********************
+ *
+ * PRINT WORDS FADE IN
+ *
+ ********************/
+DockAssistant.prototype.printWordsFadeIn = function (element, word, wordNumber) {
+
+	this.bookPhrases.style.display = "block";
+	//element.style.color = "rgba(250, 250, 250, 1";
+	Mojo.Log.info("#################", wordNumber);
+
+	if (this.groovyTimer < 100) {
+		element.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
+		this.groovyTimer++;
+		this.groovyFadeInTimer = setTimeout(this.groovyFadeIn.bind(this, element, word), 16);
+	}
+	else {
+		if (this.debugMe === true) {Mojo.Log.info("@@ FINISH FADE IN @@");}
+		this.fullBright = true;
+
+		if (! this.wordPrintTimer) {
+			//this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
+			//this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
+			wordNumber++;
+			this.wordPrintTimer = setTimeout(this.testerThing(element, word, wordNumber), 1000);
+		}
+	}
+};
+
+
+DockAssistant.prototype.testerThing = function (element, phrase, wordNumber) {
+	testPhrase = phrase.split(" ");
+	//innerSplit = element.innerHTML.split(" ");
+	Mojo.Log.info("testPhrase:", testPhrase.length);
+	//Mojo.Log.info("innerSplit:", innerSplit.length);
+
+	if (wordNumber) {
+		if (wordNumber <= phrase.length)
+		{
+			this.printWordsFadeIn(element, testPhrase[wordNumber], wordNumber);
+		}
+	}
+	else {
+		wordNumber = 0;
+		//for (i = 0; i < testPhrase.length; i++) {
+		//Mojo.Log.info("testPhrase:", testPhrase[i]);
+		//this.testTimer = setTimeout(this.testerThing(element, testPhrase[i]), 1000);
+		this.printWordsFadeIn(element, testPhrase[wordNumber], wordNumber);
+	}
+
+	wordNumber = null;
+	this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), 3000);
+
+	//Mojo.Log.info("testerThing:", word);
+	//element.innerHTML = element.innerHTML + word;
+	//clearTimeout(this.testTimer);
+	//this.testTimer = null;
+};
+
+
+
+
