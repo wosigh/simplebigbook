@@ -24,12 +24,14 @@ try {
 		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
 	}*/
 
-	if (! (this.prefs)) {
-		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
-		this.prefsModel = this.prefs.get();
-		this.prefsModel.launchParams = params;
-		this.prefs.put(this.prefsModel);
-	}
+	try { 
+		if (! (this.prefs)) {
+			this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
+			this.prefsModel = this.prefs.get();
+			this.prefsModel.launchParams = params;
+			this.prefs.put(this.prefsModel);
+		}
+	} catch (launchParamsError) {Mojo.Log.logException(launchParamsError, "launchParamsError: Can't set cookie param.");}
 
 	
 	
