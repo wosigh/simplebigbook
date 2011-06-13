@@ -194,7 +194,7 @@ PrefsAssistant.prototype.updateScrollEffect = function(event) {
 };
 
 PrefsAssistant.prototype.updateDockPhraseSpeed = function(event) {
-	Mojo.Log.info(event.value);
+	//Mojo.Log.info(event.value);
 	this.prefsModel.dockPhraseSpeed = event.value;
 	this.prefs.put(this.prefsModel);
 	if (this.debugMe===true) {Mojo.Log.info("updateDockPhraseSpeed", event.value, "-- this.prefsModel.updateDockPhraseSpeed", this.prefsModel.dockPhraseSpeed);}

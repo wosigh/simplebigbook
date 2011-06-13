@@ -60,11 +60,10 @@ MeetingsAssistant.prototype.cleanup = function (event) {
  
 MeetingsAssistant.prototype.meetingSearch = function (event) {
 try{ 
-if (this.debugMe===true) {Mojo.Log.info("@@ ENTER meetingSearch @@");}
+	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER meetingSearch @@");}
 
-Mojo.Log.info(this.controller.get('meetingSearchVal').mojo.getValue());
-theZip = this.controller.get('meetingSearchVal').mojo.getValue();
-
+	//Mojo.Log.info(this.controller.get('meetingSearchVal').mojo.getValue());
+	theZip = this.controller.get('meetingSearchVal').mojo.getValue();
 
 	this.controller.serviceRequest('palm://com.palm.applicationManager', {
 		method: 'open',
@@ -77,7 +76,6 @@ theZip = this.controller.get('meetingSearchVal').mojo.getValue();
 	});
 
 
-
 } catch (error) {Mojo.Log.error("MEETINGS ASSISTANT meetingSearch ERROR", error);}
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE meetingSearch @@");}
 };
@@ -85,11 +83,8 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE meetingSearch @@");}
 
 MeetingsAssistant.prototype.validateText = function (event) {
 try{ 
-if (this.debugMe===true) {Mojo.Log.info("@@ ENTER meetingSearch @@");}
-
-Mojo.Log.info(event.keyCode);
-
-
-} catch (error) {Mojo.Log.error("MEETINGS ASSISTANT meetingSearch ERROR", error);}
-if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE meetingSearch @@");}
+	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER meetingSearch @@");}
+	Mojo.Log.info(event.keyCode);
+	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE meetingSearch @@");}
+	} catch (error) {Mojo.Log.error("MEETINGS ASSISTANT meetingSearch ERROR", error);}
 };

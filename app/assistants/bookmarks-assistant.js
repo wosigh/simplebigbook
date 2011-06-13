@@ -218,8 +218,8 @@ try{
  ********************/
 BookmarksAssistant.prototype.bookmarkReorder = function (event) {
 try {
-	Mojo.Log.info("bookmarkReorder:", JSON.stringify(event.item));
-	Mojo.Log.info("bookmarkReorder:", event.item.id, "+", event.item.name, "+", event.item.toIndex, "+", event.item.fromIndex);
+	//Mojo.Log.info("bookmarkReorder:", JSON.stringify(event.item));
+	//Mojo.Log.info("bookmarkReorder:", event.item.id, "+", event.item.name, "+", event.item.toIndex, "+", event.item.fromIndex);
 
 	/*var idToDelete = event.item.id.toString();
 
@@ -229,7 +229,7 @@ try {
 				"DELETE FROM 'SBB_Bookmarks_Table' WHERE ID = ?",
 				[idToDelete],
 				function(transaction, results) {Mojo.Log.info("Successfully DELETED");},
-				function(transaction, error) {Mojo.Log.info("FAILED TO DELETE");}
+				function(transaction, error) {Mojo.Log.error("FAILED TO DELETE");}
 			);
 		}
 	);*/
@@ -247,7 +247,6 @@ try {
 	var urlRef = event.item;
 	var onClose = function(saved) {
 		if (saved) {
-			//Mojo.Log.info("onClose = function(saved)");
 			this.controller.modelChanged(this.listModel);
 		}
 	}.bind(this);
@@ -304,7 +303,7 @@ try {
 				"DELETE FROM 'SBB_Bookmarks_Table' WHERE ID = ?",
 				[idToDelete],
 				function(transaction, results) {Mojo.Log.info("Successfully DELETED");},
-				function(transaction, error) {Mojo.Log.info("FAILED TO DELETE");}
+				function(transaction, error) {Mojo.Log.error("FAILED TO DELETE");}
 			);
 		}
 	);
@@ -327,7 +326,7 @@ try {
 				"DELETE FROM 'SBB_Bookmarks_Table' WHERE ID > -1",
 				[],
 				function(transaction, results) {Mojo.Log.info("Successfully RESET");},
-				function(transaction, error) {Mojo.Log.info("FAILED TO RESET");}
+				function(transaction, error) {Mojo.Log.error("FAILED TO RESET");}
 			);
 		}
 	);
@@ -386,7 +385,7 @@ try {
  *
  ********************/
 BookmarksAssistant.prototype.dbSuccessHandler = function(transaction, results){
-	Mojo.Log.info(">>>>> BookAssistant - dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
+	if (this.debugMe===true) {Mojo.Log.info(">>>>> BookAssistant - dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));}
 };
 BookmarksAssistant.prototype.dbErrorHandler = function(transaction, errors){
 	Mojo.Log.error(">>>>> BookAssistant - dbErrorHandler", Object.toJSON(transaction), " -", Object.toJSON(errors));

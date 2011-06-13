@@ -53,9 +53,9 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER setup @@");}
 	}
 
 	//  ****  Setup for Application Menu
-	if (! this.prefsModel.launchParams.dockMode) {
-		this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);
-	}
+	//if (! this.prefsModel.launchParams.dockMode) {
+	//	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);
+	//}
 
 	this.controller.document.body.className = 'dock';
 	this.bookPhrases = this.controller.get('bookPhrases');
@@ -529,7 +529,6 @@ DockAssistant.prototype.printWordsFadeIn = function (element, word, wordNumber) 
 
 	this.bookPhrases.style.display = "block";
 	//element.style.color = "rgba(250, 250, 250, 1";
-	Mojo.Log.info("#################", wordNumber);
 
 	if (this.groovyTimer < 100) {
 		element.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
@@ -553,7 +552,7 @@ DockAssistant.prototype.printWordsFadeIn = function (element, word, wordNumber) 
 DockAssistant.prototype.testerThing = function (element, phrase, wordNumber) {
 	testPhrase = phrase.split(" ");
 	//innerSplit = element.innerHTML.split(" ");
-	Mojo.Log.info("testPhrase:", testPhrase.length);
+	//Mojo.Log.info("testPhrase:", testPhrase.length);
 	//Mojo.Log.info("innerSplit:", innerSplit.length);
 
 	if (wordNumber) {

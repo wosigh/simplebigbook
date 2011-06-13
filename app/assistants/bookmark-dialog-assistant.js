@@ -29,18 +29,11 @@ function BookmarkDialogAssistant(params) {
 	this.dbDisplayName = "Simple Big Book";
 	this.dbSize = 200000;
 	this.dbTable = "SBB_Bookmarks_Table";
-
 	this.params = Mojo.Model.decorate(params);
-	//Mojo.assert(params.deleteImage, "Must provide image delete func.");
-	
-	//Mojo.Log.info("BookmarkDialogAssistant", params.urlReference.id);
-	
 	this.savedUrlReference = false;
-
 	this.actionBtnTitle = $L('Save bookmark');
 
 	var urlReference = this.params.urlReference;
-	//Mojo.Log.info(JSON.stringify(urlReference));
 }
 
 BookmarkDialogAssistant.editBookmarkTask = 'task-edit-bookmark';
@@ -53,17 +46,9 @@ BookmarkDialogAssistant.prototype.setup = function(widget) {
 	
 	
 	if (!SBB.db) {
-		Mojo.Log.info("OPENING DB!", this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
 		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
 	}
-	//else {
-	//	Mojo.Log.info("DB ALREADY OPEN!", this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
-	//}
 
-	// A change to the default behaviour of textfields means
-	// we have to set the changeOnKeyPress attribute to 'true'
-	// to guarantee we have the model updated with the textfield
-	// entry on each keypress.
 	var titleFieldAttributes = { 
 		modelProperty: 'name',
 		changeOnKeyPress: true,
@@ -77,14 +62,7 @@ BookmarkDialogAssistant.prototype.setup = function(widget) {
 
 
 BookmarkDialogAssistant.prototype._onAddBookmarkButtonTap = function() {
-	
-	/*Mojo.Log.info("ID:", this.params.urlReference.id);
-	Mojo.Log.info("Name:", this.params.urlReference.name);
-	Mojo.Log.info("chapNum:", this.params.urlReference.chapNum);
-	Mojo.Log.info("pageNum:", this.params.urlReference.pageNum);
-	Mojo.Log.info("pagePos:", this.params.urlReference.pagePos);*/
-	
-	
+
 	if (this.params.urlReference.name !== "") {
 		this.savedUrlReference = true;
 
@@ -115,7 +93,6 @@ BookmarkDialogAssistant.prototype.doClose = function () {
 		delete this.params.onClose;
 	}
 	this.widget.mojo.close();
-	//BookmarksAssistant.initialPopulate();
 };
 
 BookmarkDialogAssistant.prototype._onCancelButtonTap = function() {
@@ -169,8 +146,7 @@ BookmarkDialogAssistant.showDialog = function(params) {
  *
  ********************/
 BookmarkDialogAssistant.prototype.dbSuccessHandler = function(transaction, results){
-	Mojo.Log.info(">>>>> BookAssistant - dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
-	//Mojo.Controller.errorDialog("dbErrorHandler", JSON.stringify(transaction), " -", JSON.stringify(errors));
+	//Mojo.Log.info(">>>>> BookAssistant - dbSuccessHandler", Object.toJSON(transaction), " -", Object.toJSON(results));
 	this.initialPopulate();
 };
 BookmarkDialogAssistant.prototype.dbErrorHandler = function(transaction, errors){
