@@ -487,19 +487,41 @@ BookAssistant.prototype.holdBook = function (event) {
 	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER holdBook @@");}
 
 	if (this.bookMenuGroup.style.display === 'none') {
+		//Mojo.Log.info("Show Menu:", this.bookMenuGroup.offsetTop);
 		this.bookMenuGroup.style.display = 'block';
 		this.bookFade.style.display = 'block';
+		//this.moveMenu(this.bookMenuGroup.offsetTop, this.bookMenuGroup);
 		this.prefsModel.showScrim = true;
 		this.prefs.put(this.prefsmodel);
 	} else {
+		//Mojo.Log.info("Hide Menu:", this.bookMenuGroup.offsetTop);
 		this.bookMenuGroup.style.display = 'none';
 		this.bookFade.style.display = 'none';
+		//this.bookMenuGroup.style.top = this.bookMenuGroup.offsetTop;
+		//this.moveMenu(this.bookMenuGroup.style.top, this.bookMenuGroup);
 		this.prefsModel.showScrim = false;
 		this.prefs.put(this.prefsModel);
 	}
 
 	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE holdBook @@");}
 };
+
+
+BookAssistant.prototype.moveMenu = function (location, element, event) {
+	
+	Mojo.Log.info("location:", location);
+	//var i = -50
+	//while (this.bookMenuGroup.offsetTop > -50) {
+		//element.offsetTop = (element.offsetTop - 10);
+		location = '100px'; //(location + 100) + "px";
+	//Mojo.Menu.viewMenu.top = (Mojo.Menu.viewMenu.top - 10);
+	Mojo.Log.info("location:", location);
+	//	setTimeout(100, element.offsetTop = (element.offsetTop - 1));
+	//	Mojo.Log.info(element.offsetTop);
+	//}
+	
+};
+
 
 
 /********************
