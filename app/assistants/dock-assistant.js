@@ -21,7 +21,7 @@ Mojo.Log.info("=======================  START DOCK =======================");
 function DockAssistant() {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER DocAssistant @@");}
 
-	this.debugMe = false;
+	this.debugMe = true;
 	this.prettyPhrase = null;
 	this.fullBright = false;
 	this.groovyTimer = 0.0;
@@ -512,9 +512,8 @@ DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
 		this.fullBright = true;
 
 		if (! this.phraseTimer) {
-			//this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
-			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
-			//this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), 1000);
+			//this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
+			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), 1000);
 		}
 	}
 };

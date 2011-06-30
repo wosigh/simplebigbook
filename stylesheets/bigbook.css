@@ -60,15 +60,15 @@ body.main {
 	border: 0px solid black;
 }
 
-.left {
+.align-left {
 	text-align: left;
 }
 
-.center {
+.align-center {
 	text-align: center;
 }
 
-.right {
+.align-right {
 	text-align: right;
 }
 
@@ -109,8 +109,16 @@ body.main {
 	-webkit-palm-mouse-target: ignore;
 }
 
-.border {
+.main .page {
+	padding:0px 7px 0px 7px;
+}
+
+.main .border {
 	border: 1px solid blue;
+}
+
+.main .border2 {
+	border: 1px solid red;
 }
 
 
@@ -162,6 +170,15 @@ body.main {
 	max-height: 368px;
 	z-index: 1;
 	overflow: hidden;
+}
+
+.palm-radiobutton.three div {
+	width: 33.34%;
+}
+
+.palm-divider {
+	width:100%
+	border:1px solid;
 }
 
 

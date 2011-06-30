@@ -308,9 +308,9 @@ SearchAssistant.prototype.gosearch = function (event) {
 			$('linklist').style.display = "block";
 
 			if (('_p' + pagetxt[0] + '_top') === ('_p' + pagetxt_top)) {
-				lcBut = '<div class="palm-row center"><div class="palm-button primary" id="' + chaplink + '_p' + pagetxt + '_top" onClick="jumptopage(this.id)"><font size="4">' + whichchap + ", page: " + pagetxt + '</font></div>';
+				lcBut = '<div class="palm-row align-center"><div class="palm-button primary" id="' + chaplink + '_p' + pagetxt + '_top" onClick="jumptopage(this.id)"><font size="4">' + whichchap + ", page: " + pagetxt + '</font></div>';
 			} else {
-				lcBut = '<div class="palm-row center"><div class="palm-button primary" id="' + chaplink + '_p' + pagetxt + '" onClick="jumptopage(this.id)"><font size="4">' + whichchap + ", page: " + pagetxt + '</font></div>';
+				lcBut = '<div class="palm-row align-center"><div class="palm-button primary" id="' + chaplink + '_p' + pagetxt + '" onClick="jumptopage(this.id)"><font size="4">' + whichchap + ", page: " + pagetxt + '</font></div>';
 			}
 
 			lcLine = lcBut + lcHtml + "</div>";//"<hr width=75%>";
