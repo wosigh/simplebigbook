@@ -512,8 +512,8 @@ DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
 		this.fullBright = true;
 
 		if (! this.phraseTimer) {
-			//this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
-			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), 1000);
+			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
+			//this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), 1000);
 		}
 	}
 };
