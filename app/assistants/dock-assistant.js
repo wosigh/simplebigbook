@@ -21,7 +21,7 @@ Mojo.Log.info("=======================  START DOCK =======================");
 function DockAssistant() {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER DocAssistant @@");}
 
-	this.debugMe = true;
+	this.debugMe = false;
 	this.prettyPhrase = null;
 	this.fullBright = false;
 	this.groovyTimer = 0.0;

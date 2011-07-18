@@ -474,6 +474,8 @@ BookAssistant.prototype.handleWindowResize = function (event) {
 		this.wasResized = true;
 	}
 
+	Mojo.Log.info("clientHeight:", this.bookData.clientHeight);
+
 	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE handleWindowResize @@");}
 };
 
