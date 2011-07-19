@@ -3,10 +3,20 @@
  ******************/ 
 
 body.main {
-	background: 212121;
-	/*background: #E4E4E2;*/
 	/*background: #fefbf7;*/
+	/*background: #212121;*/
+	/*background: #E4E4E2;*/
+	background: #fefbf7;
 	color: #010101;
+	text-align: justify;
+	font-size: 16px;
+}
+
+body.main.touchpad {
+	background: #fefbf7;
+	color: #010101;
+	text-align: justify;
+	font-size: 18px;
 }
 
 .main .justify {
@@ -14,37 +24,59 @@ body.main {
 }
 
 .main .book-body-text {
-	text-align:justify;
-	font-size:16px;
-	margin:6px 6px 6px 6px;
+	text-align: justify;
+	font-size: 16px;
+	margin: 6px 6px 6px 6px;
+}
+
+.main .book-body-text-touchpad {
+	text-align: justify;
+	font-size: 16px;
+	margin: 6px 60px 6px 60px;
 }
 
 .main .special-section {
 	padding: 0px 12px 0px 12px;
 	font-style: italic;
+	text-align: justify;
 }
 
 .main .indent {
-	padding: 9px 0px 9px 0px;
+	padding: 6px 0px 6px 0px;
 	text-indent:2ex;
+	text-align: justify;
+}
+
+.main .indent.touchpad {
+	margin: 6px 60px 6px 60px;
+	text-indent:2ex;
+	text-align: justify;
 }
 
 .main .no-indent {
-	padding: 9px 0px 9px 0px;
+	padding: 6px 0px 6px 0px;
+	text-align: justify;
+}
+
+.main .no-indent.touchpad {
+	margin: 6px 60px 6px 60px;
+	text-align: justify;
 }
 
 .main .page-padding {
-	padding: 8px 0px 0px 0px;
+	padding: 12px 0px 0px 0px;
 }
 
 .main .indent-no-padding {
 	padding: 0px 0px 0px 0px;
 	text-indent:2ex;
+	text-align: justify;
 }
 
 .main .double-indent-no-padding {
 	padding: 0px 0px 0px 0px;
 	text-indent:4ex;
+	text-align: justify;
 }
 
 .main .big-letter {
@@ -55,9 +87,10 @@ body.main {
 	text-shadow : 1px 2px 5px black;
 	float: left;
 	display: block;
-	margin: -9px 0px -12px 0px;
-	padding: 0px 3px -6px 0px;
+	margin: -12px 0px -12px 0px;
+	padding: 0px 6px -6px 0px;
 	border: 0px solid black;
+	text-align: justify;
 }
 
 .align-left {
@@ -110,7 +143,7 @@ body.main {
 }
 
 .main .page {
-	padding:0px 7px 0px 7px;
+	padding:0px 6px 0px 6px;
 }
 
 .main .border {

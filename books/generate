@@ -1,9 +1,0 @@
-#!/bin/sh
-rm -fv *~
-#echo "Really Old:"
-#ls -l ../../fulltext*
-echo "Previous:"
-ls -l fulltext.html
-cat $(ls *.html | grep -v fulltext) > fulltext.html
-echo "Current:"
-ls -l fulltext.html

@@ -296,7 +296,8 @@ try {
 		if (this.debugMe === true) {Mojo.Log.info("BEFORE rawPhrases:", rawPhrases.length);}
 
 		//var lcUrl = "bustedphrases.html";
-		var lcUrl = "books/fulltext.html";
+		var lcUrl = "books/dockfulltext.txt";
+		//var lcUrl = "books/fulltext.html";
 		new Ajax.Request(lcUrl, {
 			method: 'get',
 			onComplete: function (transport) {

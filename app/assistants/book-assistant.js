@@ -52,6 +52,7 @@ function BookAssistant() {
 	this.firstResize = true;
 	this.headerAdjustment = 56; //88 //32 //78
 	this.whichWay = null;
+	this.isTouchPad = false;
 }
 
 /********************
@@ -63,6 +64,7 @@ BookAssistant.prototype.setup = function () {
 	try {
 		if (this.debugMe === true) {Mojo.Log.info("@@ ENTER SETUP @@");}
 
+		this.mainDiv = this.controller.get('main');
 		this.bookFade = this.controller.get('book-fade');
 		this.bookData = this.controller.get('bookdata');
 		this.chapMenu = this.controller.get('chapMenu');
@@ -105,8 +107,8 @@ BookAssistant.prototype.setup = function () {
 				textsize: '18px',
 				wasBookmarkJump: false,
 				wasChapterJump: false,
-				showScrim: true //,
-				//launchParams: ''
+				showScrim: true,
+				isTouchPad: false
 			};
 			////////////////////////////////////////////////////
 			this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
@@ -158,6 +160,9 @@ BookAssistant.prototype.setup = function () {
 						if (prefstest.showScrim !== "undefined") {
 							this.prefsModel.showScrim = prefstest.showScrim;
 						}
+						if (prefstest.isTouchPad !== "undefined") {
+							this.prefsModel.isTouchPad = prefstest.isTouchPad;
+						}
 					}
 				}
 				prefstest = null;
@@ -172,6 +177,12 @@ BookAssistant.prototype.setup = function () {
 		////////////////////////////////////////////////////
 		// Initial states
 		//
+		if ( (this.maxScreenHeight >= 1024) || (this.maxScreenWidth >= 1024) ) {
+			this.isTouchPad = true;
+			this.prefsModel.isTouchPad = true;
+			this.prefs.put(this.prefsModel);
+		}
+
 		if ((this.prefsModel.wasBookmarkJump === true) || (this.prefsModel.wasChapterJump === true)) {
 			if (this.prefsModel.isFullScreen === true) {
 				this.doFullScreen('big');
@@ -345,7 +356,7 @@ BookAssistant.prototype.deactivate = function (event) {
 /********************
  *
  * CLEANUP
- *
+ *this.prefsModel.isTouchPad
  ********************/
 BookAssistant.prototype.cleanup = function (event) {
 	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Cleanup @@");}
@@ -474,7 +485,7 @@ BookAssistant.prototype.handleWindowResize = function (event) {
 		this.wasResized = true;
 	}
 
-	Mojo.Log.info("clientHeight:", this.bookData.clientHeight);
+	//Mojo.Log.info("clientHeight:", this.bookData.clientHeight);
 
 	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE handleWindowResize @@");}
 };
@@ -870,7 +881,16 @@ BookAssistant.prototype.changeTextSize = function (size) {
 	//  ****  Set the color theme while I'm here
 	switch (this.prefsModel.daynight) {
 	case 'day':
-		this.controller.document.body.className = 'main';
+		if (this.prefsModel.isTouchPad === true) {
+			this.controller.document.body.className = 'main touchpad';
+			this.bookData.className('book-body-text-touchpad');
+		}
+		else {
+			this.controller.document.body.className = 'main';
+			this.bookData.className = 'book-body-text';
+			this.chapMenu.addClassName('chapMenu-text');
+		}
+
 		if (this.prefsModel.showScrim === true) {
 			this.bookFade.className = 'scene-fade my-fade-day top';
 			//this.bookFade.removeClassName('my-fade-night');
@@ -879,7 +899,16 @@ BookAssistant.prototype.changeTextSize = function (size) {
 		}
 		break;
 	case 'night':
-		this.controller.document.body.className = 'palm-dark';
+		if (this.prefsModel.isTouchPad === true) {
+			this.controller.document.body.className = 'palm-dark touchpad';
+			this.bookData.className = 'book-body-text-touchpad';
+		}
+		else {
+			this.controller.document.body.className = 'palm-dark';
+			this.bookData.className = 'book-body-text';
+			this.chapMenu.addClassName = 'chapMenu-text';
+		}
+
 		if (this.prefsModel.showScrim === true) {
 			this.bookFade.className = 'scene-fade my-fade-night top';
 			//this.bookFade.removeClassName('my-fade-day');
