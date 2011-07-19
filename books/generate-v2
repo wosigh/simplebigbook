@@ -1,0 +1,18 @@
+#!/bin/sh
+rm -fv *~
+
+if [ -e fulltext.html ] ; then 
+	echo "Previous:"
+	ls -l fulltext.html
+	#mv -fv fulltext.html fulltext.html.old
+	rm -fv fulltext.html
+	rm -fv dockFullText.txt
+fi
+
+for i in $(ls *.html | grep -v fulltext) ; do cat $i | sed -e 's/<[^>]*>//g' -e '/.*\./!d' | tr -d '\r\n' >> dockfulltext.txt ; done
+for i in $(ls *.html | grep -v fulltext) ; do cat $i | tr -d '\r\n' >> fulltext.html ; done
+
+
+echo "Current:"
+#ls -l fulltext.html
+ls -l *fulltext*
