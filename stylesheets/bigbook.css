@@ -2,12 +2,18 @@
  * BODIES
  ******************/ 
 
+body.palm-dark { /*background */
+	background: url(../images/background-dark.png) top left no-repeat;
+	background-size: 100%;
+}
+
 body.main {
 	/*background: #fefbf7;*/
 	/*background: #212121;*/
 	/*background: #E4E4E2;*/
-	background: #fefbf7;
-	color: #010101;
+	/* GOOD background: #fefbf7;*/
+	background: url(../images/background-light.png) top left no-repeat;
+	background-size: 100%;
 	text-align: justify;
 	font-size: 16px;
 }
@@ -142,6 +148,12 @@ body.main.touchpad {
 	-webkit-palm-mouse-target: ignore;
 }
 
+.my-fade-none.top {
+	top: 0px;
+	background: url(../images/fade-top-blank.png) repeat-x center bottom;
+	-webkit-palm-mouse-target: ignore;
+}
+
 .main .page {
 	padding:0px 6px 0px 6px;
 }
@@ -267,10 +279,6 @@ body.dock
   background: url(../images/bookmark-icon-overlay.png) center center no-repeat;
 }
 
-.bookmark-info {
-	background: url(../images/bookmark-info-icon.png) center center no-repeat;
-}
-
 .bookmark-item {
 	display: inline-block;
 	padding: 0px;
@@ -296,7 +304,8 @@ body.dock
 }
 
 .palm-page-header .icon {
-	background:url(../images/bookicon.png) center center no-repeat;
+	/*background:url(../images/bookicon.png) center center no-repeat;*/
+	background:url(../images/bookicon-32.png) center center no-repeat;
 }
 
 .palm-menu-icon.chapter {
@@ -308,7 +317,6 @@ body.dock
 }
 
 .main .palm-menu-icon.bookmarksMenuIcon {
-	/*background-image: url(../images/menu-icon-file.png);*/
 	background-image: url(../images/menu-icon-bookmarks.png);
 }
 
@@ -316,9 +324,9 @@ body.dock
 	position:absolute;
 	top:0;
 	left:10px;
-	width:65px;
-	min-height:65px;
-	background:url(../images/bookicon.png) center center no-repeat;
+	/*width:65px;
+	min-height:65px;*/
+	background:url(../images/bookicon-64.png) center center no-repeat;
 }
 
 .img_email {
@@ -361,7 +369,7 @@ body.dock
 	top:10px;
 	width:32px;
 	height:32px;
-	background:url(../images/bookiconsmall.png) no-repeat center;
+	background:url(../images/bookicon-32.png) no-repeat center;
 	float:left;
 	padding:0 0 0 5px;
 }

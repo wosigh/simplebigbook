@@ -504,18 +504,15 @@ BookAssistant.prototype.holdBook = function (event) {
 	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER holdBook @@");}
 
 	if (this.bookMenuGroup.style.display === 'none') {
-		//Mojo.Log.info("Show Menu:", this.bookMenuGroup.offsetTop);
 		this.bookMenuGroup.style.display = 'block';
-		this.bookFade.style.display = 'block';
-		//this.moveMenu(this.bookMenuGroup.offsetTop, this.bookMenuGroup);
+		this.bookFade.className = 'scene-fade my-fade-' + this.prefsModel.daynight + ' top';
+		//Mojo.Log.info("Show Menu:", this.bookFade.className);
 		this.prefsModel.showScrim = true;
 		this.prefs.put(this.prefsmodel);
 	} else {
-		//Mojo.Log.info("Hide Menu:", this.bookMenuGroup.offsetTop);
 		this.bookMenuGroup.style.display = 'none';
-		this.bookFade.style.display = 'none';
-		//this.bookMenuGroup.style.top = this.bookMenuGroup.offsetTop;
-		//this.moveMenu(this.bookMenuGroup.style.top, this.bookMenuGroup);
+		this.bookFade.className = 'scene-fade my-fade-none top';
+		//Mojo.Log.info("Hide Menu:", this.bookFade.className);
 		this.prefsModel.showScrim = false;
 		this.prefs.put(this.prefsModel);
 	}
@@ -540,7 +537,6 @@ BookAssistant.prototype.moveMenu = function (location, element, event) {
 };
 
 
-
 /********************
  *
  * ORIENTATION CHANGE
@@ -558,6 +554,57 @@ BookAssistant.prototype.orientationChanged = function (orientation) {
 	}
 
 	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE Orientation Changed @@");}
+};
+
+
+/********************
+ *
+ * CHANGE TEXT SIZE
+ *
+ ********************/
+BookAssistant.prototype.changeTextSize = function (size) {
+	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Change Text Size @@", size);}
+
+	this.windowHeight = this.controller.window.innerHeight;
+	this.bookData.style.fontSize = size;
+
+	////////////////////////////////////////////////////
+	//  ****  Set the color theme while I'm here
+	switch (this.prefsModel.daynight) {
+	case 'day':
+		if (this.prefsModel.isTouchPad === true) {
+			this.controller.document.body.className = 'main touchpad';
+			this.bookData.className('book-body-text-touchpad');
+		}
+		else {
+			this.controller.document.body.className = 'main';
+			this.bookData.className = 'book-body-text';
+			//this.chapMenu.addClassName('chapMenu-text');
+		}
+
+		if (this.prefsModel.showScrim === true) {
+			this.bookFade.className = 'scene-fade my-fade-' + this.prefsModel.daynight + ' top';
+		}
+		break;
+	case 'night':
+		if (this.prefsModel.isTouchPad === true) {
+			this.controller.document.body.className = 'palm-dark touchpad';
+			this.bookData.className = 'book-body-text-touchpad';
+		}
+		else {
+			this.controller.document.body.className = 'palm-dark';
+			this.bookData.className = 'book-body-text';
+			//this.chapMenu.addClassName = 'chapMenu-text';
+		}
+
+		if (this.prefsModel.showScrim === true) {
+			this.bookFade.className = 'scene-fade my-fade-' + this.prefsModel.daynight + ' top';
+		}
+		break;
+	}
+	////////////////////////////////////////////////////
+
+	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Change Text Size @@", size);}
 };
 
 
@@ -867,63 +914,6 @@ BookAssistant.prototype.jumpToBookmark = function (transaction, results) {
 
 		if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE jumpToBookmark");}
 	} catch (jumpToBookmarkError) {Mojo.Log.error(">>>>> BookAssistant - jumpToBookmark ERROR:", jumpToBookmarkError);}
-};
-
-
-/********************
- *
- * CHANGE TEXT SIZE
- *
- ********************/
-BookAssistant.prototype.changeTextSize = function (size) {
-	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Change Text Size @@", size);}
-
-	this.windowHeight = this.controller.window.innerHeight;
-	this.bookData.style.fontSize = size;
-
-	////////////////////////////////////////////////////
-	//  ****  Set the color theme while I'm here
-	switch (this.prefsModel.daynight) {
-	case 'day':
-		if (this.prefsModel.isTouchPad === true) {
-			this.controller.document.body.className = 'main touchpad';
-			this.bookData.className('book-body-text-touchpad');
-		}
-		else {
-			this.controller.document.body.className = 'main';
-			this.bookData.className = 'book-body-text';
-			//this.chapMenu.addClassName('chapMenu-text');
-		}
-
-		if (this.prefsModel.showScrim === true) {
-			this.bookFade.className = 'scene-fade my-fade-day top';
-			//this.bookFade.removeClassName('my-fade-night');
-			//this.bookFade.addClassName('my-fade-day');
-			//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
-		}
-		break;
-	case 'night':
-		if (this.prefsModel.isTouchPad === true) {
-			this.controller.document.body.className = 'palm-dark touchpad';
-			this.bookData.className = 'book-body-text-touchpad';
-		}
-		else {
-			this.controller.document.body.className = 'palm-dark';
-			this.bookData.className = 'book-body-text';
-			//this.chapMenu.addClassName = 'chapMenu-text';
-		}
-
-		if (this.prefsModel.showScrim === true) {
-			this.bookFade.className = 'scene-fade my-fade-night top';
-			//this.bookFade.removeClassName('my-fade-day');
-			//this.bookFade.addClassName('my-fade-night');
-			//Mojo.Log.info(" +++ this.prefsModel.daynight:", this.prefsModel.daynight, "+", this.bookFade.style.top);
-		}
-		break;
-	}
-	////////////////////////////////////////////////////
-
-	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Change Text Size @@", size);}
 };
 
 

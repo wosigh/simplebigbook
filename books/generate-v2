@@ -1,19 +1,25 @@
 #!/bin/sh
 rm -fv *~
 
-if [ -e fulltext.html ] ; then 
-	echo "Previous:"
-	ls -l fulltext.html
-	#mv -fv fulltext.html fulltext.html.old
-	rm -fv fulltext.html
-	rm -fv dockFullText.txt
+if [ -e dockfulltext.txt ] ; then
+	echo -e \\v"Previous dockfulltext.txt:"
+	ls -l dockfulltext.txt
+	rm -fv dockfulltext.txt
 fi
 
-for i in $(ls *.html | grep -v fulltext) ; do cat $i | sed -e 's/<[^>]*>//g' -e '/.*\./!d' | tr -d '\r\n' >> dockfulltext.txt ; done
+if [ -e fulltext.html ] ; then 
+	echo -e \\v"Previous fulltext.html:"
+	ls -l fulltext.html
+	rm -fv fulltext.html
+fi
+
+for i in $(ls *.html | grep -v fulltext) ; do sed -e 's/<[^>]*>//g' -e '/.*\./!d' $i | tr -d '\r\n' >> dockfulltext.txt ; done
+#for i in $(ls *.html | grep -v fulltext) ; do sed -e 's/<[^>]*>//g' -e '/.*\./!d' -e 's/\.\ /.\n/g' -e '/.*\./!d' $i >> dockfulltext.txt ; done
+
 #for i in $(ls *.html | grep -v fulltext) ; do cat $i | sed -e 's/<[^>]*>//g' -e '/.*\./!d' | tr -d '\r\n' | sed -e 's/\. /\.\n/g' >> dockfulltext.txt ; done
 for i in $(ls *.html | grep -v fulltext) ; do cat $i | tr -d '\r\n' >> fulltext.html ; done
 
 
-echo "Current:"
+echo -e \\v"Current:"
 #ls -l fulltext.html
 ls -l *fulltext*
