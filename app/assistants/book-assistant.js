@@ -573,8 +573,9 @@ BookAssistant.prototype.changeTextSize = function (size) {
 	switch (this.prefsModel.daynight) {
 	case 'day':
 		if (this.prefsModel.isTouchPad === true) {
-			this.controller.document.body.className = 'main touchpad';
-			this.bookData.className('book-body-text-touchpad');
+			this.controller.document.body.style.className = 'main touchpad';
+			this.bookData.className = 'book-body-text-touchpad';
+			Mojo.Log.info("className:", this.controller.document.body.style.className);
 		}
 		else {
 			this.controller.document.body.className = 'main';
@@ -590,6 +591,7 @@ BookAssistant.prototype.changeTextSize = function (size) {
 		if (this.prefsModel.isTouchPad === true) {
 			this.controller.document.body.className = 'palm-dark touchpad';
 			this.bookData.className = 'book-body-text-touchpad';
+			Mojo.Log.info("className:", this.controller.document.body.className);
 		}
 		else {
 			this.controller.document.body.className = 'palm-dark';

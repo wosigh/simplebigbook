@@ -10,17 +10,25 @@ body.palm-dark { /*background */
 body.main {
 	/*background: #fefbf7;*/
 	/*background: #212121;*/
-	/*background: #E4E4E2;*/
+	/*PALM-DEFAULT background: #E4E4E2;*/
 	/* GOOD background: #fefbf7;*/
 	background: url(../images/background-light.png) top left no-repeat;
 	background-size: 100%;
 	text-align: justify;
 	font-size: 16px;
+	/*color: #383837;*/
 }
 
 body.main.touchpad {
 	background: #fefbf7;
-	color: #010101;
+	/*color: #010101;*/
+	text-align: justify;
+	font-size: 18px;
+}
+
+body.palm-dark.touchpad {
+	background: #393E43;
+	/*color: #CECFD0;*/
 	text-align: justify;
 	font-size: 18px;
 }
@@ -44,7 +52,7 @@ body.main.touchpad {
 .main .special-section {
 	padding: 0px 12px 0px 12px;
 	font-style: italic;
-	text-align: justify;
+	/*text-align: justify;*/
 }
 
 .main .indent {
@@ -109,6 +117,10 @@ body.main.touchpad {
 
 .align-right {
 	text-align: right;
+}
+
+.align-justify {
+	text-align: justify;
 }
 
 .small {
@@ -326,7 +338,7 @@ body.dock
 	left:10px;
 	/*width:65px;
 	min-height:65px;*/
-	background:url(../images/bookicon-64.png) center center no-repeat;
+	/*background:url(../images/bookicon-64.png) center center no-repeat;*/
 }
 
 .img_email {
