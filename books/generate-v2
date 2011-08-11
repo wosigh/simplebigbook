@@ -10,6 +10,7 @@ if [ -e fulltext.html ] ; then
 fi
 
 for i in $(ls *.html | grep -v fulltext) ; do cat $i | sed -e 's/<[^>]*>//g' -e '/.*\./!d' | tr -d '\r\n' >> dockfulltext.txt ; done
+#for i in $(ls *.html | grep -v fulltext) ; do cat $i | sed -e 's/<[^>]*>//g' -e '/.*\./!d' | tr -d '\r\n' | sed -e 's/\. /\.\n/g' >> dockfulltext.txt ; done
 for i in $(ls *.html | grep -v fulltext) ; do cat $i | tr -d '\r\n' >> fulltext.html ; done
 
 
