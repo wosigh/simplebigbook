@@ -244,6 +244,9 @@ BookAssistant.prototype.setup = function () {
 
 			if (this.debugMe === true) {Mojo.Log.info("book url", this.url);}
 
+			//onLoad: (show spinner)
+
+
 			this.request = new Ajax.Request(this.url, {
 				method: "get",
 				evalJSON: "force",
@@ -260,6 +263,7 @@ BookAssistant.prototype.setup = function () {
 		this.wholeScreenScroller = this.controller.getSceneScroller();
 		this.scrollStartedHandler = this.scrollStarted.bind(this);
 		////////////////////////////////////////////////////
+
 		////////////////////////////////////////////////////
 		//  Handlers
 		this.appClosingHandler = this.appClosingRoutine.bindAsEventListener(this);
@@ -888,7 +892,7 @@ BookAssistant.prototype.changeTextSize = function (size) {
 		else {
 			this.controller.document.body.className = 'main';
 			this.bookData.className = 'book-body-text';
-			this.chapMenu.addClassName('chapMenu-text');
+			//this.chapMenu.addClassName('chapMenu-text');
 		}
 
 		if (this.prefsModel.showScrim === true) {
@@ -906,7 +910,7 @@ BookAssistant.prototype.changeTextSize = function (size) {
 		else {
 			this.controller.document.body.className = 'palm-dark';
 			this.bookData.className = 'book-body-text';
-			this.chapMenu.addClassName = 'chapMenu-text';
+			//this.chapMenu.addClassName = 'chapMenu-text';
 		}
 
 		if (this.prefsModel.showScrim === true) {
