@@ -214,9 +214,9 @@ BookAssistant.prototype.setup = function () {
 		////////////////////////////////////////////////////
 		//  Setup Menus
 		try {
-			this.bookmarkMenu = this.controller.get('bookmarkMenu');
-			this.chapMenu = this.controller.get('chapMenu');
-			this.pageMenu = this.controller.get('pageMenu');
+			//this.bookmarkMenu = this.controller.get('bookmarkMenu');
+			//this.chapMenu = this.controller.get('chapMenu');
+			//this.pageMenu = this.controller.get('pageMenu');
 
 			Mojo.Event.listen(this.bookmarkMenu, Mojo.Event.tap, this.selectBookmark.bindAsEventListener(this, event));
 			Mojo.Event.listen(this.chapMenu, Mojo.Event.tap, this.selectChapter.bindAsEventListener(this, event));
@@ -575,12 +575,11 @@ BookAssistant.prototype.changeTextSize = function (size) {
 		if (this.prefsModel.isTouchPad === true) {
 			this.controller.document.body.style.className = 'main touchpad';
 			this.bookData.className = 'book-body-text-touchpad';
-			Mojo.Log.info("className:", this.controller.document.body.style.className);
+			Mojo.Log.info("className:", this.controller.document.body.style.className, this.chapMenu.className);
 		}
 		else {
 			this.controller.document.body.className = 'main';
 			this.bookData.className = 'book-body-text';
-			//this.chapMenu.addClassName('chapMenu-text');
 		}
 
 		if (this.prefsModel.showScrim === true) {
@@ -591,12 +590,11 @@ BookAssistant.prototype.changeTextSize = function (size) {
 		if (this.prefsModel.isTouchPad === true) {
 			this.controller.document.body.className = 'palm-dark touchpad';
 			this.bookData.className = 'book-body-text-touchpad';
-			Mojo.Log.info("className:", this.controller.document.body.className);
+			Mojo.Log.info("className:", this.controller.document.body.className, this.chapMenu.className);
 		}
 		else {
 			this.controller.document.body.className = 'palm-dark';
 			this.bookData.className = 'book-body-text';
-			//this.chapMenu.addClassName = 'chapMenu-text';
 		}
 
 		if (this.prefsModel.showScrim === true) {
@@ -678,7 +676,7 @@ BookAssistant.prototype.jumpToChapter = function (newindex) {
 		});
 	}
 
-	if (this.debugMe === true) {Mojo.Log.info("---- BOOK JUMP:", this.pageNumber, "BOOK:", this.myIndex, "CMDSTR:", cmdStr);}
+	if (this.debugMe === true) {Mojo.Log.info("---- BOOK JUMP:", this.pageNumber, "BOOK:", this.myIndex);}//, "CMDSTR:", cmdStr);}
 	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE Jump to Book @@");}
 };
 
