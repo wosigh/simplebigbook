@@ -19,9 +19,29 @@
 function OrganizationsAssistant() {}
 
 OrganizationsAssistant.prototype.setup = function () {
-	
-	this.prefsModel = new Mojo.Model.Cookie("SimpleBigBookv2");
-	this.prefsModel.get();
+
+	//  ****  Get the preferences from cookie
+	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
+	this.prefsModel = this.prefs.get();
+
+	if(this.prefsModel.isTouchPad === true) {
+		var menuModel = {
+			visible: true,
+			items: [ 
+				{ icon: "back", command: "cmd-Return"}
+			]
+		}; 
+
+		this.controller.setupWidget(Mojo.Menu.commandMenu,
+			this.attributes = {
+				spacerHeight: 0,
+				menuClass: 'no-fade'
+			},
+			menuModel
+		);
+
+		this.controller.get('OrgWrapperDiv').addClassName('touchpadfix');
+	}
 
 	//  ****  Setup for Application Menu
 	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);

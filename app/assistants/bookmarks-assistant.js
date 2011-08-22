@@ -43,9 +43,27 @@ BookmarksAssistant.prototype.setup = function () {
 try{
 	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER SETUP @@");}
 
-	if (! (this.prefs)) {
-		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
-		this.prefsModel = this.prefs.get();
+	//  ****  Get the preferences from cookie
+	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
+	this.prefsModel = this.prefs.get();
+
+	if(this.prefsModel.isTouchPad === true) {
+		var menuModel = {
+			visible: true,
+			items: [ 
+				{ icon: "back", command: "cmd-Return"}
+			]
+		}; 
+
+		this.controller.setupWidget(Mojo.Menu.commandMenu,
+			this.attributes = {
+				spacerHeight: 0,
+				menuClass: 'no-fade'
+			},
+			menuModel
+		);
+
+		this.controller.get('BookmarksWrapperDiv').addClassName('touchpadfix');
 	}
 
 	////////////////////////////////////////////////////

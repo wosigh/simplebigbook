@@ -22,8 +22,30 @@ function MeetingsAssistant() {
 
 MeetingsAssistant.prototype.setup = function () {
 
-	this.prefsModel = new Mojo.Model.Cookie("SimpleBigBookv2");
-	this.prefsModel.get();
+	//  ****  Get the preferences from cookie
+	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
+	this.prefsModel = this.prefs.get();
+
+	if(this.prefsModel.isTouchPad === true) {
+		var menuModel = {
+			visible: true,
+			items: [ 
+				{ icon: "back", command: "cmd-Return"}
+			]
+		}; 
+
+		this.controller.setupWidget(Mojo.Menu.commandMenu,
+			this.attributes = {
+				spacerHeight: 0,
+				menuClass: 'no-fade'
+			},
+			menuModel
+		);
+
+		this.controller.get('MeetingsContainer1').addClassName('touchpadfix');
+		this.controller.get('MeetingsContainer2').addClassName('touchpadfix');
+		this.controller.get('zipcodeSearch').addClassName('touchpadfix');
+	}
 
 	this.textfieldAttributes = {
 		hintText: '"City, State" and/or "Zipcode"',

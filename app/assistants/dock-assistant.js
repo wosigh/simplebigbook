@@ -46,7 +46,10 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER setup @@");}
 		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 		this.prefsModel = this.prefs.get();
 	}
-	//  ****  End of getting Preferences from cookie
+
+	if(this.prefsModel.isTouchPad === true) {
+		this.controller.get('bookPhrases').addClassName('docktouchpadfix');
+	}
 
 	if (rawPhrases.length <= 0) {
 		this.gatherPhrases();
@@ -296,8 +299,8 @@ try {
 		if (this.debugMe === true) {Mojo.Log.info("BEFORE rawPhrases:", rawPhrases.length);}
 
 		//var lcUrl = "bustedphrases.html";
-		var lcUrl = "books/dockfulltext.txt";
-		//var lcUrl = "books/fulltext.html";
+		//var lcUrl = "books/dockfulltext.txt";
+		var lcUrl = "books/fulltext.html";
 		new Ajax.Request(lcUrl, {
 			method: 'get',
 			onComplete: function (transport) {

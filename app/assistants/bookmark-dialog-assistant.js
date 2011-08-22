@@ -41,10 +41,17 @@ BookmarkDialogAssistant.editBookmarkTask = 'task-edit-bookmark';
 
 BookmarkDialogAssistant.prototype.setup = function(widget) {
 	
+	//  ****  Get the preferences from cookie
+	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
+	this.prefsModel = this.prefs.get();
+
+	if(this.prefsModel.isTouchPad === true) {
+		//this.controller.get('EditBMWrapperDiv').addClassName('touchpadfix');
+	}
+
 	var controller = this.params.sceneController;
 	this.widget = widget;
-	
-	
+
 	if (!SBB.db) {
 		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
 	}

@@ -107,7 +107,12 @@ try {
 				break;
 			case 'cmd-Return':
 				this.controller.getStageController('book').popScenesTo('book');
+				//this.controller.getStageController(this.getStageName()).popScenesTo();
+				//this.controller.stageController.popScene();
 				break;
+			//case 'cmd-GoBack':
+			//	this.controller.stageController.popScene();
+			//	break;
 		}
 	}
 } catch (handleCommandError) {Mojo.Log.logException(handleCommandError, "AppAss handleCommand");}

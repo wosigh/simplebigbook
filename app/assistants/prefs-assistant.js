@@ -26,23 +26,33 @@ function PrefsAssistant() {
 PrefsAssistant.prototype.setup = function () {
 try{
 	//  ****  Get the preferences from cookie
-	//if (! (this.prefsModel)) {
-	//	Mojo.Log.info("********* NO COOKIE LOADED!");
-		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
-		this.prefsModel = this.prefs.get();
-	//}
-	//  ****  End of getting Preferences from cookie
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: textsize", this.prefsModel.textsize);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: chapterNumber", this.prefsModel.chapterNumber);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: pageNumber", this.prefsModel.pageNumber);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: pagePosition", this.prefsModel.pagePosition);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: screenSize", this.prefsModel.screenSize);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: isFullScreen", this.prefsModel.isFullScreen);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: wasChapterJump", this.prefsModel.wasChapterJump);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: scrollingEffect", this.prefsModel.scrollingEffect);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: dockPhraseSpeed", this.prefsModel.dockPhraseSpeed);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: daynight", this.prefsModel.daynight);}
-	if (this.debugMe===true) {Mojo.Log.info("+++++ PREFS CHECK: wasBookmarkJump", this.prefsModel.wasBookmarkJump);}
+	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
+	this.prefsModel = this.prefs.get();
+	Mojo.Log.info(this.prefsModel.isTouchPad, this.prefs.isTouchPad);
+
+	if(this.prefsModel.isTouchPad === true) {
+		var menuModel = {
+			visible: true,
+			items: [ 
+				{ icon: "back", command: "cmd-Return"}
+			]
+		}; 
+
+		this.controller.setupWidget(Mojo.Menu.commandMenu,
+			this.attributes = {
+				spacerHeight: 0,
+				menuClass: 'no-fade'
+			},
+			menuModel
+		);
+	
+		this.controller.get('ScreenSizeDiv').addClassName('touchpadfix');
+		this.controller.get('DayNightDiv').addClassName('touchpadfix');
+		this.controller.get('ScrollingEffectDiv').addClassName('touchpadfix');
+		this.controller.get('DockSpeedDiv').addClassName('touchpadfix');
+		this.controller.get('TextSizeDiv').addClassName('touchpadfix');
+		this.controller.get('SizeButtons').addClassName('touchpadfix');
+	}
 
 	// Attributes for Text Size radio selector
 	this.radioAttributes = {
@@ -98,13 +108,6 @@ try{
 			{label: "5 Minutes", value: 360000}
 		]
 	};
-
-	/*this.dockPhraseSpeedAttributes = {
-		trueValue: 12000,
-		trueLabel: 'Fast',
-		falseValue: 36000,
-		falseLabel: 'Slow'
-	};*/
 
 	this.dockPhraseSpeedModel = { 
 		value: this.prefsModel.dockPhraseSpeed,

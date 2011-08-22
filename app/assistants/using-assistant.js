@@ -19,8 +19,28 @@
 function UsingAssistant() {}
 UsingAssistant.prototype.setup = function () {
 
-	this.prefsModel = new Mojo.Model.Cookie("SimpleBigBookv2");
-	this.prefsModel.get();
+	//  ****  Get the preferences from cookie
+	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
+	this.prefsModel = this.prefs.get();
+
+	if(this.prefsModel.isTouchPad === true) {
+		var menuModel = {
+			visible: true,
+			items: [ 
+				{ icon: "back", command: "cmd-Return"}
+			]
+		}; 
+
+		this.controller.setupWidget(Mojo.Menu.commandMenu,
+			this.attributes = {
+				spacerHeight: 0,
+				menuClass: 'no-fade'
+			},
+			menuModel
+		);
+
+		this.controller.get('UsingWrapperDiv').addClassName('touchpadfix');
+	}
 
 	this.controller.get('appname').innerHTML = _APP_Name;
 	this.controller.get('appdetails').innerHTML = _APP_VersionNumber + " by " + _APP_PublisherName;

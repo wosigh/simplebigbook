@@ -43,6 +43,7 @@ function BookAssistant() {
 
 	this.maxScreenHeight = Mojo.Environment.DeviceInfo.screenHeight;
 	this.maxScreenWidth = Mojo.Environment.DeviceInfo.screenWidth;
+	this.modelName = Mojo.Environment.DeviceInfo.modelNameAscii;
 	this.pageNumber = false;
 	this.scroller = null;
 	this.isVisible = true;
@@ -177,10 +178,12 @@ BookAssistant.prototype.setup = function () {
 		////////////////////////////////////////////////////
 		// Initial states
 		//
-		if ( (this.maxScreenHeight >= 1024) || (this.maxScreenWidth >= 1024) ) {
+		Mojo.Log.info(this.maxScreenHeight, this.maxScreenWidth, this.modelName);
+		if ( (this.maxScreenHeight >= 1024) || (this.maxScreenWidth >= 1024) || (this.modelName.indexOf("ouch") > -1) ) {
 			this.isTouchPad = true;
 			this.prefsModel.isTouchPad = true;
 			this.prefs.put(this.prefsModel);
+			Mojo.Log.info(this.prefsModel.isTouchPad, this.prefs.isTouchPad);
 		}
 
 		if ((this.prefsModel.wasBookmarkJump === true) || (this.prefsModel.wasChapterJump === true)) {

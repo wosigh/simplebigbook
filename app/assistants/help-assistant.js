@@ -3,8 +3,30 @@ function HelpAssistant() {}
 HelpAssistant.prototype.setup = function () {
 	try {
 
-		this.prefsModel = new Mojo.Model.Cookie("SimpleBigBookv2");
-		this.prefsModel.get();
+		//  ****  Get the preferences from cookie
+		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
+		this.prefsModel = this.prefs.get();
+
+		if(this.prefsModel.isTouchPad === true) {
+			var menuModel = {
+				visible: true,
+				items: [ 
+					{ icon: "back", command: "cmd-Return"}
+				]
+			}; 
+
+			this.controller.setupWidget(Mojo.Menu.commandMenu,
+				this.attributes = {
+					spacerHeight: 0,
+					menuClass: 'no-fade'
+				},
+				menuModel
+			);
+
+			//this.controller.get('HelpWrapperDiv').addClassName('touchpadfix');
+			this.controller.get('HelpContainer1').addClassName('touchpadfix');
+			this.controller.get('HelpContainer2').addClassName('touchpadfix');
+		}
 
 		this.controller.get('appname').innerHTML = _APP_Name;
 		this.controller.get('appdetails').innerHTML = _APP_VersionNumber + " by " + _APP_PublisherName;
