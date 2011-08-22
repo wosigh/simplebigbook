@@ -3,6 +3,7 @@
  ******************/ 
 
 body.palm-dark { /*background */
+	/* DEFAULT DARK #393E43 */
 	background: url(../images/background-dark.png) top left no-repeat;
 	background-size: 100%;
 }
