@@ -18,24 +18,39 @@
  */ 
  -->
 
-	<div id="SearchForDiv" class="palm-group">
-		<div class="palm-group-title" id="search-terms-group">Search For</div>
-		<div class="palm-list">
-			<div class="palm-row single">
-				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
-					<div class="title">
-						<div id="srchval" x-mojo-element="TextField"></div>
-					</div>
+<div id="SearchForDiv" class="palm-group">
+	<div class="palm-group-title" id="search-terms-group">Search For</div>
+	<div class="palm-list">
+		<div class="palm-row single">
+			<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+				<div class="title">
+					<div id="srchval" x-mojo-element="TextField"></div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 
-	<div id="SearchRadioDiv" class="palm-list"><div class="palm-row-single"><div class="palm-row-wrapper">
-		<div id="srchtype" x-mojo-element="RadioButton" style="margin:-12px 0px 0px 0px;"></div>
+<div id="SearchRadioDiv" class="palm-list">
+	<div class="palm-row-single">
+		<div class="palm-row-wrapper">
+			<div id="srchtype" x-mojo-element="RadioButton" style="margin:-12px 0px 0px 0px;"></div>
+		</div>
 	</div>
+</div>
 
-<div id="SearchWrapperDiv" class="palm-text-wrapper">
-	<div x-mojo-element="Button" id="search" class="padding:0 0 0 0;"></div>
-	<div x-mojo-element="List" id="linklist" class="palm-row-wrapper" style="display:none;padding:0 0 0 0;"></div>
+<div id="SearchButtonDiv" class="palm-list">
+	<div class="palm-row-single">
+		<div class="palm-row-wrapper">
+			<div x-mojo-element="Button" id="search" class="padding:0 0 0 0;"></div>
+		</div>
+	</div>
+</div>
+
+<div id="SearchWrapperDiv" class="palm-list">
+	<div class="palm-row-single">
+		<div class="palm-row-wrapper">
+			<div x-mojo-element="List" id="linklist" class="palm-row-wrapper" style="display:none;padding:0 0 0 0;"></div>
+		</div>
+	</div>
 </div>

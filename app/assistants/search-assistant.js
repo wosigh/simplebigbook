@@ -51,8 +51,17 @@ SearchAssistant.prototype.setup = function () {
 		this.controller.get('SearchForDiv').addClassName('touchpadfix');
 		this.controller.get('SearchRadioDiv').addClassName('touchpadfix');
 		this.controller.get('SearchWrapperDiv').addClassName('touchpadfix');
+		this.controller.get('SearchButtonDiv').addClassName('touchpadfix');
 	}
 
+
+	/*********************************
+	 * Get HTML objects
+	 *********************************/
+	this.linkList = this.controller.get('linklist');
+
+	/*********************************/
+	
 	item = [
 		["01_foreword.html", "books/", "Foreword", "foreword"],
 		["02_drsopinion.html", "books/", "The Doctor's Opinion", "drsopinion"],
@@ -86,6 +95,7 @@ SearchAssistant.prototype.setup = function () {
 	};
 
 	this.controller.setupWidget('linklist', this.linklistAttributes, this.linklistModel);
+	//this.controller.setupWidget(this.linkList, this.linklistAttributes, this.linklistModel);
 
 	this.radioAttributes = {
 		choices: [{
@@ -237,7 +247,8 @@ SearchAssistant.prototype.gosearch = function (event) {
 
 	for (k = 0; k < txt.length; k++) {
 		if (txt[k].length < 4) {
-			$('linklist').style.display = "block";
+			//$('linklist').style.display = "block";
+			this.linkList.style.display = "block";
 			lcLine = "All words submitted must be at least 4 characters long.";
 			items.push({
 				listdata: lcLine
@@ -327,7 +338,8 @@ SearchAssistant.prototype.gosearch = function (event) {
 		lcHtml += "</font>";
 
 		if ((this.radioValue === 2 && lnCntr === txt.length) || (this.radioValue !== 2 && lnCntr > 0)) {
-			$('linklist').style.display = "block";
+			//$('linklist').style.display = "block";
+			this.linkList.style.display = "block";
 
 			if (('_p' + pagetxt[0] + '_top') === ('_p' + pagetxt_top)) {
 				lcBut = '<div class="palm-row align-center"><div class="palm-button primary" id="' + chaplink + '_p' + pagetxt + '_top" onClick="jumptopage(this.id)"><font size="4">' + whichchap + ", page: " + pagetxt + '</font></div>';
@@ -353,7 +365,8 @@ SearchAssistant.prototype.gosearch = function (event) {
 		});
 	}
 	
-	$('linklist').style.display = "block";
+	//$('linklist').style.display = "block";
+	this.linkList.style.display = "block";
 	this.linklistModel.items = items;
 	this.controller.modelChanged(this.linklistModel);
 

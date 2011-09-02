@@ -593,11 +593,17 @@ BookAssistant.prototype.changeTextSize = function (size) {
 		if (this.prefsModel.isTouchPad === true) {
 			this.controller.document.body.className = 'palm-dark touchpad';
 			this.bookData.className = 'book-body-text-touchpad';
-			Mojo.Log.info("className:", this.controller.document.body.className, this.chapMenu.className);
 		}
 		else {
 			this.controller.document.body.className = 'palm-dark';
 			this.bookData.className = 'book-body-text';
+			//this.bookData.className = 'palm-dark book-body-text';
+			//this.controller.document.body.className = 'palm-dark book-body-text';
+			Mojo.Log.info("className:", this.controller.document.body.className, this.chapMenu.className);
+			Mojo.Log.info("BACKGROUND:", this.controller.document.body.style.backgroundImage, this.bookData.style.backgroundImage);
+			//Mojo.Log.info("BODY:", this.controller.document.get('body').style.backgroundImage);
+			this.bodyThing = this.controller.get('main');
+			Mojo.Log.info("BODY:", this.bodyThing.color);
 		}
 
 		if (this.prefsModel.showScrim === true) {
