@@ -487,12 +487,12 @@ BookAssistant.prototype.moved = function (scrollEnding, position) {
 BookAssistant.prototype.handleWindowResize = function (event) {
 	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER handleWindowResize @@");}
 
+	this.controller.get('body_wallpaper').style.backgroundSize = this.controller.window.innerWidth + "px " + this.controller.window.innerHeight + "px";
+
 	if (this.prefsModel.wasBookmarkJump === false) {
 		this.NewThisBig = this.bookData.clientHeight;
 		this.wasResized = true;
 	}
-
-	//Mojo.Log.info("clientHeight:", this.bookData.clientHeight);
 
 	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE handleWindowResize @@");}
 };
@@ -506,40 +506,87 @@ BookAssistant.prototype.handleWindowResize = function (event) {
 BookAssistant.prototype.holdBook = function (event) {
 	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER holdBook @@");}
 
-	if (this.bookMenuGroup.style.display === 'none') {
+
+	if (this.showScrim === false) {
+		this.groovyTimer = 0;
+		this.groovyFadeIn();
+	}
+	else {
+		this.groovyTimer = 100;
+		this.groovyFadeOut();
+	}
+
+	/*if (this.bookMenuGroup.style.display === 'none') {
 		this.bookMenuGroup.style.display = 'block';
 		this.bookFade.className = 'scene-fade my-fade-' + this.prefsModel.daynight + ' top';
-		//Mojo.Log.info("Show Menu:", this.bookFade.className);
 		this.prefsModel.showScrim = true;
 		this.prefs.put(this.prefsmodel);
 	} else {
 		this.bookMenuGroup.style.display = 'none';
 		this.bookFade.className = 'scene-fade my-fade-none top';
-		//Mojo.Log.info("Hide Menu:", this.bookFade.className);
 		this.prefsModel.showScrim = false;
 		this.prefs.put(this.prefsModel);
-	}
+	}*/
 
 	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE holdBook @@");}
 };
 
 
-BookAssistant.prototype.moveMenu = function (location, element, event) {
-	
-	Mojo.Log.info("location:", location);
-	//var i = -50
-	//while (this.bookMenuGroup.offsetTop > -50) {
-		//element.offsetTop = (element.offsetTop - 10);
-		location = '100px'; //(location + 100) + "px";
-	//Mojo.Menu.viewMenu.top = (Mojo.Menu.viewMenu.top - 10);
-	Mojo.Log.info("location:", location);
-	//	setTimeout(100, element.offsetTop = (element.offsetTop - 1));
-	//	Mojo.Log.info(element.offsetTop);
-	//}
-	
+
+/********************
+ *
+ * FADE OUT
+ *
+ ********************/
+BookAssistant.prototype.groovyFadeOut = function () {
+
+	if (this.groovyTimer > 0) {
+		this.bookMenuGroup.style.opacity = this.groovyTimer * 0.01;
+		this.bookFade.style.opacity = this.groovyTimer * 0.01;
+		this.chapMenu.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
+		//this.chapMenu.style.opacity = this.groovyTimer * 0.01;
+		this.groovyTimer = this.groovyTimer - 9;
+		this.groovyFadeOutTimer = setTimeout(this.groovyFadeOut.bind(this), 12);
+	}
+	else {
+		//Mojo.Log.info("@@ FINISH FADE OUT @@");
+		this.chapMenu.style.color = "rgba(250, 250, 250, 0.0)";
+		this.bookMenuGroup.style.opacity = "0.0";
+		this.bookMenuGroup.style.display = "none";
+		this.bookFade.style.opacity = "0.0";
+		this.bookFade.style.display = "none";
+		this.showScrim = false;
+		this.prefsModel.showScrim = false;
+		this.prefs.put(this.prefsModel);
+	}
 };
 
 
+/********************
+ *
+ * FADE IN
+ *
+ ********************/
+BookAssistant.prototype.groovyFadeIn = function () {
+
+	this.bookMenuGroup.style.display = "block";
+	this.bookFade.style.display = "block";
+
+	if (this.groovyTimer < 100) {
+		this.bookMenuGroup.style.opacity = this.groovyTimer * 0.01;
+		this.bookFade.style.opacity = this.groovyTimer * 0.01;
+		this.chapMenu.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
+		//this.chapMenu.style.opacity = this.groovyTimer * 0.01;
+		this.groovyTimer = this.groovyTimer + 9;
+		this.groovyFadeInTimer = setTimeout(this.groovyFadeIn.bind(this), 12);
+	}
+	else {
+		//Mojo.Log.info("@@ FINISH FADE IN @@");
+		this.showScrim = true;
+		this.prefsModel.showScrim = true;
+		this.prefs.put(this.prefsModel);
+	}
+};
 /********************
  *
  * ORIENTATION CHANGE
@@ -570,15 +617,24 @@ BookAssistant.prototype.changeTextSize = function (size) {
 
 	this.windowHeight = this.controller.window.innerHeight;
 	this.bookData.style.fontSize = size;
+	//Mojo.Log.info("++++++POSITION:", this.controller.get('menu-panel-container').style.opacity);
+	//Mojo.Log.info("++++++POSITION:", this.controller.get('OtherOne').style.opacity);
+	//Mojo.Log.info("++++++POSITION:", this.controller.get('bookMenuGroup').style.opacity);
+
+
+	//this.controller.get('menu-panel-container').style.opacity = "0.6";
+
 
 	////////////////////////////////////////////////////
 	//  ****  Set the color theme while I'm here
 	switch (this.prefsModel.daynight) {
 	case 'day':
+		this.controller.get('body_wallpaper').style.background = "url('images/background-light.png')";
+		this.controller.get('body_wallpaper').style.backgroundSize = this.controller.window.innerWidth + "px " + this.controller.window.innerHeight + "px";
+
 		if (this.prefsModel.isTouchPad === true) {
 			this.controller.document.body.style.className = 'main touchpad';
 			this.bookData.className = 'book-body-text-touchpad';
-			Mojo.Log.info("className:", this.controller.document.body.style.className, this.chapMenu.className);
 		}
 		else {
 			this.controller.document.body.className = 'main';
@@ -590,6 +646,9 @@ BookAssistant.prototype.changeTextSize = function (size) {
 		}
 		break;
 	case 'night':
+		this.controller.get('body_wallpaper').style.background = "url('images/background-dark.png')";
+		this.controller.get('body_wallpaper').style.backgroundSize = this.controller.window.innerWidth + "px " + this.controller.window.innerHeight + "px";
+
 		if (this.prefsModel.isTouchPad === true) {
 			this.controller.document.body.className = 'palm-dark touchpad';
 			this.bookData.className = 'book-body-text-touchpad';
@@ -597,13 +656,6 @@ BookAssistant.prototype.changeTextSize = function (size) {
 		else {
 			this.controller.document.body.className = 'palm-dark';
 			this.bookData.className = 'book-body-text';
-			//this.bookData.className = 'palm-dark book-body-text';
-			//this.controller.document.body.className = 'palm-dark book-body-text';
-			Mojo.Log.info("className:", this.controller.document.body.className, this.chapMenu.className);
-			Mojo.Log.info("BACKGROUND:", this.controller.document.body.style.backgroundImage, this.bookData.style.backgroundImage);
-			//Mojo.Log.info("BODY:", this.controller.document.get('body').style.backgroundImage);
-			this.bodyThing = this.controller.get('main');
-			Mojo.Log.info("BODY:", this.bodyThing.color);
 		}
 
 		if (this.prefsModel.showScrim === true) {
@@ -1033,7 +1085,8 @@ BookAssistant.prototype.doubleClick = function (event) {
 	// Detect single tap vs double tap
 	if (this.whichWay === 'up') {
 		if (this.click === 1) { //DOUBLE TAP
-			if (this.controller.window.innerHeight !== this.maxScreenHeight) {
+			//if (this.controller.window.innerHeight !== this.maxScreenHeight) {
+			if (this.prefsModel.isFullScreen === false) {
 				this.doFullScreen('big');
 				this.click = 0;
 			} else {
@@ -1075,12 +1128,14 @@ BookAssistant.prototype.doFullScreen = function (forceSelection, event) {
 			this.prefsModel.isFullScreen = true;
 			this.prefs.put(this.prefsModel);
 			forceSelection = null;
+			//Mojo.Log.info("BIG:", this.controller.window.innerHeight, this.maxScreenHeight);
 			break;
 		case 'small':
 			this.controller.enableFullScreenMode(false);
 			this.prefsModel.isFullScreen = false;
 			this.prefs.put(this.prefsModel);
 			forceSelection = null;
+			//Mojo.Log.info("SMALL:", this.controller.window.innerHeight, this.maxScreenHeight);
 			break;
 		}
 	}

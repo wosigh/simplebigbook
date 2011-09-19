@@ -4,9 +4,10 @@
 
 body.palm-dark { /*background */
 	/* DEFAULT DARK #393E43 */
-	background: url(../images/background-dark.png) top left no-repeat;
-	background-color: #393E43;
-	background-size: 100%;
+	/*background: url(../images/background-dark.png) top left no-repeat;*/
+	/*background-color: #393E43;*/
+	/*background-size: 100%;*/
+	background-repeat: no-repeat;
 }
 
 body.main {
@@ -14,26 +15,29 @@ body.main {
 	/*background: #212121;*/
 	/*PALM-DEFAULT background: #E4E4E2;*/
 	/* GOOD background: #fefbf7;*/
-	background: url(../images/background-light.png) top left no-repeat;
-	background-color: #E4E4E2;
-	background-size: 100%;
+	/*background: url(../images/background-light.png) top left no-repeat;*/
+	/*background-color: #E4E4E2;*/
+	/*background-size: 100%;
 	text-align: justify;
-	font-size: 16px;
+	font-size: 16px;*/
 	/*color: #383837;*/
+	background-repeat: no-repeat;
 }
 
 body.main.touchpad {
 	background: #fefbf7;
+	background-repeat: no-repeat;
 	/*color: #010101;*/
-	text-align: justify;
-	font-size: 18px;
+	/*text-align: justify;*/
+	/*font-size: 18px;*/
 }
 
 body.palm-dark.touchpad {
 	background: #393E43;
+	background-repeat: no-repeat;
 	/*color: #CECFD0;*/
-	text-align: justify;
-	font-size: 18px;
+	/*text-align: justify;*/
+	/*font-size: 18px;*/
 }
 
 .main .justify {
@@ -147,7 +151,7 @@ body.palm-dark.touchpad {
 	width: 100%;
 	position: fixed;
 	left: 0px;
-	z-index: 10000;
+	/*z-index: 10000;*/
 	-webkit-palm-mouse-target: ignore;
 }
 
@@ -210,7 +214,7 @@ body.palm-dark.touchpad {
 	min-width: 180px;
 	margin: 5px 0 0 0;
 	padding: 0;
-	z-index: 199500;
+	/*z-index: 199500;*/
 	position: fixed;
 	top: 80px;
 	left: 20px;
@@ -299,7 +303,7 @@ body.dock
 
 .bookmark-icon-overlay {
   position: absolute;
-  z-index: 1;
+  /*z-index: 1;*/
   left: 8px;
   margin-top: 8px;
   width: 40px;
@@ -314,7 +318,7 @@ body.dock
 
 .bookmark-icon-overlay {
   position: absolute;
-  z-index: 1;
+  /*z-index: 1;*/
   left: 8px;
   margin-top: 8px;
   width: 40px;

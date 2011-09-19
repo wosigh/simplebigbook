@@ -23,14 +23,14 @@
 <body>
 <div class="main" id="main">
 
-<div id="menu-panel-container">
-<div class="palm-menu view-menu palm-default" style="width:100%;z-index:30000;max-width:100%;">
-	<div class="palm-menu-group" style="width:100%;z-index:90000;" id="bookMenuGroup">
+<div id="menu-panel-container" style="opacity:1.0;">
+<div id="OtherOne" class="palm-menu view-menu palm-default" style="width:100%;max-width:100%;">
+	<div class="palm-menu-group" style="width:100%;" id="bookMenuGroup">
 		<div class="palm-menu-button" x-mojo-tap-highlight="momentary" id="bookmarkMenu" style="left:0;">
 			<div class="palm-menu-icon bookmarksMenuIcon"></div>
 		</div>
 		<div class="palm-menu-text chapMenu-text" x-mojo-tap-highlight="momentary" id="chapMenu" style="position:relative;margin:0px 60px 0px 60px;">
-			<div class="truncating-text">#{chapLabel}</div>
+			<div id="chapMenuDiv" class="truncating-text">#{chapLabel}</div>
 		</div>
 		<div class="palm-menu-button" x-mojo-tap-highlight="momentary" id="pageMenu" style="right:0;">
 			<div class="palm-menu-icon pageMenuIcon"></div>
@@ -39,7 +39,7 @@
 </div>
 </div>
 
-<div id="book-fade" class="scene-fade top" x-mojo-scroll-fade="top"></div>
+<div id="book-fade" class="scene-fade top" x-mojo-scroll-fade="top" style="opacity:1.0;"></div>
 <!--div id="book-fade" class="scene-fade" x-mojo-scroll-fade="top"></div-->
 <!--div id="bookdata" class="book-body-text"></div-->
 <div id="bookdata"></div>

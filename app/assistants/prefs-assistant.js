@@ -215,11 +215,13 @@ PrefsAssistant.prototype.dayNightButtonToggle = function(event) {
 PrefsAssistant.prototype.setDayNight= function(dn){
 	switch (dn){
 		case 'day':
+			this.controller.get('body_wallpaper').style.background = "url('images/background-light.png')";
 			var body = Element.select(this.controller.document, 'body');
 			body[0].addClassName('main');  //palm-default
 			body[0].removeClassName('palm-dark');
 			break;
 		case 'night':
+			this.controller.get('body_wallpaper').style.background = "url('images/background-dark.png')";
 			var body = Element.select(this.controller.document, 'body');
 			body[0].addClassName('palm-dark');
 			body[0].removeClassName('main');  //palm-default
