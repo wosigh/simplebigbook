@@ -46,12 +46,12 @@ try{
 			menuModel
 		);
 	
-		this.controller.get('ScreenSizeDiv').addClassName('touchpadfix');
-		this.controller.get('DayNightDiv').addClassName('touchpadfix');
-		this.controller.get('ScrollingEffectDiv').addClassName('touchpadfix');
-		this.controller.get('DockSpeedDiv').addClassName('touchpadfix');
-		this.controller.get('TextSizeDiv').addClassName('touchpadfix');
-		this.controller.get('SizeButtons').addClassName('touchpadfix');
+		$('ScreenSizeDiv').addClassName('touchpadfix');
+		$('DayNightDiv').addClassName('touchpadfix');
+		$('ScrollingEffectDiv').addClassName('touchpadfix');
+		$('DockSpeedDiv').addClassName('touchpadfix');
+		$('TextSizeDiv').addClassName('touchpadfix');
+		$('SizeButtons').addClassName('touchpadfix');
 	}
 
 	// Attributes for Text Size radio selector
@@ -132,7 +132,7 @@ try{
 	this.controller.setupWidget('dockPhraseSpeedToggle', this.dockPhraseSpeedAttributes, this.dockPhraseSpeedModel);
 	this.controller.setupWidget('daynightToggle', this.dayNightToggleAttributes,this.daynightToggleModel );
 
-	this.dayNightButton = this.controller.get('daynightToggle');
+	this.dayNightButton = $('daynightToggle');
 	this.dayNightButtonBinder = this.dayNightButtonToggle.bindAsEventListener(this);
 
 	this.changeTextSize(this.prefsModel.textsize);
@@ -145,11 +145,11 @@ try{
 
 
 PrefsAssistant.prototype.activate = function (event) {
-	Mojo.Event.listen(this.controller.get('rbutton'), Mojo.Event.propertyChange, this.radioTextSize.bind(this));
-	Mojo.Event.listen(this.controller.get('screenSizeToggle'), Mojo.Event.propertyChange, this.updateScreenSize.bind(this));
-	Mojo.Event.listen(this.controller.get('scrollEffectToggle'), Mojo.Event.propertyChange, this.updateScrollEffect.bind(this));
-	Mojo.Event.listen(this.controller.get('dockPhraseSpeedToggle'), Mojo.Event.propertyChange, this.updateDockPhraseSpeed.bind(this));
-	Mojo.Event.listen(this.controller.get('daynightToggle'), Mojo.Event.propertyChange, this.dayNightButtonToggle.bind(this));
+	Mojo.Event.listen($('rbutton'), Mojo.Event.propertyChange, this.radioTextSize.bind(this));
+	Mojo.Event.listen($('screenSizeToggle'), Mojo.Event.propertyChange, this.updateScreenSize.bind(this));
+	Mojo.Event.listen($('scrollEffectToggle'), Mojo.Event.propertyChange, this.updateScrollEffect.bind(this));
+	Mojo.Event.listen($('dockPhraseSpeedToggle'), Mojo.Event.propertyChange, this.updateDockPhraseSpeed.bind(this));
+	Mojo.Event.listen($('daynightToggle'), Mojo.Event.propertyChange, this.dayNightButtonToggle.bind(this));
 };
 
 
@@ -163,11 +163,11 @@ PrefsAssistant.prototype.deactivate = function (event) {
 
 PrefsAssistant.prototype.cleanup = function (event) {
 	this.prefs.put(this.prefsModel);
-	Mojo.Event.stopListening(this.controller.get('rbutton'), Mojo.Event.propertyChange, this.radioTextSize.bind(this));
-	Mojo.Event.stopListening(this.controller.get('screenSizeToggle'), Mojo.Event.propertyChange, this.updateScreenSize.bind(this));
-	Mojo.Event.stopListening(this.controller.get('scrollEffectToggle'), Mojo.Event.propertyChange, this.updateScrollEffect.bind(this));
-	Mojo.Event.stopListening(this.controller.get('dockPhraseSpeedToggle'), Mojo.Event.propertyChange, this.updateDockPhraseSpeed.bind(this));
-	Mojo.Event.stopListening(this.controller.get('daynightToggle'), Mojo.Event.propertyChange, this.dayNightButtonToggle.bind(this));
+	Mojo.Event.stopListening($('rbutton'), Mojo.Event.propertyChange, this.radioTextSize.bind(this));
+	Mojo.Event.stopListening($('screenSizeToggle'), Mojo.Event.propertyChange, this.updateScreenSize.bind(this));
+	Mojo.Event.stopListening($('scrollEffectToggle'), Mojo.Event.propertyChange, this.updateScrollEffect.bind(this));
+	Mojo.Event.stopListening($('dockPhraseSpeedToggle'), Mojo.Event.propertyChange, this.updateDockPhraseSpeed.bind(this));
+	Mojo.Event.stopListening($('daynightToggle'), Mojo.Event.propertyChange, this.dayNightButtonToggle.bind(this));
 };
 
 
@@ -215,13 +215,13 @@ PrefsAssistant.prototype.dayNightButtonToggle = function(event) {
 PrefsAssistant.prototype.setDayNight= function(dn){
 	switch (dn){
 		case 'day':
-			this.controller.get('body_wallpaper').style.background = "url('images/background-light.png')";
+			$('body_wallpaper').style.background = "url('images/background-light.png')";
 			var body = Element.select(this.controller.document, 'body');
 			body[0].addClassName('main');  //palm-default
 			body[0].removeClassName('palm-dark');
 			break;
 		case 'night':
-			this.controller.get('body_wallpaper').style.background = "url('images/background-dark.png')";
+			$('body_wallpaper').style.background = "url('images/background-dark.png')";
 			var body = Element.select(this.controller.document, 'body');
 			body[0].addClassName('palm-dark');
 			body[0].removeClassName('main');  //palm-default

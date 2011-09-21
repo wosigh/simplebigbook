@@ -18,6 +18,7 @@
 
 function SearchAssistant() {
 	this.debugMe = false;
+	this.radioValue = 3;
 }
 
 /********************
@@ -48,17 +49,17 @@ SearchAssistant.prototype.setup = function () {
 			menuModel
 		);
 
-		this.controller.get('SearchForDiv').addClassName('touchpadfix');
-		this.controller.get('SearchRadioDiv').addClassName('touchpadfix');
-		this.controller.get('SearchWrapperDiv').addClassName('touchpadfix');
-		this.controller.get('SearchButtonDiv').addClassName('touchpadfix');
+		$('SearchForDiv').addClassName('touchpadfix');
+		$('srchtype').addClassName('touchpadfix');
+		$('search').addClassName('touchpadfix');
+		$('linklist').addClassName('touchpadfix');
 	}
 
 
 	/*********************************
 	 * Get HTML objects
 	 *********************************/
-	this.linkList = this.controller.get('linklist');
+	this.linkList = $('linklist');
 
 	/*********************************/
 	
@@ -111,7 +112,7 @@ SearchAssistant.prototype.setup = function () {
 	};
 
 	this.radioModel = {
-		value: 1,
+		value: 3,
 		disabled: false
 	};
 	this.controller.setupWidget('srchtype', this.radioAttributes, this.radioModel);
@@ -135,6 +136,8 @@ SearchAssistant.prototype.setup = function () {
 	//  ****  Setup for Application Menu
 	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);
 
+	//Mojo.Log.info("VALUE:", $('srchtype').value.toString());
+
 if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE SEARCH SETUP @@");}
 };
 
@@ -154,12 +157,13 @@ SearchAssistant.prototype.activate = function (event) {
 	srchval = "";
 	getLocalInfo();
 	allPages = [];
-	allPageUrl = [];
-	radioValue = 1;
-	holdlist = 0;
+	//allPageUrl = [];
+	//radioValue = 3;
+	//holdlist = 0;
 
 	this.controller.listen('search', Mojo.Event.tap, this.gosearch.bind(this));
 	this.controller.listen('srchtype', Mojo.Event.propertyChange, this.radioCallback.bind(this));
+	this.controller.document.addEventListener("keyup", this.keyDownHandler.bind(this), true);
 
 	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE SEARCH ACTIVATE @@");}
 };
@@ -231,6 +235,20 @@ getLocalInfo = function () {
 
 /********************
  *
+ * ENTER KEY
+ * 
+ ********************/
+SearchAssistant.prototype.keyDownHandler = function(event)
+{
+	if (Mojo.Char.isEnterKey(event.keyCode)) {
+		$('srchval').mojo.blur();
+		setTimeout(this.gosearch.bind(this), 10);
+	}
+}
+
+
+/********************
+ *
  * GO SEARCH
  * 
  * The HTML is quoted now (id="somepage_12") which 
@@ -241,44 +259,39 @@ SearchAssistant.prototype.gosearch = function (event) {
 	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER SEARCH GO SEARCH @@");}
 
 	items = [];
-	var lcSrch = this.controller.get('srchval').mojo.getValue();
+
+	var lcSrch = $('srchval').mojo.getValue();
 	lcSrch = trimAll(lcSrch);
-	txt = lcSrch.split(" ");
 
-	for (k = 0; k < txt.length; k++) {
-		if (txt[k].length < 4) {
-			//$('linklist').style.display = "block";
-			this.linkList.style.display = "block";
-			lcLine = "All words submitted must be at least 4 characters long.";
-			items.push({
-				listdata: lcLine
-			});
-			this.linklistModel.items = items;
-			this.controller.modelChanged(this.linklistModel);
-			return;
-		}
+	if (this.radioValue === 3) {
+		txt = [];
+		txt[0] = trimAll(lcSrch);
+		isPhrase = true;
 	}
-	if (this.radioValue === undefined) {
-		this.radioValue = 1;
-	}
+	else {
+		txt = lcSrch.split(" ");
 
-	if (this.radioValue !== 1) {
-		if (this.radioValue !== 2) {
-			//txt = new Array();
-			txt = [];
-			txt[0] = trimAll(lcSrch);
-			isPhrase = true;
+		for (k = 0; k < txt.length; k++) {
+			if (txt[k].length < 4) {
+				this.linkList.style.display = "block";
+				lcLine = "<center>All words must be at least 4 characters.</center>";
+				items.push({
+					listdata: lcLine
+				});
+				this.linklistModel.items = items;
+				this.controller.modelChanged(this.linklistModel);
+				return;
+			}
 		}
 	}
 
 	if (this.debugMe === true) {Mojo.Log.info("** radioValue", this.radioValue);}
 
-	//fnd = new Array();
 	fnd = [];
 	total = 0;
 	time = 0;
-	var whichchap = "";
-	var chaplink = "";
+	var whichchap = '';
+	var chaplink = '';
 
 	for (i = 0; i < allPages.length; i++) {
 		thisPage = allPages[i];
@@ -300,8 +313,6 @@ SearchAssistant.prototype.gosearch = function (event) {
 			pagetxt = (trimAll(rawpage).substring(0, rawpage.indexOf("_")));
 			if (this.debugMe === true) {Mojo.Log.info("+++ IS FIRST PAGE:", pagetxt_top, pagetxt);}
 		}
-
-		whichchap = '';
 
 		for (q = 0; q < item.length; q++) {
 			if (this.debugMe === true) {Mojo.Log.info("** QQQQ", q, item.length, whichchap, chapname);}
@@ -361,11 +372,10 @@ SearchAssistant.prototype.gosearch = function (event) {
 	if (items.length === 0) {
 		this.linklistModel.listTitle = "Search Results: 0";
 		items.push({
-			listdata: "No matches found"
+			listdata: "<center>No matches found.</center>"
 		});
 	}
-	
-	//$('linklist').style.display = "block";
+
 	this.linkList.style.display = "block";
 	this.linklistModel.items = items;
 	this.controller.modelChanged(this.linklistModel);

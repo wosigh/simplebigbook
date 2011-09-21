@@ -39,12 +39,12 @@ UsingAssistant.prototype.setup = function () {
 			menuModel
 		);
 
-		this.controller.get('UsingWrapperDiv').addClassName('touchpadfix');
+		$('UsingWrapperDiv').addClassName('touchpadfix');
 	}
 
-	this.controller.get('appname').innerHTML = _APP_Name;
-	this.controller.get('appdetails').innerHTML = _APP_VersionNumber + " by " + _APP_PublisherName;
-	this.controller.get('copywrite').innerHTML = _APP_Copyright;
+	$('appname').innerHTML = _APP_Name;
+	$('appdetails').innerHTML = _APP_VersionNumber + " by " + _APP_PublisherName;
+	$('copywrite').innerHTML = _APP_Copyright;
 
 	//  ****  Setup for Application Menu
 	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);

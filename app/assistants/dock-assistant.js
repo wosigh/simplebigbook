@@ -48,7 +48,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER setup @@");}
 	}
 
 	if(this.prefsModel.isTouchPad === true) {
-		this.controller.get('bookPhrases').addClassName('docktouchpadfix');
+		$('bookPhrases').addClassName('docktouchpadfix');
 	}
 
 	if (rawPhrases.length <= 0) {
@@ -61,7 +61,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER setup @@");}
 	//}
 
 	this.controller.document.body.className = 'dock';
-	this.bookPhrases = this.controller.get('bookPhrases');
+	this.bookPhrases = $('bookPhrases');
 	this.bookPhrases.innerHTML = this.getRandomBookPhrases();
 
 

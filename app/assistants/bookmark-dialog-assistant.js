@@ -40,17 +40,16 @@ BookmarkDialogAssistant.editBookmarkTask = 'task-edit-bookmark';
 
 
 BookmarkDialogAssistant.prototype.setup = function(widget) {
-	
+	var controller = this.params.sceneController;
+	this.widget = widget;
+
 	//  ****  Get the preferences from cookie
 	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 	this.prefsModel = this.prefs.get();
 
 	if(this.prefsModel.isTouchPad === true) {
-		//this.controller.get('EditBMWrapperDiv').addClassName('touchpadfix');
+		controller.get('buttonsDiv').addClassName('touchpadfix');
 	}
-
-	var controller = this.params.sceneController;
-	this.widget = widget;
 
 	if (!SBB.db) {
 		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
@@ -61,11 +60,26 @@ BookmarkDialogAssistant.prototype.setup = function(widget) {
 		changeOnKeyPress: true,
 		focusMode: Mojo.Widget.focusSelectMode  
 	};
-	controller.setupWidget('titleField', titleFieldAttributes, this.params.urlReference);
 
-	controller.get('actionButton').addEventListener(Mojo.Event.tap, this._onAddBookmarkButtonTap.bind(this));
-	controller.get('cancelBookmarkButton').addEventListener(Mojo.Event.tap, this._onCancelButtonTap.bind(this));
+	controller.setupWidget('titleField', titleFieldAttributes, this.params.urlReference);
+	//controller.document.addEventListener("keyup", this.keyDownHandler.bind(this), true);
+	$('saveBookmarkButton').addEventListener(Mojo.Event.tap, this._onAddBookmarkButtonTap.bind(this));
+	$('cancelBookmarkButton').addEventListener(Mojo.Event.tap, this._onCancelButtonTap.bind(this));
 };
+
+
+/********************
+ *
+ * ENTER KEY
+ * 
+ ********************/
+BookmarkDialogAssistant.prototype.keyDownHandler = function(event)
+{
+	if (Mojo.Char.isEnterKey(event.keyCode)) {
+		$('srchval').mojo.blur();
+		setTimeout(this._onAddBookmarkButtonTap.bind(this), 10);
+	}
+}
 
 
 BookmarkDialogAssistant.prototype._onAddBookmarkButtonTap = function() {
@@ -85,8 +99,6 @@ BookmarkDialogAssistant.prototype._onAddBookmarkButtonTap = function() {
 				);
 			}.bind(this)
 		);
-
-
 	}
 	else {
 		Mojo.Log.warn("Must supply a name.");

@@ -39,7 +39,7 @@ CalcAssistant.prototype.setup = function () {
 			menuModel
 		);
 
-		this.controller.get('CalcWrapperDiv').addClassName('touchpadfix');
+		$('CalcWrapperDiv').addClassName('touchpadfix');
 	}
 
 	//  ****  Setup for Application Menu

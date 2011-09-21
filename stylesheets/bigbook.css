@@ -53,7 +53,8 @@ body.palm-dark.touchpad {
 .main .book-body-text-touchpad {
 	text-align: justify;
 	font-size: 16px;
-	margin: 6px 60px 6px 60px;
+	/*margin: 6px 60px 6px 60px;*/
+	margin: 60px 60px 60px 60px;
 }
 
 .main .special-section {

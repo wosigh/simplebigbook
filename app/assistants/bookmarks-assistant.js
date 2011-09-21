@@ -63,7 +63,7 @@ try{
 			menuModel
 		);
 
-		this.controller.get('BookmarksWrapperDiv').addClassName('touchpadfix');
+		//$('BookmarksWrapperDiv').addClassName('touchpadfix');
 	}
 
 	////////////////////////////////////////////////////
@@ -82,10 +82,10 @@ try{
 		reorderable: false,
 		emptyTemplate: 'bookmarks/emptyTemplate'
 		}, this.listModel);
-	this.BookmarksListWidget = this.controller.get('Bookmarks_List');
+	this.BookmarksListWidget = $('Bookmarks_List');
 
 	this.controller.setupWidget('deleteRows', {}, {label: 'Reset ALL Bookmarks'});
-	this.deleteRowsWidget = this.controller.get('deleteRows');
+	this.deleteRowsWidget = $('deleteRows');
 	////////////////////////////////////////////////////
 
 	////////////////////////////////////////////////////
@@ -114,7 +114,6 @@ try {
 	this.controller.listen(this.BookmarksListWidget, Mojo.Event.listDelete, this.bookmarkDelete.bind(this));
 	this.controller.listen(this.BookmarksListWidget, Mojo.Event.listTap, this.bookmarkRenameDialog.bind(this));
 	//this.controller.listen(this.BookmarksListWidget, Mojo.Event.listReorder, this.bookmarkReorder.bind(this));
-	//this.controller.listen(this.deleteRowsWidget, Mojo.Event.tap, this.deleteRows.bind(this));
 	this.controller.listen(this.deleteRowsWidget, Mojo.Event.tap, this.clearBookmarks.bind(this));
 
 	} catch (error) {Mojo.Log.error("ACTIVE ERROR", error);}
@@ -133,7 +132,6 @@ BookmarksAssistant.prototype.deactivate = function (event) {
 	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listDelete, this.bookmarkDeleteHandler);
 	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listTap, this.bookmarkRenameDialogHandler);
 	//this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listReorder, this.bookmarkReorder);
-	//this.controller.stopListening(this.deleteRowsWidget, Mojo.Event.tap, this.deleteRows);
 	this.controller.stopListening(this.deleteRowsWidget, Mojo.Event.tap, this.clearBookmarksHandler);
 
 	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Deactivate @@");}
@@ -151,7 +149,6 @@ if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Cleanup @@");}
 	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listDelete, this.bookmarkDeleteHandler);
 	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listTap, this.bookmarkRenameDialogHandler);
 	//this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listReorder, this.bookmarkReorder);
-	//this.controller.stopListening(this.deleteRowsWidget, Mojo.Event.tap, this.deleteRows);
 	this.controller.stopListening(this.deleteRowsWidget, Mojo.Event.tap, this.clearBookmarksHandler);
 
 if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Cleanup @@");}

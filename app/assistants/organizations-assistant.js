@@ -40,7 +40,7 @@ OrganizationsAssistant.prototype.setup = function () {
 			menuModel
 		);
 
-		this.controller.get('OrgWrapperDiv').addClassName('touchpadfix');
+		$('OrgWrapperDiv').addClassName('touchpadfix');
 	}
 
 	//  ****  Setup for Application Menu

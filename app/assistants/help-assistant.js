@@ -23,13 +23,13 @@ HelpAssistant.prototype.setup = function () {
 				menuModel
 			);
 
-			//this.controller.get('HelpWrapperDiv').addClassName('touchpadfix');
-			this.controller.get('HelpContainer1').addClassName('touchpadfix');
-			this.controller.get('HelpContainer2').addClassName('touchpadfix');
+			//$('HelpWrapperDiv').addClassName('touchpadfix');
+			$('HelpContainer1').addClassName('touchpadfix');
+			$('HelpContainer2').addClassName('touchpadfix');
 		}
 
-		this.controller.get('appname').innerHTML = _APP_Name;
-		this.controller.get('appdetails').innerHTML = _APP_VersionNumber + " by " + _APP_PublisherName;
+		$('appname').innerHTML = _APP_Name;
+		$('appdetails').innerHTML = _APP_VersionNumber + " by " + _APP_PublisherName;
 
 		var supportitems = [];
 		var i = 0;
@@ -122,7 +122,7 @@ HelpAssistant.prototype.setup = function () {
 			listTitle: $L('Support'),
 			items: supportitems
 		});
-		this.controller.get('copywrite').innerHTML = _APP_Copyright;
+		$('copywrite').innerHTML = _APP_Copyright;
 	} catch (e) {
 		Mojo.Log.error(e);
 	}
@@ -164,13 +164,13 @@ HelpAssistant.prototype.handleListTap = function (event) {
 
 HelpAssistant.prototype.activate = function (event) {
 	this.handleListTap = this.handleListTap.bind(this);
-	Mojo.Event.listen(this.controller.get('AppHelp_list'), Mojo.Event.listTap, this.handleListTap);
-	Mojo.Event.listen(this.controller.get('AppSupport_list'), Mojo.Event.listTap, this.handleListTap);
+	Mojo.Event.listen($('AppHelp_list'), Mojo.Event.listTap, this.handleListTap);
+	Mojo.Event.listen($('AppSupport_list'), Mojo.Event.listTap, this.handleListTap);
 };
 
 HelpAssistant.prototype.deactivate = function (event) {};
 
 HelpAssistant.prototype.cleanup = function (event) {
-	Mojo.Event.stopListening(this.controller.get('AppHelp_list'), Mojo.Event.listTap, this.handleListTap);
-	Mojo.Event.stopListening(this.controller.get('AppSupport_list'), Mojo.Event.listTap, this.handleListTap);
+	Mojo.Event.stopListening($('AppHelp_list'), Mojo.Event.listTap, this.handleListTap);
+	Mojo.Event.stopListening($('AppSupport_list'), Mojo.Event.listTap, this.handleListTap);
 };

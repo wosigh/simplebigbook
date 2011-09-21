@@ -23,10 +23,19 @@ Mojo.Log.info("=======================  START STAGE ASST =======================
 function StageAssistant(stageController) {}
 
 this.debugMe = false;
+this.maxScreenHeight = Mojo.Environment.DeviceInfo.screenHeight;
+this.maxScreenWidth = Mojo.Environment.DeviceInfo.screenWidth;
+this.modelName = Mojo.Environment.DeviceInfo.modelNameAscii;
+Mojo.Log.info("IN STAGE:", this.maxScreenHeight, this.maxScreenWidth, this.modelName);
 
 // stage names
-var mainStageName = 'book';
 var dockStageName = 'dock';
+if ( (this.maxScreenHeight >= 1024) || (this.maxScreenWidth >= 1024) || (this.modelName.indexOf("ouch") > -1) ) {
+	var mainStageName = 'booktp';
+}
+else {
+	var mainStageName = 'book'
+}
 
 StageAssistant.prototype.setup = function () {
 
