@@ -1,5 +1,5 @@
 /*******************
- * BODIES
+ * BODIES - GENERAL
  ******************/ 
 
 body.palm-dark { /*background */
@@ -24,22 +24,6 @@ body.main {
 	background-repeat: no-repeat;
 }
 
-body.main.touchpad {
-	background: #fefbf7;
-	background-repeat: no-repeat;
-	/*color: #010101;*/
-	/*text-align: justify;*/
-	/*font-size: 18px;*/
-}
-
-body.palm-dark.touchpad {
-	background: #393E43;
-	background-repeat: no-repeat;
-	/*color: #CECFD0;*/
-	/*text-align: justify;*/
-	/*font-size: 18px;*/
-}
-
 .main .justify {
 	text-align: justify;
 }
@@ -48,13 +32,6 @@ body.palm-dark.touchpad {
 	text-align: justify;
 	font-size: 16px;
 	margin: 6px 6px 6px 6px;
-}
-
-.main .book-body-text-touchpad {
-	text-align: justify;
-	font-size: 16px;
-	/*margin: 6px 60px 6px 60px;*/
-	margin: 60px 60px 60px 60px;
 }
 
 .main .special-section {
@@ -69,19 +46,8 @@ body.palm-dark.touchpad {
 	text-align: justify;
 }
 
-.main .indent.touchpad {
-	margin: 6px 60px 6px 60px;
-	text-indent:2ex;
-	text-align: justify;
-}
-
 .main .no-indent {
 	padding: 6px 0px 6px 0px;
-	text-align: justify;
-}
-
-.main .no-indent.touchpad {
-	margin: 6px 60px 6px 60px;
 	text-align: justify;
 }
 
@@ -106,13 +72,17 @@ body.palm-dark.touchpad {
 	/*font-style: italic;*/
 	font-family: serif;
 	font-weight: bold;
-	text-shadow : 1px 2px 5px black;
+	text-shadow: 1px 2px 5px black;
 	float: left;
 	display: block;
 	margin: -12px 0px -12px 0px;
 	padding: 0px 6px -6px 0px;
 	border: 0px solid black;
 	text-align: justify;
+}
+
+.main .hiddenDiv {
+	display: none;
 }
 
 .align-left {
@@ -185,6 +155,71 @@ body.palm-dark.touchpad {
 .main .border2 {
 	border: 1px solid red;
 }
+
+
+/*******************
+ * BODIES - TOUCHPAD
+ ******************/ 
+body.main.touchpad {
+	background: #fefbf7;
+	background-repeat: no-repeat;
+	/*color: #010101;*/
+	/*text-align: justify;*/
+	/*font-size: 18px;*/
+}
+
+body.palm-dark.touchpad {
+	background: #393E43;
+	background-repeat: no-repeat;
+	/*color: #CECFD0;*/
+	/*text-align: justify;*/
+	/*font-size: 18px;*/
+}
+
+.main .book-body-text-touchpad {
+	border: 0px solid;
+	text-align: justify;
+	font-size: 16px;
+	/*margin: 6px 60px 6px 60px;*/
+	margin: 60px 60px 0px 60px;
+	position: relative;
+	/*top: 70px;*/
+}
+
+.main .indent.touchpad {
+	margin: 6px 60px 6px 60px;
+	text-indent:2ex;
+	text-align: justify;
+}
+
+.main .no-indent.touchpad {
+	margin: 6px 60px 6px 60px;
+	text-align: justify;
+}
+
+.main .tpchapterTitle {
+	border: 0px solid;
+	display: none;
+	font-family: serif;
+	font-size: 36px;
+	font-style: italic;
+	font-weight: bold;
+	position: fixed;
+	text-align: center;
+	text-shadow: 1px 2px 5px black;
+	width: 100%;
+}
+
+.main .tpChapterNumber {
+	border: 0px solid;
+	font-family: serif;
+	font-weight: bold;
+	position: fixed;
+	text-align: center;
+	text-shadow: 1px 2px 5px black;
+	width: 100%;
+}
+
 
 
 /*******************

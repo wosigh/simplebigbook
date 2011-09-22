@@ -162,93 +162,123 @@ StageAssistant.prototype.cleanup = function (event) {};
 	try{
 	SBB.chapterList = [];
 	SBB.chapterList.push({
+		chapternumberlabel: "Forward",
 		label: "Foreword",
 		value: "1",
 		shortname: "forward",
+		firstpage: "foreword_pxiii_text",
 		file: "01_foreword.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "The Doctor's Opinion",
 		label: "The Doctor's Opinion",
 		value: "2",
 		shortname: "drsopinion",
+		firstpage: "drsopinion_pxxiii_text",
 		file: "02_drsopinion.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Chapter 1",
 		label: "Bill's Story",
 		value: "3",
 		shortname: "billsstory",
+		firstpage: "bill_p1_text",
 		file: "03_billsstory.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Chapter 2",
 		label: "There is a Solution",
 		value: "4",
 		shortname: "thereis",
+		firstpage: "thereis_p17_text",
 		file: "04_thereis.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Chapter 3",
 		label: "More About Alcoholism",
 		value: "5",
 		shortname: "moreabout",
+		firstpage: "moreabout_30p_text",
 		file: "05_moreabout.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Chapter 4",
 		label: "We Agnostics",
 		value: "6",
 		shortname: "weagnostics",
+		firstpage: "weagnostics_p44_text",
 		file: "06_weagnostics.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Chapter 5",
 		label: "How It Works",
 		value: "7",
 		shortname: "howitworks",
+		firstpage: "howitworks_p58_text",
 		file: "07_howitworks.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Chapter 6",
 		label: "Into Action",
 		value: "8",
 		shortname: "intoaction",
+		firstpage: "intoaction_p72_text",
 		file: "08_intoaction.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Chapter 7",
 		label: "Working With Others",
 		value: "9",
 		shortname: "workingwithothers",
+		firstpage: "working_p89_text",
 		file: "09_workingwithothers.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Chapter 8",
 		label: "To Wives",
 		value: "10",
 		shortname: "towives",
+		firstpage: "towives_p104_text",
 		file: "10_towives.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Chapter 9",
 		label: "The Family Afterward",
 		value: "11",
 		shortname: "thefamily",
+		firstpage: "thefamily_p122_text",
 		file: "11_thefamily.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Chapter 10",
 		label: "To Employers",
 		value: "12",
 		shortname: "toemployers",
+		firstpage: "toemployers_p136_text",
 		file: "12_toemployers.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Chapter 11",
 		label: "A Vision for You",
 		value: "13",
 		shortname: "avisionforyou",
+		firstpage: "avision_p151_text",
 		file: "13_avisionforyou.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "Doctor Bob's Nightmare",
 		label: "The Doctor's Nightmare",
 		value: "14",
 		shortname: "drsnightmare",
+		firstpage: "drsnightmare_p171_text",
 		file: "14_drsnightmare.html"
 	});
 	SBB.chapterList.push({
+		chapternumberlabel: "II",
 		label: "Spiritual Experience",
 		value: "15",
 		shortname: "spiritual",
+		firstpage: "spiritual_p569_text",
 		file: "15_spiritual.html"
 	});
 	} catch (error) {Mojo.Log.error("STAGE CHAPTERS!", error);}

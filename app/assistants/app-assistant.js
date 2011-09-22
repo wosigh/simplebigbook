@@ -78,41 +78,47 @@ AppAssistant.prototype.cleanup = function (event) {
 
 AppAssistant.prototype.handleCommand = function (event) {
 try {
+	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
+	this.prefsModel = this.prefs.get();
+	//Mojo.Log.info("APPASS Device:", this.prefsModel.isTouchPad);
+
+	if (this.prefsModel.isTouchPad === true) {
+		var mainScene = 'booktp';
+	}
+	else {
+		var mainScene = 'book'
+	}
+	
 	if (event.type === Mojo.Event.command) {
 		if (this.debugMe===true) {Mojo.Log.info("AppAss handleCommand", event.command);}
 		switch (event.command) {
 			case 'cmd-Dock':
-				this.controller.getStageController('book').pushScene({name: 'dock', transition: Mojo.Transition.crossFade}, this);
+				this.controller.getStageController(mainScene).pushScene({name: 'dock', transition: Mojo.Transition.crossFade}, this);
 				break;
 			case 'cmd-Search':
-				this.controller.getStageController('book').pushScene({name: 'search', transition: Mojo.Transition.crossFade}, this);
+				this.controller.getStageController(mainScene).pushScene({name: 'search', transition: Mojo.Transition.crossFade}, this);
 				break;
 			case 'cmd-Bookmarks':
-				this.controller.getStageController('book').pushScene({name: 'bookmarks', transition: Mojo.Transition.crossFade}, this);
+				this.controller.getStageController(mainScene).pushScene({name: 'bookmarks', transition: Mojo.Transition.crossFade}, this);
 				break;
 			case 'cmd-Organizations':
-				this.controller.getStageController('book').pushScene({name: 'organizations', transition: Mojo.Transition.crossFade}, this);
+				this.controller.getStageController(mainScene).pushScene({name: 'organizations', transition: Mojo.Transition.crossFade}, this);
 				break;
 			case 'cmd-Calculator':
-				this.controller.getStageController('book').pushScene({name: 'calc', transition: Mojo.Transition.crossFade}, this);
+				this.controller.getStageController(mainScene).pushScene({name: 'calc', transition: Mojo.Transition.crossFade}, this);
 				break;
 			case 'cmd-Meetings':
-				this.controller.getStageController('book').pushScene({name: 'meetings', transition: Mojo.Transition.crossFade}, this);
+				this.controller.getStageController(mainScene).pushScene({name: 'meetings', transition: Mojo.Transition.crossFade}, this);
 				break;
 			case 'cmd-Preferences':
-				this.controller.getStageController('book').pushScene({name: 'prefs', transition: Mojo.Transition.crossFade}, this);
+				this.controller.getStageController(mainScene).pushScene({name: 'prefs', transition: Mojo.Transition.crossFade}, this);
 				break;
 			case 'cmd-HelpAbout':
-				this.controller.getStageController('book').pushScene({name: 'help', transition: Mojo.Transition.crossFade}, this);
+				this.controller.getStageController(mainScene).pushScene({name: 'help', transition: Mojo.Transition.crossFade}, this);
 				break;
 			case 'cmd-Return':
-				this.controller.getStageController('book').popScenesTo('book');
-				//this.controller.getStageController(this.getStageName()).popScenesTo();
-				//this.controller.stageController.popScene();
+				this.controller.getStageController(mainScene).popScenesTo(mainScene);
 				break;
-			//case 'cmd-GoBack':
-			//	this.controller.stageController.popScene();
-			//	break;
 		}
 	}
 } catch (handleCommandError) {Mojo.Log.logException(handleCommandError, "AppAss handleCommand");}

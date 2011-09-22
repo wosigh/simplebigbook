@@ -72,6 +72,7 @@ BookAssistant.prototype.setup = function () {
 		this.pageMenu = $('pageMenu');
 		this.bookmarkMenu = $('bookmarkMenu');
 		this.bookMenuGroup = $('bookMenuGroup');
+		this.menuFadingDiv = $('menuFadingDiv');
 
 		/*******  COOKIE SECTION  *******/
 		////////////////////////////////////////////////////
@@ -264,7 +265,8 @@ BookAssistant.prototype.setup = function () {
 		this.appClosingHandler = this.appClosingRoutine.bindAsEventListener(this);
 		this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
 		this.resizeHandler = this.handleWindowResize.bindAsEventListener(this);
-		this.holdBookHandler = this.holdBook.bindAsEventListener(this);
+		this.fadeDeciderHandler = this.fadeDecider.bindAsEventListener(this, this.menuFadingDiv, 25);
+		//this.fadeDeciderHandler = this.fadeDecider.bindAsEventListener(this);
 		////////////////////////////////////////////////////
 	} catch (error) {
 		Mojo.Log.error(">>>>> BookAssistant - setup ERROR", error);
@@ -291,7 +293,7 @@ BookAssistant.prototype.activate = function (event) {
 	////////////////////////////////////////////////////
 	//  Listeners
 	this.controller.listen(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollStartedHandler);
-	this.controller.listen(this.wholeScreenScroller, Mojo.Event.hold, this.holdBookHandler);
+	this.controller.listen(this.wholeScreenScroller, Mojo.Event.hold, this.fadeDeciderHandler);
 	this.controller.window.addEventListener('resize', this.resizeHandler, true);
 	this.controller.document.addEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
 	window.document.addEventListener(Mojo.Event.deactivate, this.appClosingHandler, true);
@@ -488,35 +490,19 @@ BookAssistant.prototype.handleWindowResize = function (event) {
 
 /********************
  *
- * HOLD BOOK
+ * FADE DECIDER
  *
  ********************/
-BookAssistant.prototype.holdBook = function (event) {
-	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER holdBook @@");}
+BookAssistant.prototype.fadeDecider = function (event, element, speed) {
 
-
-	if (this.showScrim === false) {
+	if (element.style.display === "none") {
 		this.groovyTimer = 0;
-		this.groovyFadeIn();
+		this.groovyFadeIn(element, 25);
 	}
 	else {
 		this.groovyTimer = 100;
-		this.groovyFadeOut();
+		this.groovyFadeOut(element, 25);
 	}
-
-	/*if (this.bookMenuGroup.style.display === 'none') {
-		this.bookMenuGroup.style.display = 'block';
-		this.bookFade.className = 'scene-fade my-fade-' + this.prefsModel.daynight + ' top';
-		this.prefsModel.showScrim = true;
-		this.prefs.put(this.prefsmodel);
-	} else {
-		this.bookMenuGroup.style.display = 'none';
-		this.bookFade.className = 'scene-fade my-fade-none top';
-		this.prefsModel.showScrim = false;
-		this.prefs.put(this.prefsModel);
-	}*/
-
-	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE holdBook @@");}
 };
 
 
@@ -526,26 +512,16 @@ BookAssistant.prototype.holdBook = function (event) {
  * FADE OUT
  *
  ********************/
-BookAssistant.prototype.groovyFadeOut = function () {
+BookAssistant.prototype.groovyFadeOut = function (element, speed) {
 
 	if (this.groovyTimer > 0) {
-		this.bookMenuGroup.style.opacity = this.groovyTimer * 0.01;
-		this.bookFade.style.opacity = this.groovyTimer * 0.01;
-		this.chapMenu.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
-		//this.chapMenu.style.opacity = this.groovyTimer * 0.01;
-		this.groovyTimer = this.groovyTimer - 9;
-		this.groovyFadeOutTimer = setTimeout(this.groovyFadeOut.bind(this), 12);
+		element.style.opacity = this.groovyTimer * 0.01;
+		this.groovyTimer = this.groovyTimer - 5;
+		this.groovyFadeOutTimer = setTimeout(this.groovyFadeOut.bind(this, element, speed));
 	}
 	else {
-		//Mojo.Log.info("@@ FINISH FADE OUT @@");
-		this.chapMenu.style.color = "rgba(250, 250, 250, 0.0)";
-		this.bookMenuGroup.style.opacity = "0.0";
-		this.bookMenuGroup.style.display = "none";
-		this.bookFade.style.opacity = "0.0";
-		this.bookFade.style.display = "none";
-		this.showScrim = false;
-		this.prefsModel.showScrim = false;
-		this.prefs.put(this.prefsModel);
+		element.style.opacity = "0.0";
+		element.style.display = "none";
 	}
 };
 
@@ -555,26 +531,21 @@ BookAssistant.prototype.groovyFadeOut = function () {
  * FADE IN
  *
  ********************/
-BookAssistant.prototype.groovyFadeIn = function () {
+BookAssistant.prototype.groovyFadeIn = function (element, speed) {
 
-	this.bookMenuGroup.style.display = "block";
-	this.bookFade.style.display = "block";
+	element.style.display = "block";
 
 	if (this.groovyTimer < 100) {
-		this.bookMenuGroup.style.opacity = this.groovyTimer * 0.01;
-		this.bookFade.style.opacity = this.groovyTimer * 0.01;
-		this.chapMenu.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
-		//this.chapMenu.style.opacity = this.groovyTimer * 0.01;
-		this.groovyTimer = this.groovyTimer + 9;
-		this.groovyFadeInTimer = setTimeout(this.groovyFadeIn.bind(this), 12);
+		element.style.opacity = this.groovyTimer * 0.01;
+		this.groovyTimer = this.groovyTimer + 5;
+		this.groovyFadeInTimer = setTimeout(this.groovyFadeIn.bind(this, element, speed));
 	}
 	else {
-		//Mojo.Log.info("@@ FINISH FADE IN @@");
-		this.showScrim = true;
-		this.prefsModel.showScrim = true;
-		this.prefs.put(this.prefsModel);
+		element.style.opacity = "1.0";
+		element.style.display = "block";
 	}
 };
+
 /********************
  *
  * ORIENTATION CHANGE
@@ -605,13 +576,6 @@ BookAssistant.prototype.changeTextSize = function (size) {
 
 	this.windowHeight = this.controller.window.innerHeight;
 	this.bookData.style.fontSize = size;
-	//Mojo.Log.info("++++++POSITION:", $('menu-panel-container').style.opacity);
-	//Mojo.Log.info("++++++POSITION:", $('OtherOne').style.opacity);
-	//Mojo.Log.info("++++++POSITION:", $('bookMenuGroup').style.opacity);
-
-
-	//$('menu-panel-container').style.opacity = "0.6";
-
 
 	////////////////////////////////////////////////////
 	//  ****  Set the color theme while I'm here
