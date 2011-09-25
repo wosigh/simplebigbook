@@ -1,0 +1,48 @@
+<html><head>
+<!--
+/* SimpleBigBook Copyright (C) 2009  Rick Boatright, John Kiernan
+ *
+ * This file is part of Simple Big Book.
+ *
+ * Simple Big Book is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Simple Big Book is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Simple Big Book.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+ -->
+<meta name="viewport" content="height=device-height">
+</head>
+<body>
+<div class="main" id="main">
+	<div id="menu-panel-container">
+		<div id="menuFadingDiv" class="palm-menu view-menu palm-default" style="width:100%;max-width:100%;top:0px;display:block;">
+			<div class="palm-menu-group" style="width:100%;" id="bookMenuGroup">
+				<div class="palm-menu-button" x-mojo-tap-highlight="momentary" id="bookmarkMenu" style="left:0;">
+					<div class="palm-menu-icon bookmarksMenuIcon"></div>
+				</div>
+				<div class="palm-menu-text chapMenu-text" x-mojo-tap-highlight="momentary" id="chapMenu" style="position:relative;margin:0px 60px 0px 60px;">
+					<div id="chapMenuDiv" class="truncating-text">#{chapLabel}</div>
+				</div>
+				<div class="palm-menu-button" x-mojo-tap-highlight="momentary" id="pageMenu" style="right:0;">
+					<div class="palm-menu-icon pageMenuIcon"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="chapterTitle" class="tpchapterTitle"></div>
+	<div id="bookdata" class="main"></div>
+	<div id="bookPageNumber" class="tpChapterNumber"></div>
+</div>
+
+	<div id="tempBookData" style="display:none;color:blue;"><div>
+</body>
+</html>
