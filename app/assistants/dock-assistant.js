@@ -41,29 +41,23 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE DocAssistant @@");}
 DockAssistant.prototype.setup = function () {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER setup @@");}
 
+	$('body_wallpaper').style.background = "black";
+
 	//  ****  Get the preferences from cookie
 	if (! (this.prefs)) {
 		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 		this.prefsModel = this.prefs.get();
 	}
 
-	if(this.prefsModel.isTouchPad === true) {
-		$('bookPhrases').addClassName('docktouchpadfix');
-	}
-
-	if (rawPhrases.length <= 0) {
-		this.gatherPhrases();
-	}
-
-	//  ****  Setup for Application Menu
-	//if (! this.prefsModel.launchParams.dockMode) {
-	//	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);
-	//}
-
 	this.controller.document.body.className = 'dock';
 	this.bookPhrases = $('bookPhrases');
 	this.bookPhrases.innerHTML = this.getRandomBookPhrases();
+	this.phraseDelayTime = this.prefsModel.dockPhraseSpeed
+	//this.phraseDelayTime = 5000;
 
+	if (this.prefsModel.isTouchPad === true) {$('bookPhrases').addClassName('docktouchpadfix');}
+
+	if (rawPhrases.length <= 0) {this.gatherPhrases();}
 
 if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE setup @@");}
 };
@@ -103,8 +97,8 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE activate @@");}
 DockAssistant.prototype.deactivate = function (event) {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER deactivate @@");}
 
-	this.bookPhrases.style.display = "none";
-	this.bookPhrases.style.color = "rgba(250, 250, 250, 0.0)";
+	//this.bookPhrases.style.display = "none";
+	//this.bookPhrases.style.color = "rgba(250, 250, 250, 0.0)";
 	this.bookPhrases.innerHTML = "";
 
 	rawPhrases = [];
@@ -241,46 +235,49 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE stageActivate @@");}
  ********************/
 DockAssistant.prototype.sanitizer = function (sString) {
 	try {
-		if (sString.indexOf('palm-divider') >= 0) {
-			sString = sString.replace(sString.substring(sString.indexOf('<table'), (sString.indexOf('table>') + 6)), '');
-		}
+		if (sString) {
+			if (sString.indexOf('palm-divider') >= 0) {
+				sString = sString.replace(sString.substring(sString.indexOf('<table'), (sString.indexOf('table>') + 6)), '');
+			}
 
-		sString = sString.replace(/<.*?>/g, '');
+			sString = sString.replace(/<.*?>/g, '');
+			sString = sString.replace(/^\s+|\s+$/g,'').replace(/\s+/g,' ');
 
-		sString = sString.replace(/^\s+|\s+$/g,'').replace(/\s+/g,' ');
+			if (sString.indexOf('?') > 0) {
+				// Just end at "?"
+				sString = sString.substring(0, (sString.indexOf('?') + 1));
+			}
+			else if (sString.indexOf('!') > 0) {
+				// Just end at "!"
+				sString = sString.substring(0, (sString.indexOf('!') + 1));
+			}
+			else {
+				//Otherwise put the "." back in.
+				if (sString.lastIndexOf(".") < 0) {
+					sString = sString + ".";
+				}
+			}
 
-		if (sString.indexOf('?') > 0) {
-			// Just end at "?"
-			sString = sString.substring(0, (sString.indexOf('?') + 1));
-		}
-		else if (sString.indexOf('!') > 0) {
-			// Just end at "!"
-			sString = sString.substring(0, (sString.indexOf('!') + 1));
+			while (sString.indexOf('"') >= 0) {sString = sString.replace('"', '');}
+			while (sString.indexOf('[') >= 0) {sString = sString.replace('[', '');}
+			while (sString.indexOf(']') >= 0) {sString = sString.replace(']', '');}
+			while (sString.indexOf('- ') >= 0) {sString = sString.replace('- ', '');}
+			while (sString.indexOf(' -') >= 0) {sString = sString.replace(' -', '');}
+			while (sString.indexOf('*') >= 0) {sString = sString.replace('*', '');}
+
+			if (sString.length < 12) {
+				if (this.debugMe === true) {Mojo.Log.info("FIRST BAD LENGTH!", sString.length);}
+					//this.prettyPhrase = null;
+					clearTimeout(this.doThePhrase);
+					this.getRandomBookPhrases();
+			}
+
+			return sString;
 		}
 		else {
-			//Otherwise put the "." back in.
-			//Mojo.Log.info("PERIOD:", sString.lastIndexOf("."))
-			if (sString.lastIndexOf(".") < 0) {
-				sString = sString + ".";
-			}
+			this.getRandomBookPhrases();
 		}
 
-		while (sString.indexOf('"') >= 0) {sString = sString.replace('"', '');}
-		while (sString.indexOf('[') >= 0) {sString = sString.replace('[', '');}
-		while (sString.indexOf(']') >= 0) {sString = sString.replace(']', '');}
-		while (sString.indexOf('- ') >= 0) {sString = sString.replace('- ', '');}
-		while (sString.indexOf(' -') >= 0) {sString = sString.replace(' -', '');}
-		while (sString.indexOf('*') >= 0) {sString = sString.replace('*', '');}
-
-		if (sString.length < 12) {
-			if (this.debugMe === true) {Mojo.Log.info("FIRST BAD LENGTH!", sString.length);}
-				//this.prettyPhrase = null;
-				clearTimeout(this.doThePhrase);
-				this.getRandomBookPhrases();
-		}
-
-	return sString;
-	
 	} catch (sanitizerError) {Mojo.Log.error(">>>>>>> THE SANITIZER", sanitizerError, "+", sString);}
 	return sString;
 };
@@ -325,6 +322,9 @@ DockAssistant.prototype.getRandomBookPhrases = function () {
 try {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 
+
+Mojo.Log.info("PLACE:", this.bookPhrases.style.top);
+
 	thisQuote = Math.floor(Math.random() * 10000);
 
 	this.doThePhrase = setTimeout(function () {
@@ -344,20 +344,20 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 		try{
 			if (this.debugMe === true) {Mojo.Log.info("------- BEFORE STRIP:", rawPhrases[thisQuote].length, "+", thisQuote, "+", rawPhrases[thisQuote]);}
 
-			if ( (! rawPhrases[thisQuote]) || (! rawPhrases) || (rawPhrases[thisQuote].length <= 0) ) {
+			//if ( (! rawPhrases[thisQuote]) || (! rawPhrases) || (rawPhrases[thisQuote].length <= 0) ) {
+			//	this.prettyPhrase = null;
+			//	clearTimeout(this.doThePhrase);
+			//	this.getRandomBookPhrases();
+			//}
+
+			if (rawPhrases[thisQuote]) {
+				this.prettyPhrase = this.sanitizer(rawPhrases[thisQuote]);
+			}
+			else {
 				this.prettyPhrase = null;
 				clearTimeout(this.doThePhrase);
 				this.getRandomBookPhrases();
 			}
-
-			this.prettyPhrase = this.sanitizer(rawPhrases[thisQuote]);
-
-			//testPhrase = this.prettyPhrase.concat(this.prettyPhrase.split(" "));
-			//testPhrase = this.prettyPhrase.split(" ");
-			//Mojo.Log.info("testPhrase:", testPhrase.length);
-			//for (i = 0; i < testPhrase.length; i++) {
-			//	Mojo.Log.info("testPhrase:", testPhrase[i]);
-			//}
 
 		} catch (SendToSanitizerError) {Mojo.Log.error(">>>>>>> Send To Sanitizer", SendToSanitizerError, "thisQuote:", thisQuote, "rawPhrases:", rawPhrases.length);}
 
@@ -436,11 +436,30 @@ try {		if (thisQuote > 0) {
 			if (this.debugMe === true) {Mojo.Log.info("------- SEND FINAL:", this.prettyPhrase.length, "+", this.prettyPhrase);}
 
 			this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
+			//this.effectDecision(this.bookPhrases, this.prettyPhrase);
+			//this.groovyFadeDecision($('Container1'), this.prettyPhrase);
 		}
 	} catch (doThePhraseError) {Mojo.Log.error(">>>>>>> doThePhrase", doThePhraseError, "thisQuote:", thisQuote, "rawPhrases:", rawPhrases.length, "this.prettyPhrase:", this.prettyPhrase);}
 	}.bind(this), 10);
 if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE getRandomBookPhrases @@");}
 } catch (error) {Mojo.Log.error("ALL PAGES", error);}
+};
+
+
+/********************
+ *
+ * EFFECT DECISION
+ *
+ ********************/
+DockAssistant.prototype.effectDecision = function (element, phrase) {
+
+	//this.groovyFadeDecision(element, phrase);
+
+	this.printWords(element, phrase);
+	this.phrasePlace = 0;
+	this.printWords(element, phrase);
+	
+	
 };
 
 
@@ -456,20 +475,9 @@ DockAssistant.prototype.groovyFadeDecision = function (element, phrase) {
 	}
 	else {
 		this.groovyTimer = 0;
-		this.setThePhrase(element, phrase);
+		element.innerHTML = phrase;
+		this.groovyFadeIn(element, phrase);
 	}
-};
-
-
-/********************
- *
- * SET THE PHRASE
- *
- ********************/
-DockAssistant.prototype.setThePhrase = function (element, phrase) {
-	element.innerHTML = phrase;
-	this.groovyFadeIn(element, phrase);
-	//this.testerThing(element, phrase);
 };
 
 
@@ -486,11 +494,9 @@ DockAssistant.prototype.groovyFadeOut = function (element, phrase) {
 	}
 	else {
 		if (this.debugMe === true) {Mojo.Log.info("@@ FINISH FADE OUT @@");}
-		this.bookPhrases.style.display = "none";
-		element.style.color = "rgba(250, 250, 250, 0.0)";
+		element.style.display = "none";
 		this.fullBright = false;
-		this.setThePhrase(element, phrase);
-		//clearInterval(this.phraseTimer);
+		this.groovyFadeDecision(element, phrase);
 		clearTimeout(this.phraseTimer);
 		this.phraseTimer = null;
 	}
@@ -504,7 +510,7 @@ DockAssistant.prototype.groovyFadeOut = function (element, phrase) {
  ********************/
 DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
 
-	this.bookPhrases.style.display = "block";
+	element.style.display = "block";
 
 	if (this.groovyTimer < 100) {
 		element.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
@@ -516,8 +522,38 @@ DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
 		this.fullBright = true;
 
 		if (! this.phraseTimer) {
-			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
-			//this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), 1000);
+			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
+		}
+	}
+};
+
+
+/********************
+ *
+ * PRINT WORDS
+ *
+ ********************/
+DockAssistant.prototype.printWords = function (element, phrase) {
+	$('infodiv').innerHTML = this.phrasePlace;
+
+	if (this.phrasePlace <= phrase.length) {
+		element.innerHTML = phrase.substring(0, this.phrasePlace);
+		this.phrasePlace++;
+		this.printWordsTimer = setTimeout(this.printWords.bind(this, element, phrase), 25);
+	}
+	else {
+	
+		Mojo.Log.info("@@ FINISH WRITING @@");
+		//this.fullBright = false;
+
+		clearTimeout(this.phraseTimer);
+		clearTimeout(this.printWordsTimer);
+		this.phraseTimer = null;
+		this.printWordsTimer = null;
+		//this.groovyFadeDecision(element, phrase);
+
+		if (! this.phraseTimer) {
+			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
 		}
 	}
 };
@@ -531,10 +567,10 @@ DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
 DockAssistant.prototype.printWordsFadeIn = function (element, word, wordNumber) {
 
 	this.bookPhrases.style.display = "block";
-	//element.style.color = "rgba(250, 250, 250, 1";
 
 	if (this.groovyTimer < 100) {
-		element.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
+		//element.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
+		element.style.opacity = this.groovyTimer * 0.01;
 		this.groovyTimer++;
 		this.groovyFadeInTimer = setTimeout(this.groovyFadeIn.bind(this, element, word), 16);
 	}
@@ -543,44 +579,8 @@ DockAssistant.prototype.printWordsFadeIn = function (element, word, wordNumber) 
 		this.fullBright = true;
 
 		if (! this.wordPrintTimer) {
-			//this.phraseTimer = setInterval(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
-			//this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.prefsModel.dockPhraseSpeed);
 			wordNumber++;
 			this.wordPrintTimer = setTimeout(this.testerThing(element, word, wordNumber), 1000);
 		}
 	}
 };
-
-
-DockAssistant.prototype.testerThing = function (element, phrase, wordNumber) {
-	testPhrase = phrase.split(" ");
-	//innerSplit = element.innerHTML.split(" ");
-	//Mojo.Log.info("testPhrase:", testPhrase.length);
-	//Mojo.Log.info("innerSplit:", innerSplit.length);
-
-	if (wordNumber) {
-		if (wordNumber <= phrase.length)
-		{
-			this.printWordsFadeIn(element, testPhrase[wordNumber], wordNumber);
-		}
-	}
-	else {
-		wordNumber = 0;
-		//for (i = 0; i < testPhrase.length; i++) {
-		//Mojo.Log.info("testPhrase:", testPhrase[i]);
-		//this.testTimer = setTimeout(this.testerThing(element, testPhrase[i]), 1000);
-		this.printWordsFadeIn(element, testPhrase[wordNumber], wordNumber);
-	}
-
-	wordNumber = null;
-	this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), 3000);
-
-	//Mojo.Log.info("testerThing:", word);
-	//element.innerHTML = element.innerHTML + word;
-	//clearTimeout(this.testTimer);
-	//this.testTimer = null;
-};
-
-
-
-

@@ -309,6 +309,7 @@ BooktpAssistant.prototype.setup = function () {
 		//this.doubleClickHandler = this.doubleClick.bindAsEventListener(this);
 		this.resizeHandler = this.handleWindowResize.bindAsEventListener(this);
 		this.fadeDeciderHandler = this.fadeDecider.bindAsEventListener(this, this.menuFadingDiv, 25);
+		this.flickHandler = this.readFlick.bindAsEventListener(this);
 		////////////////////////////////////////////////////
 	} catch (error) {
 		Mojo.Log.error(">>>>> BooktpAssistant - setup ERROR", error);
@@ -335,6 +336,7 @@ BooktpAssistant.prototype.activate = function (event) {
 	////////////////////////////////////////////////////
 	//  Listeners
 	//this.controller.listen(this.wholeScreenScroller, Mojo.Event.scrollStarting, this.scrollStartedHandler);
+	Mojo.Event.listen(this.wholeScreenScroller, Mojo.Event.flick, this.flickHandler);
 	this.controller.listen(this.wholeScreenScroller, Mojo.Event.hold, this.fadeDeciderHandler);
 	this.controller.window.addEventListener('resize', this.resizeHandler, true);
 	//this.controller.document.addEventListener(Mojo.Event.tap, this.doubleClickHandler, true);
@@ -350,13 +352,13 @@ BooktpAssistant.prototype.activate = function (event) {
 	//  Decide to only load or to do search/highlight too.
 	highsearch = false;
 	if (searchBook !== false) {
-		Mojo.Log.info("SEARCHBOOK:", searchBook, "|", "SEARCHPAGE:", searchPage);
+		//Mojo.Log.info("SEARCHBOOK:", searchBook, "|", "SEARCHPAGE:", searchPage);
 		setTimeout(function () {
 			this.jumpToChapter(searchBook);
 			searchBook = false;
 		}.bind(this), 150);
 	} else {
-		Mojo.Log.info("SEARCHBOOK:", searchBook, "|", "SEARCHPAGE:", searchPage);
+		//Mojo.Log.info("SEARCHBOOK:", searchBook, "|", "SEARCHPAGE:", searchPage);
 		if (searchPage !== false) {
 			setTimeout(function () {
 				this.jumpToPage(searchPage);
@@ -425,7 +427,7 @@ BooktpAssistant.prototype.appClosingRoutine = function (event) {
 		if (this.debugMe === true) {Mojo.Log.info("@@ APP CLOSING - this.prefsModel.pagePosition", this.prefsModel.pagePosition);}
 
 		if ((this.prefsModel.wasChapterJump === false) && (this.prefsModel.wasBookmarkJump === false)) {
-			this.prefsModel.pagePosition = this.ImHere.y;
+			//this.prefsModel.pagePosition = this.ImHere.y;
 			this.prefsModel.wasChapterJump = false;
 			this.prefsModel.wasBookmarkJump = false;
 			this.prefs.put(this.prefsModel);
@@ -529,7 +531,7 @@ BooktpAssistant.prototype.handleWindowResize = function (event) {
 	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER handleWindowResize @@");}
 
 	$('body_wallpaper').style.backgroundSize = this.controller.window.innerWidth + "px " + this.controller.window.innerHeight + "px";
-	Mojo.Log.info("this.controller.window.innerHeight:", this.controller.window.innerHeight);
+	//Mojo.Log.info("this.controller.window.innerHeight:", this.controller.window.innerHeight, "this.controller.window.innerWidth:", this.controller.window.innerWidth);
 	$('bookPageNumber').style.top = (this.controller.window.innerHeight - 25) + 'px';
 
 	if (this.prefsModel.wasBookmarkJump === false) {
@@ -615,6 +617,34 @@ BooktpAssistant.prototype.orientationChanged = function (orientation) {
 		//this.controller.getSceneScroller().mojo.scrollTo(0, this.goHere, false, false);
 		this.wasResized = false;
 	}
+	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE Orientation Changed @@");}
+};
+
+
+/********************
+ *
+ * READ FLICK
+ *
+ ********************/
+BooktpAssistant.prototype.readFlick = function (event) {
+	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Orientation Changed @@");}
+
+	this.canFLick = true;
+
+	if (event.velocity.x > 600 && (Math.abs(event.velocity.x) > Math.abs(event.velocity.y))) {
+		this.jumpToPage(this.previousPage);
+	}
+	else if (event.velocity.x < -600 && (Math.abs(event.velocity.x) > Math.abs(event.velocity.y))) {
+		this.jumpToPage(this.nextPage);
+	}
+// 	else if (event.velocity.y < -1000 && (Math.abs(event.velocity.y) > Math.abs(event.velocity.x))){
+// 		Mojo.Log.info("FLICK ELSE IF 2! ", "X:", event.velocity.x, "Y:", event.velocity.x);
+// 	} 
+// 	else if (event.velocity.y > 1000 && (Math.abs(event.velocity.y) > Math.abs(event.velocity.x))){
+// 		Mojo.Log.info("FLICK ELSE IF 3! ", "X:", event.velocity.x, "Y:", event.velocity.x);
+// 	}
+
+
 	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE Orientation Changed @@");}
 };
 
@@ -747,36 +777,25 @@ BooktpAssistant.prototype.getChapterSuccess = function (transport) {
 	if (this.pageNumber.indexOf('_text') <= 0) {
 		this.pageNumber = this.pageNumber+ '_text';
 	}
-// 	else {
-// 		//this.pageNumber = this.pageNumber;
-// 		//Mojo.Log.error("Can't figure out what page to load.");
-// 	}
 
 	////////////////////////////////////////
 	// Put the response into the scene
-	
-	Mojo.Log.info("this.prefsModel.wasChapterJump:", this.prefsModel.wasChapterJump);
-	
-	
 	if (search_string !== false) {
 		var temp = transport.transport.responseText;
 		this.highlightSearchTerms(search_string, temp);
 	} else {
 		this.bookData.innerHTML = document.getElementById(this.pageNumber).innerHTML;
+
 		if (this.isFirstPage === true) {
-			//Mojo.Log.info("IF this.isFirstPage:", this.isFirstPage);
 			$('chapterTitle').style.display = 'block';
 			$('chapterTitle').innerHTML = SBB.chapterList[this.myIndex].chapternumberlabel + ": " + SBB.chapterList[this.myIndex].label;
 			$('bookdata').style.top = '60px';
 		}
 		else {
-			//Mojo.Log.info("ELSE this.isFirstPage:", this.isFirstPage);
 			$('chapterTitle').style.display = 'none';
 			$('chapterTitle').innerHTML = "";
 			$('bookdata').style.top = '0px';
 		}
-
-		//$('bookPageNumber').innerHTML = "&#151; " + this.pageNumber.substring(this.pageNumber.indexOf("_")+2, this.pageNumber.lastIndexOf("_")) + " &#151;";
 	}
 
 	//////////////////////////////////
@@ -788,23 +807,9 @@ BooktpAssistant.prototype.getChapterSuccess = function (transport) {
 		var lcId = document.getElementsByTagName("table").item(i).id;
 		var lcName = lcId.substr(lcId.indexOf("_p") + 2);
 
-		// Filter out "_top" for display in the popup menu.
-		if (lcName.indexOf('_top') >= 0) {
-			lcName = lcName.replace('_top', '');
-		}
-
-		//temp1 = this.pageNumber.substring(0, '_text');
-		if (lcId.indexOf('_top') >= 0) {
-			lcId = lcId.replace('_top', '');
-		}
-		//else {
-		//	temp2 = lcId;
-		//}
-
-		if (this.pageNumber.substring(0, this.pageNumber.indexOf('_text')) === lcId) {
-			this.currentPageIndex = i;
-			//temp2 = null;
-		}
+		if (lcName.indexOf('_top') >= 0) {lcName = lcName.replace('_top', '');}
+		if (lcId.indexOf('_top') >= 0) {lcId = lcId.replace('_top', '');}
+		if (this.pageNumber.substring(0, this.pageNumber.indexOf('_text')) === lcId) {this.currentPageIndex = i;}
 
 		var labelStr = "Page " + lcName;
 		var cmdStr = lcId;
@@ -815,18 +820,10 @@ BooktpAssistant.prototype.getChapterSuccess = function (transport) {
 		});
 	}
 
-	//this.buildPageNumbers();
-
-// 	this.previousPage = this.pagenumberMenuModelItems[(this.currentPageIndex - 1)].command;
-// 	this.currentPage = this.pagenumberMenuModelItems[(this.currentPageIndex)].command;
-// 	this.nextPage = this.pagenumberMenuModelItems[(this.currentPageIndex + 1)].command;
-// 	//Mojo.Log.info("You're on page:", this.currentPage, "|", this.previousPage, "|", this.nextPage);
-
-
-	this.jumpToPage(this.pageNumber);
-
 	this.prefsModel.wasChapterJump = false;
 	this.prefs.put(this.prefsModel);
+
+	this.jumpToPage(this.pageNumber);
 
 	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE getChapterSuccess @@");}
 };
@@ -867,8 +864,6 @@ BooktpAssistant.prototype.selectPage = function (event) {
  ********************/
 BooktpAssistant.prototype.jumpToPage = function (pgnum) {
 	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER Jump to Page @@");}
-	Mojo.Log.info("@@ ENTER Jump to Page @@");
-	//Mojo.Log.info("PGNUM:", pgnum, pgnum.indexOf('_top'));
 
 	if (pgnum) {
 		this.isFirstPage = false;
@@ -877,21 +872,17 @@ BooktpAssistant.prototype.jumpToPage = function (pgnum) {
 
 		if (this.pageNumber.indexOf('_top') > 0) {
 			this.isFirstPage = true;
-			//this.pageNumber = "avision_p160_text";
 			this.pageNumber = this.pageNumber.replace('_top', '_text');
 		}
 		if (this.pageNumber.indexOf('_text') <= 0) {
 			this.pageNumber = this.pageNumber+ '_text';
 		}
-// 		else {
-// 			this.pageNumber = this.pageNumber+ '_text';
-// 		}
 
 		////////////////////////////////////////
 		// Put the response into the scene
 		if (search_string !== false) {
 			var temp = transport.transport.responseText;
-				this.highlightSearchTerms(search_string, temp);
+			this.highlightSearchTerms(search_string, temp);
 		}
 	}
 
@@ -911,19 +902,11 @@ BooktpAssistant.prototype.jumpToPage = function (pgnum) {
 		this.prefs.put(this.prefsModel);
 	}
 
-	//if (pgnum) {
-	//	this.buildPageNumbers(page);
-	//}
-
 	if (pgnum) {
 		for (i = 0; i < this.pagenumberMenuModelItems.length; i++) {
-			//var lcId = this.pagenumberMenuModelItems[i].command;
 			if (this.pagenumberMenuModelItems[i].command.indexOf('_top') >= 0) {
 				this.pagenumberMenuModelItems[i].command = this.pagenumberMenuModelItems[i].command.replace('_top', '');
 			}
-			//else {
-			//	this.pagenumberMenuModelItems[i].command = lcId;
-			//}
 
 			if (this.pageNumber.substring(0, this.pageNumber.indexOf('_text')) === this.pagenumberMenuModelItems[i].command) {
 				this.currentPageIndex = i;
@@ -944,11 +927,9 @@ BooktpAssistant.prototype.jumpToPage = function (pgnum) {
 			$('chapterTitle').style.display = 'block';
 			$('chapterTitle').innerHTML = SBB.chapterList[this.myIndex].chapternumberlabel + ": " + SBB.chapterList[this.myIndex].label;
 			$('bookdata').style.top = '60px';
-
 		}
 
 		this.currentPage = this.pagenumberMenuModelItems[(this.currentPageIndex)].command;
-		//$('bookPageNumber').innerHTML = "&#151; " + this.pageNumber.substring(this.pageNumber.indexOf("_")+2, this.pageNumber.lastIndexOf("_")) + " &#151;";
 
 		if (this.currentPageIndex < (this.pagenumberMenuModelItems.length -1)) {
 			this.nextPage = this.pagenumberMenuModelItems[(this.currentPageIndex + 1)].command;
@@ -958,7 +939,6 @@ BooktpAssistant.prototype.jumpToPage = function (pgnum) {
 			this.commandButtons[0].disabled = false;
 			this.commandButtons[1].disabled = true;
 		}
-		//Mojo.Log.info("PAGE currentPage:", this.currentPage, "| previousPage:", this.previousPage, "| nextPage:", this.nextPage, "| pgnum:", pgnum, "| currentPageIndex:", this.currentPageIndex, "| pagenumberMenuModelItems:", this.pagenumberMenuModelItems.length);
 
 		this.controller.modelChanged(this.commandMenuModel, this);
 

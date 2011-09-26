@@ -100,6 +100,8 @@ try{
 	//this.controller.setupWidget("minTimeSelectorWidget",
 	this.dockPhraseSpeedAttributes = {
 		choices: [
+			{label: "5 seconds", value: 5000},
+			{label: "10 seconds", value: 10000},
 			{label: "30 seconds", value: 30000},
 			{label: "1 Minute", value: 60000},
 			{label: "2 Minutes", value: 120000},
