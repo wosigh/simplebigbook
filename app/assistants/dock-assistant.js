@@ -51,6 +51,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER setup @@");}
 
 	this.controller.document.body.className = 'dock';
 	this.bookPhrases = $('bookPhrases');
+	this.bookPhrases.style.display = "none";
 	this.bookPhrases.innerHTML = this.getRandomBookPhrases();
 	this.phraseDelayTime = this.prefsModel.dockPhraseSpeed
 	//this.phraseDelayTime = 5000;
@@ -115,6 +116,13 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER deactivate @@");}
 
 	this.doThePhrase = null;
 
+	this.printWordsTimer = null;
+	this.phrasePlace = null;
+	this.readyForFading = false;
+	clearTimeout(this.phraseTimer);
+	clearTimeout(this.printWordsTimer);
+
+
 	this.fullBright = false;
 	this.prettyPhrase = null;
 	//this.controller.document.removeEventListener(Mojo.Event.tap, this.screenTapHandler, true);
@@ -148,7 +156,15 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER cleanup @@");}
 	this.groovyFadeOutTimer = null;
 	this.doThePhrase = null;
 
+	this.printWordsTimer = null;
+	this.phrasePlace = null;
+	this.readyForFading = false;
+	clearTimeout(this.phraseTimer);
+	clearTimeout(this.printWordsTimer);
+
+
 	this.fullBright = false;
+	this.readyForFading = false
 	this.prettyPhrase = null;
 	this.groovyTimer = 0.0;
 	//this.controller.document.removeEventListener(Mojo.Event.tap, this.screenTapHandler, true);
@@ -188,6 +204,13 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER stageDeactivate @@");}
 	this.doThePhrase = null;
 	this.prettyPhrase = null;
 	this.fullBright = false;
+
+	this.printWordsTimer = null;
+	this.phrasePlace = null;
+	this.readyForFading = false;
+	clearTimeout(this.phraseTimer);
+	clearTimeout(this.printWordsTimer);
+
 
 	this.controller.document.removeEventListener(Mojo.Event.stageDeactivate, this.stageDeactivateHandler, true);
 
@@ -452,10 +475,16 @@ DockAssistant.prototype.effectDecision = function (element, phrase) {
 
 	//this.printWords(element, phrase);
 	//this.groovyWordTimer = 0;
-	this.groovyWordTimer = [];
-	this.phrasePlace = 0;
-	element.innerHTML = ""
-	this.printWords(element, phrase, phrase.length);
+	if (this.fullBright === false) {
+		this.groovyWordTimer = [];
+		this.phrasePlace = 0;
+		element.innerHTML = ""
+		this.printWords(element, phrase, phrase.length);
+	}
+	else {
+		this.fullBright = false;
+		this.effectDecision(element, phrase);
+	}
 	
 	
 };
@@ -532,25 +561,35 @@ DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
  *
  ********************/
 DockAssistant.prototype.printWords = function (element, phrase) {
-//Mojo.Log.info(phrase.charAt(0));
-
 	if (this.phrasePlace <= phrase.length) {
 		element.innerHTML = element.innerHTML + "<span id='quoteSpan" + this.phrasePlace + "' style='color:rgba(250, 250, 250, 0);'>" + phrase.charAt(this.phrasePlace) + "</span>";
 		this.groovyWordTimer[this.phrasePlace] = 0;
-		this.printWordsFadeIn(element, this.phrasePlace, phrase.length);
 		this.phrasePlace++;
-		this.printWordsTimer = setTimeout(this.printWords.bind(this, element, phrase), 25);
+		this.printWordsTimer = setTimeout(this.printWords.bind(this, element, phrase), 5);
 	}
 	else {
-	
-		//Mojo.Log.info("@@ FINISH WRITING @@");
 		clearTimeout(this.phraseTimer);
 		clearTimeout(this.printWordsTimer);
 		this.phraseTimer = null;
 		this.printWordsTimer = null;
+		this.readyForFading = true;
+		element.style.display = "block";
+		this.ControlPrintWordsFadeIn(0, phrase.length)
+	}
+};
 
-		if (! this.phraseTimer) {
-			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
+
+/********************
+ *
+ * FADE CONTROLLER
+ *
+ ********************/
+DockAssistant.prototype.ControlPrintWordsFadeIn = function (letter, length) {
+	if (this.readyForFading === true) {
+		if (letter <= length) {
+			this.printWordsFadeIn(letter, length);
+			letter++;
+			this.groovyFadeInControlTimer = setTimeout(this.ControlPrintWordsFadeIn.bind(this, letter, length), 50);
 		}
 	}
 };
@@ -561,17 +600,51 @@ DockAssistant.prototype.printWords = function (element, phrase) {
  * PRINT WORDS FADE IN
  *
  ********************/
-DockAssistant.prototype.printWordsFadeIn = function (element, letter, length) {
-	if (letter) {
-		if ( (this.groovyWordTimer[letter] < 100) && (letter <= length) ) {
-			$('quoteSpan' + letter).style.color = "rgba(250, 250, 250, " + ((this.groovyWordTimer[letter] + 5) * 0.01) + ")";
-			this.groovyWordTimer[letter]++;
-			this.groovyFadeInTimer = setTimeout(this.printWordsFadeIn.bind(this, element, letter, length), 12);
-		}
-		else {
-			if (letter === length) {
-				this.groovyWordTimer = [];
+DockAssistant.prototype.printWordsFadeIn = function (letter, length) {
+	if (this.groovyWordTimer[letter] < 100) {
+		$('quoteSpan' + letter).style.color = "rgba(250, 250, 250, " + this.groovyWordTimer[letter] * 0.01 + ")";
+		this.groovyWordTimer[letter]++;
+		this.groovyFadeInTimer = setTimeout(this.printWordsFadeIn.bind(this, letter, length), 12);
+	}
+	else {
+		clearTimeout(this.groovyFadeInTimer[letter]);
+		this.groovyFadeInTimer[letter] = null;
+
+		if (letter >= length) {
+			Mojo.Log.info("DONE");
+			this.readyForFading = false;
+			if (! this.phraseTimer) {
+				this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
 			}
+			this.groovyFadeInTimer = null;
+			this.fullBright = true;
 		}
 	}
 };
+
+
+/********************
+ *
+ * PRINT WORDS FADE OUT
+ *
+ ********************/
+/*DockAssistant.prototype.printWordsFadeOut = function (letter, length) {
+	if (this.groovyWordTimer[letter] < 100) {
+		$('quoteSpan' + letter).style.color = "rgba(250, 250, 250, " + this.groovyWordTimer[letter] * 0.01 + ")";
+		this.groovyWordTimer[letter]++;
+		this.groovyFadeInTimer = setTimeout(this.printWordsFadeIn.bind(this, letter, length), 12);
+	}
+	else {
+		clearTimeout(this.groovyFadeInTimer[letter]);
+		this.groovyFadeInTimer[letter] = null;
+
+		if (letter >= length) {
+			Mojo.Log.info("DONE");
+			this.readyForFading = false;
+			if (! this.phraseTimer) {
+				this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
+			}
+			this.groovyFadeInTimer = null;
+		}
+	}
+};*/
