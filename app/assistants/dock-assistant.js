@@ -300,9 +300,7 @@ try {
 		var lcUrl = "books/fulltext.html";
 		new Ajax.Request(lcUrl, {
 			method: 'get',
-			onComplete: function (transport) {
-				rawPhrases = rawPhrases.concat(transport.transport.responseText.split("."));
-			},
+			onComplete: function (transport) {rawPhrases = rawPhrases.concat(transport.transport.responseText.split("."));},
 			onSuccess: function (transport) {if (this.debugMe === true) {Mojo.Log.info("FINISHED PARSING TEXT");}},
 			onFailure: function (transport) {Mojo.Log.error("FAILURE:");}
 		});
@@ -322,14 +320,10 @@ DockAssistant.prototype.getRandomBookPhrases = function () {
 try {
 if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 
-
-Mojo.Log.info("PLACE:", this.bookPhrases.style.top);
-
 	thisQuote = Math.floor(Math.random() * 10000);
 
 	this.doThePhrase = setTimeout(function () {
 	try {
-		if (this.debugMe === true) {Mojo.Log.info("START - rawPhrases:", rawPhrases.length, "thisQuote:", thisQuote);}
 		if (rawPhrases.length > 0) {
 			while (thisQuote > (rawPhrases.length - 1)) {
 				thisQuote = Math.floor(Math.random() * 10000);
@@ -424,7 +418,8 @@ try {		if (thisQuote > 0) {
 		/////////////////////////////////////////////////////
 
 
-		if ((this.prettyPhrase.length < 12) || (this.prettyPhrase.length > 142)) {
+		//if ((this.prettyPhrase.length < 12) || (this.prettyPhrase.length > 142)) {
+		if (this.prettyPhrase.length > 142) {
 			if (this.debugMe === true) {Mojo.Log.info("SECOND BAD SIZE!", this.prettyPhrase.length);}
 			this.prettyPhrase = null;
 			clearTimeout(this.doThePhrase);
@@ -435,8 +430,8 @@ try {		if (thisQuote > 0) {
 			this.prettyPhrase = this.sanitizer(this.prettyPhrase);
 			if (this.debugMe === true) {Mojo.Log.info("------- SEND FINAL:", this.prettyPhrase.length, "+", this.prettyPhrase);}
 
-			this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
-			//this.effectDecision(this.bookPhrases, this.prettyPhrase);
+			//this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
+			this.effectDecision(this.bookPhrases, this.prettyPhrase);
 			//this.groovyFadeDecision($('Container1'), this.prettyPhrase);
 		}
 	} catch (doThePhraseError) {Mojo.Log.error(">>>>>>> doThePhrase", doThePhraseError, "thisQuote:", thisQuote, "rawPhrases:", rawPhrases.length, "this.prettyPhrase:", this.prettyPhrase);}
@@ -455,9 +450,12 @@ DockAssistant.prototype.effectDecision = function (element, phrase) {
 
 	//this.groovyFadeDecision(element, phrase);
 
-	this.printWords(element, phrase);
+	//this.printWords(element, phrase);
+	//this.groovyWordTimer = 0;
+	this.groovyWordTimer = [];
 	this.phrasePlace = 0;
-	this.printWords(element, phrase);
+	element.innerHTML = ""
+	this.printWords(element, phrase, phrase.length);
 	
 	
 };
@@ -534,23 +532,22 @@ DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
  *
  ********************/
 DockAssistant.prototype.printWords = function (element, phrase) {
-	$('infodiv').innerHTML = this.phrasePlace;
+//Mojo.Log.info(phrase.charAt(0));
 
 	if (this.phrasePlace <= phrase.length) {
-		element.innerHTML = phrase.substring(0, this.phrasePlace);
+		element.innerHTML = element.innerHTML + "<span id='quoteSpan" + this.phrasePlace + "' style='color:rgba(250, 250, 250, 0);'>" + phrase.charAt(this.phrasePlace) + "</span>";
+		this.groovyWordTimer[this.phrasePlace] = 0;
+		this.printWordsFadeIn(element, this.phrasePlace, phrase.length);
 		this.phrasePlace++;
 		this.printWordsTimer = setTimeout(this.printWords.bind(this, element, phrase), 25);
 	}
 	else {
 	
-		Mojo.Log.info("@@ FINISH WRITING @@");
-		//this.fullBright = false;
-
+		//Mojo.Log.info("@@ FINISH WRITING @@");
 		clearTimeout(this.phraseTimer);
 		clearTimeout(this.printWordsTimer);
 		this.phraseTimer = null;
 		this.printWordsTimer = null;
-		//this.groovyFadeDecision(element, phrase);
 
 		if (! this.phraseTimer) {
 			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
@@ -564,23 +561,17 @@ DockAssistant.prototype.printWords = function (element, phrase) {
  * PRINT WORDS FADE IN
  *
  ********************/
-DockAssistant.prototype.printWordsFadeIn = function (element, word, wordNumber) {
-
-	this.bookPhrases.style.display = "block";
-
-	if (this.groovyTimer < 100) {
-		//element.style.color = "rgba(250, 250, 250, " + (this.groovyTimer * 0.01) + ")";
-		element.style.opacity = this.groovyTimer * 0.01;
-		this.groovyTimer++;
-		this.groovyFadeInTimer = setTimeout(this.groovyFadeIn.bind(this, element, word), 16);
-	}
-	else {
-		if (this.debugMe === true) {Mojo.Log.info("@@ FINISH FADE IN @@");}
-		this.fullBright = true;
-
-		if (! this.wordPrintTimer) {
-			wordNumber++;
-			this.wordPrintTimer = setTimeout(this.testerThing(element, word, wordNumber), 1000);
+DockAssistant.prototype.printWordsFadeIn = function (element, letter, length) {
+	if (letter) {
+		if ( (this.groovyWordTimer[letter] < 100) && (letter <= length) ) {
+			$('quoteSpan' + letter).style.color = "rgba(250, 250, 250, " + ((this.groovyWordTimer[letter] + 5) * 0.01) + ")";
+			this.groovyWordTimer[letter]++;
+			this.groovyFadeInTimer = setTimeout(this.printWordsFadeIn.bind(this, element, letter, length), 12);
+		}
+		else {
+			if (letter === length) {
+				this.groovyWordTimer = [];
+			}
 		}
 	}
 };
