@@ -19,17 +19,18 @@ Mojo.Log.info("=======================  START DOCK =======================");
  */
 
 function DockAssistant() {
-if (this.debugMe === true) {Mojo.Log.info("@@ ENTER DocAssistant @@");}
+if (this.debugMe === true) {Mojo.Log.info("@@ ENTER DockAssistant @@");}
 
 	this.debugMe = false;
 	this.prettyPhrase = null;
 	this.fullBright = false;
 	this.groovyTimer = 0.0;
 	this.firstRun = true;
+	this.readyForNewPhrase = true;
 	rawPhrases = [];
 	thisQuote = (Math.floor(Math.random() * 10000));
 
-if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE DocAssistant @@");}
+if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE DockAssistant @@");}
 }
 
 
@@ -51,10 +52,13 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER setup @@");}
 
 	this.controller.document.body.className = 'dock';
 	this.bookPhrases = $('bookPhrases');
+	this.ELT = $('EffectLayerTop');
+	this.ELB = $('EffectLayerBottom');
 	this.bookPhrases.style.display = "none";
 	this.bookPhrases.innerHTML = this.getRandomBookPhrases();
-	this.phraseDelayTime = this.prefsModel.dockPhraseSpeed
+	this.phraseDelayTime = this.prefsModel.dockPhraseSpeed;
 	//this.phraseDelayTime = 5000;
+	$('Container1').style.width = this.controller.window.innerWidth + "px";
 
 	if (this.prefsModel.isTouchPad === true) {$('bookPhrases').addClassName('docktouchpadfix');}
 
@@ -164,7 +168,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER cleanup @@");}
 
 
 	this.fullBright = false;
-	this.readyForFading = false
+	this.readyForFading = false;
 	this.prettyPhrase = null;
 	this.groovyTimer = 0.0;
 	//this.controller.document.removeEventListener(Mojo.Event.tap, this.screenTapHandler, true);
@@ -263,8 +267,8 @@ DockAssistant.prototype.sanitizer = function (sString) {
 				sString = sString.replace(sString.substring(sString.indexOf('<table'), (sString.indexOf('table>') + 6)), '');
 			}
 
-			sString = sString.replace(/<.*?>/g, '');
-			sString = sString.replace(/^\s+|\s+$/g,'').replace(/\s+/g,' ');
+			sString = sString.replace(/<.*?>/g,' ');
+			sString = sString.replace(/^\s+|\s+$/g,' ').replace(/\s+/g,' ');
 
 			if (sString.indexOf('?') > 0) {
 				// Just end at "?"
@@ -380,7 +384,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 
 		/////////////////////////////////////////////////////
 		// Ends in "A", Starts with "A", Previous ends in "A"
-		
+
 		//This starts, previous ends
 		/*if (thisQuote > 0) {
 			if (this.prettyPhrase.indexOf('A') === 0) {
@@ -421,7 +425,7 @@ try {		if (thisQuote > 0) {
 		//"Mr." and "Dr." get cut too.  
 		// Farm it out.
 		//
-		
+
 		// ends with 
 		if (thisQuote > 0) {
 			if ((this.prettyPhrase.indexOf('Dr') === (this.prettyPhrase.length - 2)) || (this.prettyPhrase.indexOf('Mr') === (this.prettyPhrase.length - 2))) {
@@ -454,7 +458,10 @@ try {		if (thisQuote > 0) {
 			if (this.debugMe === true) {Mojo.Log.info("------- SEND FINAL:", this.prettyPhrase.length, "+", this.prettyPhrase);}
 
 			//this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
-			this.effectDecision(this.bookPhrases, this.prettyPhrase);
+			//this.effectDecision(this.bookPhrases, this.prettyPhrase);
+			
+			this.layerSetup(this.bookPhrases, this.prettyPhrase);
+			
 			//this.groovyFadeDecision($('Container1'), this.prettyPhrase);
 		}
 	} catch (doThePhraseError) {Mojo.Log.error(">>>>>>> doThePhrase", doThePhraseError, "thisQuote:", thisQuote, "rawPhrases:", rawPhrases.length, "this.prettyPhrase:", this.prettyPhrase);}
@@ -464,32 +471,310 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE getRandomBookPhrases @@");}
 };
 
 
+
+
+
+
+
+
+
+
+
+
 /********************
  *
- * EFFECT DECISION
+ * LAYER SETUP
  *
  ********************/
+DockAssistant.prototype.layerSetup = function (element, phrase) {
+
+//phrase = "This is a two line phrase, OK?"
+
+// 	this.ELT.style.background = "url('images/EffectScrims/FullBlack.png') center center no-repeat";
+// 	this.ELT.style.background = "url('images/EffectScrims/LinearLeftClear.png') center center no-repeat";
+// 	this.ELT.style.position = "absolute";
+// 	this.ELT.style.top = "0px";
+// 	this.ELT.style.left = "0px";
+// 	this.ELT.style.opacity = "1.0"
+// 	this.ELT.innerHTML = phrase;
+// 	this.ELT.style.color = "rgba(250, 250, 250, 1.0)"
+// 	this.ELT.style.backgroundSize = "100% 100%";
+// 	this.ELT.style.display = "block";
+	this.ELT.style.zIndex = "1";
+// 	Mojo.Log.info("EffectLayerTop:", this.ELT.style.offsetWidth, this.ELT.style.offsetHeight);
+
+// 	this.ELB.style.background = "url('images/EffectScrims/RadialCenterLight.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/LinearLeftClear.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/SpiralCW.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/CircleWave.png') center center no-repeat";
+// 	this.ELB.style.position = "absolute";
+// 	this.ELB.style.top = "0px";
+// 	this.ELB.style.left = "0px";
+// 	this.ELB.style.opacity = "1.0"
+// 	this.ELB.innerHTML = phrase;
+// 	this.ELB.style.color = "rgba(250, 250, 250, 1.0)"
+// 	this.ELB.style.backgroundSize = "100% 100%";
+// 	this.ELB.style.display = "block";
+	this.ELB.style.zIndex = "-1";
+// 	Mojo.Log.info("EffectLayerBottom:", this.ELB.style.offsetWidth, this.ELB.style.offsetHeight);
+
+// 	element.innerHTML = "Really short phrase.";
+// 	element.style.position = "absolute";
+// 	element.style.top = "0px";
+// 	element.style.left = "0px";
+	//element.innerHTML = phrase;
+	element.style.color = "rgba(250, 250, 250, 1.0)"
+	element.style.display = "block";
+	element.style.zIndex = "-2";
+// 	element.style.width = (this.controller.window.innerWidth - 20)+ "px";
+// 	Mojo.Log.info("bookPhrases:", element.style.width, element.style.offsetHeight);
+
+// 	Mojo.Log.info(element.style.top);
+
+//////////////////////////////////////////
+// 	this.layerFadeCounter = 0;
+
+// 	this.ELT.innerHTML = phrase;
+// 	this.ELB.innerHTML = phrase;
+// 	element.innerHTML = phrase;
+// 	this.layerFadeCounter = 100;
+// 	this.layerOpacityAdjustment = 20;
+// 	this.ELT.style.backgroundSize = "100% 100%";
+// 	this.ELB.style.backgroundSize = "100% 100%";
+// 	this.doLayerFadeDown(element, phrase);
+//////////////////////////////////////////
+
+
+
+// 	this.ELT.style.background = "url('images/EffectScrims/DiamondInLeft.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/DiamondInRight.png') center center no-repeat";
+
+// 	this.layerMoveCounter = 0;
+// 	this.layerMoveCounter = this.controller.window.innerWidth
+// 	this.ELT.style.opacity = "1"
+// 	Mojo.Log.info("this.layerMoveCounter:", this.layerMoveCounter);
+	//this.doLayerMoveRight(element, phrase, "DiamondInLeft", "DiamondInRight");
+
+
+	this.effectDecision(element, phrase);
+};
+
 DockAssistant.prototype.effectDecision = function (element, phrase) {
 
-	//this.groovyFadeDecision(element, phrase);
-
-	//this.printWords(element, phrase);
-	//this.groovyWordTimer = 0;
-	if (this.fullBright === false) {
-		this.groovyWordTimer = [];
-		this.phrasePlace = 0;
-		element.innerHTML = ""
-		this.printWords(element, phrase, phrase.length);
+	if (this.readyForNewPhrase === true) {
+		//Mojo.Log.info("DECIDE IF -");
+		this.ELT.innerHTML = phrase;
+		this.ELB.innerHTML = phrase;
+		element.innerHTML = phrase;
+		this.ELT.style.backgroundSize = "100% 100%";
+		this.ELB.style.backgroundSize = "100% 100%";
+		this.layerMoveCounter = 0;
+		this.doLayerMoveRight(element, phrase);
 	}
 	else {
-		this.fullBright = false;
-		this.effectDecision(element, phrase);
+		//Mojo.Log.info("DECIDE ELSE -");
+		this.layerMoveCounter = this.controller.window.innerWidth;
+		this.ELT.style.backgroundSize = "100% 100%";
+		this.ELB.style.backgroundSize = "100% 100%";
+		this.doLayerMoveLeft(element, phrase);
 	}
-	
-	
+}
+
+
+// 	if (this.fullBright === true) {
+// 		this.groovyTimer = 100;
+// 		this.groovyFadeOut(element, phrase);
+// 	}
+// 	else {
+// 		this.groovyTimer = 0;
+// 		element.innerHTML = phrase;
+// 		this.groovyFadeIn(element, phrase);
+// 	}
+
+
+
+
+/********************
+ *
+ * DO LAYER FADE DOWN
+ *
+ ********************/
+DockAssistant.prototype.doLayerFadeDown = function (element, phrase) {
+	this.ELT.style.background = "url('images/EffectScrims/FullBlack.png') center center no-repeat";
+	this.ELB.style.background = "url('images/EffectScrims/RadialCenterLight.png') center center no-repeat";
+	this.ELT.style.backgroundSize = "100% 100%";
+	this.ELB.style.backgroundSize = "100% 100%";
+
+	if ( (this.ELT.style.opacity > 0) || (this.ELB.style.opacity > 0) ) {
+		//Mojo.Log.info("WORKING DOWN:", this.ELT.style.opacity, this.ELB.style.opacity);
+		//this.ELT.style.opacity = (this.layerFadeCounter - 20 ) * 0.01;
+		this.ELT.style.opacity = (this.layerFadeCounter + this.layerOpacityAdjustment) * 0.01;
+		this.ELB.style.opacity = this.layerFadeCounter * 0.01;
+		this.layerFadeCounter--;
+		this.doLayerFadeTimer = setTimeout(this.doLayerFadeDown.bind(this, element, phrase), 25);
+	}
+	else {
+		Mojo.Log.info("DONE DOWN - Top:", this.ELT.style.opacity, "Bottom:", this.ELB.style.opacity);
+		this.layerFadeCounter = 0;
+		this.doLayerFadeUp(element, phrase);
+	}
 };
 
 
+/********************
+ *
+ * DO LAYER FADE UP
+ *
+ ********************/
+DockAssistant.prototype.doLayerFadeUp = function (element, phrase) {
+
+	//if ((this.layerFadeCounter - this.layerOpacityAdjustment) <= 100) {
+	if ( (this.ELT.style.opacity < 1) || (this.ELB.style.opacity < 1) ) {
+		//Mojo.Log.info("WORKING UP:", this.ELT.style.opacity, this.ELB.style.opacity);
+		//this.ELT.style.opacity = (this.layerFadeCounter - 20 ) * 0.01;
+		this.ELT.style.opacity = this.layerFadeCounter * 0.01;
+		this.ELB.style.opacity = (this.layerFadeCounter - this.layerOpacityAdjustment) * 0.01;
+		this.layerFadeCounter++;
+		this.doLayerFadeTimer = setTimeout(this.doLayerFadeUp.bind(this, element, phrase), 25);
+	}
+	else {
+		Mojo.Log.info("DONE UP - Top:", this.ELT.style.opacity, "Bottom:", this.ELB.style.opacity);
+		this.layerFadeCounter = 100;
+		this.doLayerFadeDown(element, phrase);
+	}
+};
+
+
+/********************
+ *
+ * TEXT IN
+ *
+ ********************/
+DockAssistant.prototype.doLayerMoveRight = function (element, phrase) {
+
+// 	this.ELT.style.background = "url('images/EffectScrims/FullBlack.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/LinearLeftClear.png') center center no-repeat";
+
+// 	this.ELT.style.background = "url('images/EffectScrims/DiamondOutRight.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/DiamondOutLeft.png') center center no-repeat";
+
+	this.ELT.style.background = "url('images/EffectScrims/DiamondInLeft.png') center center no-repeat";
+	this.ELB.style.background = "url('images/EffectScrims/DiamondInRight.png') center center no-repeat";
+
+// 	this.ELT.style.background = "url('images/EffectScrims/'" + elt + "'.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/'" + elb + "'.png') center center no-repeat";
+
+	if (this.ELB.style.left.replace('px', '') < this.controller.window.innerWidth) {
+		//Mojo.Log.info("WORKING Move Right:", this.ELB.style.left, this.ELT.style.opacity)
+		//Mojo.Log.info("WORKING Move Right:", this.ELB.style.left, this.ELT.style.left)
+
+		//this.ELB.style.opacity = "0";
+		//this.ELT.style.left = this.layerMoveCounter + "px";
+		//this.layerMoveCounter = this.layerMoveCounter + 5;
+
+		this.ELB.style.left = this.layerMoveCounter + "px";
+		this.ELT.style.left = (0 - this.layerMoveCounter) + "px";
+		this.layerMoveCounter = this.layerMoveCounter + 5;
+
+		//this.ELT.style.opacity = (this.layerFadeCounter + this.layerOpacityAdjustment) * 0.01;
+		//this.ELB.style.opacity = this.layerFadeCounter * 0.01;
+		//this.layerFadeCounter--;
+
+// 		if (this.ELT.style.opacity > 0.0) {
+// 			this.ELT.style.opacity = this.layerFadeCounter * 0.01;
+// 			this.layerFadeCounter = this.layerFadeCounter - 2;
+// 		}
+
+		this.doLayerMoveTimer = setTimeout(this.doLayerMoveRight.bind(this, element, phrase), 50);
+	}
+	else {
+		//Mojo.Log.info("DONE Move Right:", this.ELT.style.left, this.ELB.style.left);
+		this.readyForNewPhrase = false;
+		this.layerMoveCounter = this.controller.window.innerWidth;
+		//this.doLayerMoveLeft(element, phrase);
+
+		if (! this.phraseTimer) {
+			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
+		}
+	}
+};
+
+
+/********************
+ *
+ * TEXT OUT
+ *
+ ********************/
+DockAssistant.prototype.doLayerMoveLeft = function (element, phrase) {
+// 	this.ELT.style.background = "url('images/EffectScrims/FullBlack.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/LinearLeftClear.png') center center no-repeat";
+
+// 	this.ELT.style.background = "url('images/EffectScrims/DiamondOutRight.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/DiamondOutLeft.png') center center no-repeat";
+
+// 	this.ELT.style.background = "url('images/EffectScrims/DiamondInLeft.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/DiamondInRight.png') center center no-repeat";
+
+// 	this.ELT.style.background = "url('images/EffectScrims/'" + elt + "'.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/'" + elb + "'.png') center center no-repeat";
+
+	if (this.ELB.style.left.replace('px', '') > 0) {
+		//Mojo.Log.info("WORKING Move Left:", this.ELB.style.left, this.ELT.style.opacity)
+
+		//this.ELB.style.opacity = "0";
+		//this.ELT.style.left = this.layerMoveCounter + "px";
+		//this.layerMoveCounter = this.layerMoveCounter - 5;
+
+		this.ELB.style.left = this.layerMoveCounter + "px";
+		this.ELT.style.left = (0 - this.layerMoveCounter) + "px";
+		this.layerMoveCounter = this.layerMoveCounter - 5;
+
+		//this.ELT.style.opacity = this.layerFadeCounter * 0.01;
+		//this.ELB.style.opacity = (this.layerFadeCounter + this.layerOpacityAdjustment) * 0.01;
+		//this.layerFadeCounter++;
+
+// 		if (this.ELT.style.opacity < 1) {
+// 			this.ELT.style.opacity = this.layerFadeCounter * 0.01;
+// 			this.layerFadeCounter = this.layerFadeCounter + 2;
+// 		}
+
+		this.doLayerMoveTimer = setTimeout(this.doLayerMoveLeft.bind(this, element, phrase), 50);
+	}
+	else {
+		//Mojo.Log.info("DONE Move Left:", this.ELT.style.left, this.ELB.style.left, this.ELT.style.backgroundWidth);
+		this.readyForNewPhrase = true;
+		//this.layerMoveCounter = 0;
+		//this.layerFadeCounter = 0;
+		//this.doLayerMoveRight(element, phrase);
+
+		clearTimeout(this.phraseTimer);
+		this.phraseTimer = null;
+		this.effectDecision(element, phrase);
+	}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+//
+// Fade in/out entire phrase
+//
 /********************
  *
  * FADE DECISION
@@ -553,6 +838,40 @@ DockAssistant.prototype.groovyFadeIn = function (element, phrase) {
 		}
 	}
 };
+/////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////
+//
+// Fade in/out each letter of the phrase
+//
+// Out not working
+//
+/********************
+ *
+ * EFFECT DECISION
+ *
+ ********************/
+DockAssistant.prototype.effectLetterFadeDecision = function (element, phrase) {
+
+	//this.groovyFadeDecision(element, phrase);
+
+	//this.printWords(element, phrase);
+	//this.groovyWordTimer = 0;
+	if (this.fullBright === false) {
+		Mojo.Log.info("DECIDE FADE IN");
+		this.groovyWordTimer = [];
+		this.phrasePlace = 0;
+		element.innerHTML = "";
+		this.printWords(element, phrase, phrase.length);
+	}
+	else {
+		Mojo.Log.info("DECIDE FADE OUT");
+		this.fullBright = false;
+		this.effectLetterFadeDecision(element, phrase);
+		//this.controlPrintWordsFade(0, phrase.length, element, phrase);
+	}
+};
 
 
 /********************
@@ -565,16 +884,18 @@ DockAssistant.prototype.printWords = function (element, phrase) {
 		element.innerHTML = element.innerHTML + "<span id='quoteSpan" + this.phrasePlace + "' style='color:rgba(250, 250, 250, 0);'>" + phrase.charAt(this.phrasePlace) + "</span>";
 		this.groovyWordTimer[this.phrasePlace] = 0;
 		this.phrasePlace++;
-		this.printWordsTimer = setTimeout(this.printWords.bind(this, element, phrase), 5);
+		this.printWordsTimer = setTimeout(this.printWords.bind(this, element, phrase), 0);
 	}
 	else {
+		Mojo.Log.info("DONE WRITING");
 		clearTimeout(this.phraseTimer);
 		clearTimeout(this.printWordsTimer);
 		this.phraseTimer = null;
 		this.printWordsTimer = null;
 		this.readyForFading = true;
 		element.style.display = "block";
-		this.ControlPrintWordsFadeIn(0, phrase.length)
+		this.phrasePlace = null;
+		this.controlPrintWordsFade(0, phrase.length, element, phrase);
 	}
 };
 
@@ -584,12 +905,23 @@ DockAssistant.prototype.printWords = function (element, phrase) {
  * FADE CONTROLLER
  *
  ********************/
-DockAssistant.prototype.ControlPrintWordsFadeIn = function (letter, length) {
+DockAssistant.prototype.controlPrintWordsFade = function (letter, length, element, phrase) {
 	if (this.readyForFading === true) {
 		if (letter <= length) {
 			this.printWordsFadeIn(letter, length);
 			letter++;
-			this.groovyFadeInControlTimer = setTimeout(this.ControlPrintWordsFadeIn.bind(this, letter, length), 50);
+			this.controlPrintWordsFadeTimer = setTimeout(this.controlPrintWordsFade.bind(this, letter, length), 12);
+		}
+	}
+	else {
+		if (letter <= length) {
+			//Mojo.Log.info("CONTROL FADE OUT", letter, length, Object.toString(element));
+			this.groovyWordTimer[letter] = 100;
+			try {
+			this.printWordsFadeOut(letter, length, element, phrase);
+			} catch (ControlOutError) {Mojo.Log.error(">>>>>>> ControlOutError", ControlOutError, "|", letter, length, element);}
+			letter++;
+			this.controlPrintWordsFadeTimer = setTimeout(this.controlPrintWordsFade.bind(this, letter, length, element, phrase), 12);
 		}
 	}
 };
@@ -604,14 +936,14 @@ DockAssistant.prototype.printWordsFadeIn = function (letter, length) {
 	if (this.groovyWordTimer[letter] < 100) {
 		$('quoteSpan' + letter).style.color = "rgba(250, 250, 250, " + this.groovyWordTimer[letter] * 0.01 + ")";
 		this.groovyWordTimer[letter]++;
-		this.groovyFadeInTimer = setTimeout(this.printWordsFadeIn.bind(this, letter, length), 12);
+		this.groovyFadeInTimer = setTimeout(this.printWordsFadeIn.bind(this, letter, length), 5);
 	}
 	else {
 		clearTimeout(this.groovyFadeInTimer[letter]);
 		this.groovyFadeInTimer[letter] = null;
 
 		if (letter >= length) {
-			Mojo.Log.info("DONE");
+			Mojo.Log.info("DONE FADE IN");
 			this.readyForFading = false;
 			if (! this.phraseTimer) {
 				this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
@@ -628,23 +960,24 @@ DockAssistant.prototype.printWordsFadeIn = function (letter, length) {
  * PRINT WORDS FADE OUT
  *
  ********************/
-/*DockAssistant.prototype.printWordsFadeOut = function (letter, length) {
-	if (this.groovyWordTimer[letter] < 100) {
+DockAssistant.prototype.printWordsFadeOut = function (letter, length, element, phrase) {
+	if (this.groovyWordTimer[letter] > 0) {
+			try {
 		$('quoteSpan' + letter).style.color = "rgba(250, 250, 250, " + this.groovyWordTimer[letter] * 0.01 + ")";
-		this.groovyWordTimer[letter]++;
-		this.groovyFadeInTimer = setTimeout(this.printWordsFadeIn.bind(this, letter, length), 12);
+			} catch (printWordsFadeOut) {Mojo.Log.error(">>>>>>> printWordsFadeOut", printWordsFadeOut, letter, length, element);}
+		this.groovyWordTimer[letter]--;
+		this.groovyFadeOutTimer = setTimeout(this.groovyFadeOutTimer.bind(this, letter, length), 12);
 	}
 	else {
-		clearTimeout(this.groovyFadeInTimer[letter]);
-		this.groovyFadeInTimer[letter] = null;
+		clearTimeout(this.groovyFadeOutTimer[letter]);
+		this.groovyFadeOutTimer[letter] = null;
 
 		if (letter >= length) {
-			Mojo.Log.info("DONE");
-			this.readyForFading = false;
-			if (! this.phraseTimer) {
-				this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
-			}
-			this.groovyFadeInTimer = null;
+			Mojo.Log.info("DONE FADE OUT");
+			this.readyForFading = true;
+			this.groovyFadeOutTimer = null;
+			this.printWords(element, phrase);
 		}
 	}
-};*/
+};
+/////////////////////////////////////////////////////////////////////
