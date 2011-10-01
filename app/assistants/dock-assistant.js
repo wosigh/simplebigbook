@@ -357,7 +357,8 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 			}
 		}
 		else {
-			this.gatherPhrases();
+			//this.gatherPhrases();
+			this.getRandomBookPhrases();
 		}
 
 		if (this.debugMe === true) {Mojo.Log.info("START - rawPhrases:", rawPhrases.length, "thisQuote:", thisQuote);}
@@ -370,7 +371,6 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 			//	clearTimeout(this.doThePhrase);
 			//	this.getRandomBookPhrases();
 			//}
-
 			if (rawPhrases[thisQuote]) {
 				this.prettyPhrase = this.sanitizer(rawPhrases[thisQuote]);
 			}
@@ -400,7 +400,8 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER getRandomBookPhrases @@");}
 			}
 		}*/
 		//This ends, next starts
-try {		if (thisQuote > 0) {
+try {		//if (thisQuote > 0) {
+		if ( (thisQuote) && (rawPhrases.length > 0) ) {
 			if (this.prettyPhrase.indexOf('A') === this.prettyPhrase.length -1) {
 				Mojo.Log.error("MEGA-BUSTED:", this.prettyPhrase);
 				this.prettyPhrase = null;
@@ -457,10 +458,10 @@ try {		if (thisQuote > 0) {
 			this.prettyPhrase = this.sanitizer(this.prettyPhrase);
 			if (this.debugMe === true) {Mojo.Log.info("------- SEND FINAL:", this.prettyPhrase.length, "+", this.prettyPhrase);}
 
-			//this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
+			this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
 			//this.effectDecision(this.bookPhrases, this.prettyPhrase);
 			
-			this.layerSetup(this.bookPhrases, this.prettyPhrase);
+			//this.layerSetup(this.bookPhrases, this.prettyPhrase);
 			
 			//this.groovyFadeDecision($('Container1'), this.prettyPhrase);
 		}
