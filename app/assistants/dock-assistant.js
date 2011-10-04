@@ -58,7 +58,7 @@ if (this.debugMe === true) {Mojo.Log.info("@@ ENTER setup @@");}
 	this.bookPhrases.innerHTML = this.getRandomBookPhrases();
 	this.phraseDelayTime = this.prefsModel.dockPhraseSpeed;
 	//this.phraseDelayTime = 5000;
-	$('Container1').style.width = this.controller.window.innerWidth + "px";
+	//$('Container1').style.width = this.controller.window.innerWidth + "px";
 
 	if (this.prefsModel.isTouchPad === true) {$('bookPhrases').addClassName('docktouchpadfix');}
 
@@ -456,14 +456,27 @@ try {		//if (thisQuote > 0) {
 		else {
 			this.firstRun = false;
 			this.prettyPhrase = this.sanitizer(this.prettyPhrase);
+			//this.prettyPhrase = "Really short.";
+
+			this.prettyPhrase = "<span class='serifFont'>" + this.prettyPhrase.charAt(1) + "</span>" + this.prettyPhrase.substring(2, this.prettyPhrase.length);
+			//Mojo.Log.info("this.prettyPhrase:", this.prettyPhrase);
+
 			if (this.debugMe === true) {Mojo.Log.info("------- SEND FINAL:", this.prettyPhrase.length, "+", this.prettyPhrase);}
 
-			this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
+
+			// WORKS - ORIGINAL
+			//this.groovyFadeDecision(this.bookPhrases, this.prettyPhrase);
+
+			//WORKS
+			//this.simpleFadeDecision(this.bookPhrases, this.prettyPhrase);
+
+			//WORKS
+			this.radialFadeDecision(this.bookPhrases, this.prettyPhrase);
+
+			//WORKS
+			//this.separateDecision(this.bookPhrases, this.prettyPhrase);
+
 			//this.effectDecision(this.bookPhrases, this.prettyPhrase);
-			
-			//this.layerSetup(this.bookPhrases, this.prettyPhrase);
-			
-			//this.groovyFadeDecision($('Container1'), this.prettyPhrase);
 		}
 	} catch (doThePhraseError) {Mojo.Log.error(">>>>>>> doThePhrase", doThePhraseError, "thisQuote:", thisQuote, "rawPhrases:", rawPhrases.length, "this.prettyPhrase:", this.prettyPhrase);}
 	}.bind(this), 10);
@@ -473,227 +486,112 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE getRandomBookPhrases @@");}
 
 
 
-
-
-
-
-
-
-
-
-
 /********************
  *
- * LAYER SETUP
+ * MASTER EFFECT DECISION
  *
  ********************/
-DockAssistant.prototype.layerSetup = function (element, phrase) {
-
-//phrase = "This is a two line phrase, OK?"
-
-// 	this.ELT.style.background = "url('images/EffectScrims/FullBlack.png') center center no-repeat";
-// 	this.ELT.style.background = "url('images/EffectScrims/LinearLeftClear.png') center center no-repeat";
-// 	this.ELT.style.position = "absolute";
-// 	this.ELT.style.top = "0px";
-// 	this.ELT.style.left = "0px";
-// 	this.ELT.style.opacity = "1.0"
-// 	this.ELT.innerHTML = phrase;
-// 	this.ELT.style.color = "rgba(250, 250, 250, 1.0)"
-// 	this.ELT.style.backgroundSize = "100% 100%";
-// 	this.ELT.style.display = "block";
-	this.ELT.style.zIndex = "1";
-// 	Mojo.Log.info("EffectLayerTop:", this.ELT.style.offsetWidth, this.ELT.style.offsetHeight);
-
-// 	this.ELB.style.background = "url('images/EffectScrims/RadialCenterLight.png') center center no-repeat";
-// 	this.ELB.style.background = "url('images/EffectScrims/LinearLeftClear.png') center center no-repeat";
-// 	this.ELB.style.background = "url('images/EffectScrims/SpiralCW.png') center center no-repeat";
-// 	this.ELB.style.background = "url('images/EffectScrims/CircleWave.png') center center no-repeat";
-// 	this.ELB.style.position = "absolute";
-// 	this.ELB.style.top = "0px";
-// 	this.ELB.style.left = "0px";
-// 	this.ELB.style.opacity = "1.0"
-// 	this.ELB.innerHTML = phrase;
-// 	this.ELB.style.color = "rgba(250, 250, 250, 1.0)"
-// 	this.ELB.style.backgroundSize = "100% 100%";
-// 	this.ELB.style.display = "block";
-	this.ELB.style.zIndex = "-1";
-// 	Mojo.Log.info("EffectLayerBottom:", this.ELB.style.offsetWidth, this.ELB.style.offsetHeight);
-
-// 	element.innerHTML = "Really short phrase.";
-// 	element.style.position = "absolute";
-// 	element.style.top = "0px";
-// 	element.style.left = "0px";
-	//element.innerHTML = phrase;
-	element.style.color = "rgba(250, 250, 250, 1.0)"
-	element.style.display = "block";
-	element.style.zIndex = "-2";
-// 	element.style.width = (this.controller.window.innerWidth - 20)+ "px";
-// 	Mojo.Log.info("bookPhrases:", element.style.width, element.style.offsetHeight);
-
-// 	Mojo.Log.info(element.style.top);
-
-//////////////////////////////////////////
-// 	this.layerFadeCounter = 0;
-
-// 	this.ELT.innerHTML = phrase;
-// 	this.ELB.innerHTML = phrase;
-// 	element.innerHTML = phrase;
-// 	this.layerFadeCounter = 100;
-// 	this.layerOpacityAdjustment = 20;
-// 	this.ELT.style.backgroundSize = "100% 100%";
-// 	this.ELB.style.backgroundSize = "100% 100%";
-// 	this.doLayerFadeDown(element, phrase);
-//////////////////////////////////////////
-
-
-
-// 	this.ELT.style.background = "url('images/EffectScrims/DiamondInLeft.png') center center no-repeat";
-// 	this.ELB.style.background = "url('images/EffectScrims/DiamondInRight.png') center center no-repeat";
-
-// 	this.layerMoveCounter = 0;
-// 	this.layerMoveCounter = this.controller.window.innerWidth
-// 	this.ELT.style.opacity = "1"
-// 	Mojo.Log.info("this.layerMoveCounter:", this.layerMoveCounter);
-	//this.doLayerMoveRight(element, phrase, "DiamondInLeft", "DiamondInRight");
-
-
-	this.effectDecision(element, phrase);
-};
-
 DockAssistant.prototype.effectDecision = function (element, phrase) {
+	var effectList = new Array(
+		"simpleFadeDecision",
+		"radialFadeDecision",
+		"separateDecision"
+	);
 
-	if (this.readyForNewPhrase === true) {
-		//Mojo.Log.info("DECIDE IF -");
-		this.ELT.innerHTML = phrase;
-		this.ELB.innerHTML = phrase;
-		element.innerHTML = phrase;
-		this.ELT.style.backgroundSize = "100% 100%";
-		this.ELB.style.backgroundSize = "100% 100%";
-		this.layerMoveCounter = 0;
-		this.doLayerMoveRight(element, phrase);
+	var useEffect = (Math.floor(Math.random() * 10));
+	if (useEffect >= effectList.length) {
+		this.effectDecision(element, phrase)
 	}
 	else {
-		//Mojo.Log.info("DECIDE ELSE -");
-		this.layerMoveCounter = this.controller.window.innerWidth;
-		this.ELT.style.backgroundSize = "100% 100%";
-		this.ELB.style.backgroundSize = "100% 100%";
-		this.doLayerMoveLeft(element, phrase);
+		switch (effectList[useEffect]) {
+			case 'simpleFadeDecision' :
+				Mojo.Log.info("USE EFFECT:", useEffect, "|", effectList[useEffect]);
+				this.simpleFadeDecision(this.bookPhrases, this.prettyPhrase);
+				break;
+			case 'radialFadeDecision' :
+				Mojo.Log.info("USE EFFECT:", useEffect, "|", effectList[useEffect]);
+				this.radialFadeDecision(this.bookPhrases, this.prettyPhrase);
+				break;
+			case 'separateDecision' :
+				Mojo.Log.info("USE EFFECT:", useEffect, "|", effectList[useEffect]);
+				this.separateDecision(this.bookPhrases, this.prettyPhrase);
+				break;
+		}
 	}
 }
 
 
-// 	if (this.fullBright === true) {
-// 		this.groovyTimer = 100;
-// 		this.groovyFadeOut(element, phrase);
-// 	}
-// 	else {
-// 		this.groovyTimer = 0;
-// 		element.innerHTML = phrase;
-// 		this.groovyFadeIn(element, phrase);
-// 	}
-
-
-
-
+/////////////////////////////////////////////////////////////////////
+//
+// Effect Layers Separate/Join
+//
 /********************
  *
- * DO LAYER FADE DOWN
+ * SEPARATE DECISION
  *
  ********************/
-DockAssistant.prototype.doLayerFadeDown = function (element, phrase) {
-	this.ELT.style.background = "url('images/EffectScrims/FullBlack.png') center center no-repeat";
-	this.ELB.style.background = "url('images/EffectScrims/RadialCenterLight.png') center center no-repeat";
-	this.ELT.style.backgroundSize = "100% 100%";
-	this.ELB.style.backgroundSize = "100% 100%";
-
-	if ( (this.ELT.style.opacity > 0) || (this.ELB.style.opacity > 0) ) {
-		//Mojo.Log.info("WORKING DOWN:", this.ELT.style.opacity, this.ELB.style.opacity);
-		//this.ELT.style.opacity = (this.layerFadeCounter - 20 ) * 0.01;
-		this.ELT.style.opacity = (this.layerFadeCounter + this.layerOpacityAdjustment) * 0.01;
-		this.ELB.style.opacity = this.layerFadeCounter * 0.01;
-		this.layerFadeCounter--;
-		this.doLayerFadeTimer = setTimeout(this.doLayerFadeDown.bind(this, element, phrase), 25);
+DockAssistant.prototype.separateDecision = function (element, phrase) {
+	if (this.readyForNewPhrase === true) {
+		this.ELT.style.zIndex = "1";
+		this.ELB.style.zIndex = "-1";
+		element.style.zIndex = "-2";
+		this.ELT.innerHTML = phrase;
+		this.ELB.innerHTML = phrase;
+		element.innerHTML = phrase;
+		this.ELT.style.display = "block";
+		this.ELB.style.display = "block";
+		element.style.display = "block";
+		this.ELT.style.background = "url('images/EffectScrims/DiamondOutRight.png') center center no-repeat";
+		this.ELB.style.background = "url('images/EffectScrims/DiamondOutLeft.png') center center no-repeat";
+		this.ELT.style.backgroundSize = "100% 100%";
+		this.ELB.style.backgroundSize = "100% 100%";
+		this.layerMoveCounter = 0;
+		this.groovyFadeCounter = 0;
+		this.doLayerSeparate(element, phrase);
 	}
 	else {
-		Mojo.Log.info("DONE DOWN - Top:", this.ELT.style.opacity, "Bottom:", this.ELB.style.opacity);
-		this.layerFadeCounter = 0;
-		this.doLayerFadeUp(element, phrase);
+		this.layerMoveCounter = this.controller.window.innerWidth;
+		this.ELT.style.backgroundSize = "100% 100%";
+		this.ELB.style.backgroundSize = "100% 100%";
+		this.doLayerJoin(element, phrase);
 	}
-};
+}
 
 
 /********************
  *
- * DO LAYER FADE UP
+ * SEPARATE LAYERS
  *
  ********************/
-DockAssistant.prototype.doLayerFadeUp = function (element, phrase) {
-
-	//if ((this.layerFadeCounter - this.layerOpacityAdjustment) <= 100) {
-	if ( (this.ELT.style.opacity < 1) || (this.ELB.style.opacity < 1) ) {
-		//Mojo.Log.info("WORKING UP:", this.ELT.style.opacity, this.ELB.style.opacity);
-		//this.ELT.style.opacity = (this.layerFadeCounter - 20 ) * 0.01;
-		this.ELT.style.opacity = this.layerFadeCounter * 0.01;
-		this.ELB.style.opacity = (this.layerFadeCounter - this.layerOpacityAdjustment) * 0.01;
-		this.layerFadeCounter++;
-		this.doLayerFadeTimer = setTimeout(this.doLayerFadeUp.bind(this, element, phrase), 25);
-	}
-	else {
-		Mojo.Log.info("DONE UP - Top:", this.ELT.style.opacity, "Bottom:", this.ELB.style.opacity);
-		this.layerFadeCounter = 100;
-		this.doLayerFadeDown(element, phrase);
-	}
-};
-
-
-/********************
- *
- * TEXT IN
- *
- ********************/
-DockAssistant.prototype.doLayerMoveRight = function (element, phrase) {
+DockAssistant.prototype.doLayerSeparate = function (element, phrase) {
 
 // 	this.ELT.style.background = "url('images/EffectScrims/FullBlack.png') center center no-repeat";
 // 	this.ELB.style.background = "url('images/EffectScrims/LinearLeftClear.png') center center no-repeat";
 
-// 	this.ELT.style.background = "url('images/EffectScrims/DiamondOutRight.png') center center no-repeat";
-// 	this.ELB.style.background = "url('images/EffectScrims/DiamondOutLeft.png') center center no-repeat";
-
-	this.ELT.style.background = "url('images/EffectScrims/DiamondInLeft.png') center center no-repeat";
-	this.ELB.style.background = "url('images/EffectScrims/DiamondInRight.png') center center no-repeat";
+// 	this.ELT.style.background = "url('images/EffectScrims/DiamondInLeft.png') center center no-repeat";
+// 	this.ELB.style.background = "url('images/EffectScrims/DiamondInRight.png') center center no-repeat";
 
 // 	this.ELT.style.background = "url('images/EffectScrims/'" + elt + "'.png') center center no-repeat";
 // 	this.ELB.style.background = "url('images/EffectScrims/'" + elb + "'.png') center center no-repeat";
 
 	if (this.ELB.style.left.replace('px', '') < this.controller.window.innerWidth) {
-		//Mojo.Log.info("WORKING Move Right:", this.ELB.style.left, this.ELT.style.opacity)
-		//Mojo.Log.info("WORKING Move Right:", this.ELB.style.left, this.ELT.style.left)
-
-		//this.ELB.style.opacity = "0";
-		//this.ELT.style.left = this.layerMoveCounter + "px";
-		//this.layerMoveCounter = this.layerMoveCounter + 5;
-
 		this.ELB.style.left = this.layerMoveCounter + "px";
 		this.ELT.style.left = (0 - this.layerMoveCounter) + "px";
-		this.layerMoveCounter = this.layerMoveCounter + 5;
+		this.layerMoveCounter = this.layerMoveCounter + 10;
 
-		//this.ELT.style.opacity = (this.layerFadeCounter + this.layerOpacityAdjustment) * 0.01;
-		//this.ELB.style.opacity = this.layerFadeCounter * 0.01;
-		//this.layerFadeCounter--;
+		if (this.groovyFadeCounter <= 100) {
+			element.style.color = "rgba(250, 250, 250, " + (this.groovyFadeCounter * 0.01) + ")";
+			this.groovyFadeCounter = this.groovyFadeCounter + 4;
+		}
 
-// 		if (this.ELT.style.opacity > 0.0) {
-// 			this.ELT.style.opacity = this.layerFadeCounter * 0.01;
-// 			this.layerFadeCounter = this.layerFadeCounter - 2;
-// 		}
-
-		this.doLayerMoveTimer = setTimeout(this.doLayerMoveRight.bind(this, element, phrase), 50);
+		this.doLayerSeparateTimer = setTimeout(this.doLayerSeparate.bind(this, element, phrase), 50);
 	}
 	else {
-		//Mojo.Log.info("DONE Move Right:", this.ELT.style.left, this.ELB.style.left);
 		this.readyForNewPhrase = false;
 		this.layerMoveCounter = this.controller.window.innerWidth;
-		//this.doLayerMoveLeft(element, phrase);
+		this.groovyFadeCounter = 100;
 
+// 		this.callLayerJoin = setTimeout(this.doLayerJoin.bind(element, phrase), this.phraseDelayTime);
 		if (! this.phraseTimer) {
 			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
 		}
@@ -701,12 +599,14 @@ DockAssistant.prototype.doLayerMoveRight = function (element, phrase) {
 };
 
 
+
 /********************
  *
- * TEXT OUT
+ * JOIN LAYERS
  *
  ********************/
-DockAssistant.prototype.doLayerMoveLeft = function (element, phrase) {
+DockAssistant.prototype.doLayerJoin = function (element, phrase) {
+	//clearTimeout(this.callLayerJoin);
 // 	this.ELT.style.background = "url('images/EffectScrims/FullBlack.png') center center no-repeat";
 // 	this.ELB.style.background = "url('images/EffectScrims/LinearLeftClear.png') center center no-repeat";
 
@@ -720,41 +620,115 @@ DockAssistant.prototype.doLayerMoveLeft = function (element, phrase) {
 // 	this.ELB.style.background = "url('images/EffectScrims/'" + elb + "'.png') center center no-repeat";
 
 	if (this.ELB.style.left.replace('px', '') > 0) {
-		//Mojo.Log.info("WORKING Move Left:", this.ELB.style.left, this.ELT.style.opacity)
-
-		//this.ELB.style.opacity = "0";
-		//this.ELT.style.left = this.layerMoveCounter + "px";
-		//this.layerMoveCounter = this.layerMoveCounter - 5;
-
 		this.ELB.style.left = this.layerMoveCounter + "px";
 		this.ELT.style.left = (0 - this.layerMoveCounter) + "px";
-		this.layerMoveCounter = this.layerMoveCounter - 5;
+		this.layerMoveCounter = this.layerMoveCounter - 10;
 
-		//this.ELT.style.opacity = this.layerFadeCounter * 0.01;
-		//this.ELB.style.opacity = (this.layerFadeCounter + this.layerOpacityAdjustment) * 0.01;
-		//this.layerFadeCounter++;
+		if (this.groovyFadeCounter >= 0) {
+			element.style.color = "rgba(250, 250, 250, " + (this.groovyFadeCounter * 0.01) + ")";
+			this.groovyFadeCounter = this.groovyFadeCounter - 5;
+		}
 
-// 		if (this.ELT.style.opacity < 1) {
-// 			this.ELT.style.opacity = this.layerFadeCounter * 0.01;
-// 			this.layerFadeCounter = this.layerFadeCounter + 2;
-// 		}
-
-		this.doLayerMoveTimer = setTimeout(this.doLayerMoveLeft.bind(this, element, phrase), 50);
+		this.doLayerJoinTimer = setTimeout(this.doLayerJoin.bind(this, element, phrase), 50);
 	}
 	else {
-		//Mojo.Log.info("DONE Move Left:", this.ELT.style.left, this.ELB.style.left, this.ELT.style.backgroundWidth);
 		this.readyForNewPhrase = true;
-		//this.layerMoveCounter = 0;
-		//this.layerFadeCounter = 0;
-		//this.doLayerMoveRight(element, phrase);
-
 		clearTimeout(this.phraseTimer);
 		this.phraseTimer = null;
-		this.effectDecision(element, phrase);
+		//this.separateDecision(element, phrase);
+		this.getRandomBookPhrases();
+	}
+};
+/////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+//
+// Radial Fade in/out entire phrase
+//
+/********************
+ *
+ * RADIAL FADE DECISION
+ *
+ ********************/
+DockAssistant.prototype.radialFadeDecision = function (element, phrase) {
+	if (this.readyForNewPhrase === true) {
+		this.ELT.innerHTML = phrase;
+		this.ELB.innerHTML = phrase;
+		element.innerHTML = phrase;
+
+		this.ELT.style.zIndex = "1";
+		this.ELT.style.display = "block";
+		this.ELT.style.opacity = "1.0";
+		this.ELT.style.background = "url('images/EffectScrims/FullBlack.png') center center no-repeat";
+		this.ELT.style.backgroundSize = "100% 100%";
+
+		this.ELB.style.zIndex = "-1";
+		this.ELB.style.display = "block";
+		this.ELB.style.background = "url('images/EffectScrims/RadialCenterLight.png') center center no-repeat";
+		this.ELB.style.backgroundSize = "100% 100%";
+
+		element.style.color = "rgba(250, 250, 250, 1.0)"
+		element.style.display = "block";
+		element.style.zIndex = "-2";
+
+		this.layerOpacityAdjustment = 20;
+		this.radialFadeCounter = 100;
+		this.radialFadeIn(element, phrase);
+	}
+	else {
+		this.radialFadeCounter = 0;
+		this.radialFadeOut(element, phrase);
 	}
 };
 
 
+/********************
+ *
+ * RADIAL FADE OUT
+ *
+ ********************/
+DockAssistant.prototype.radialFadeOut = function (element, phrase) {
+	if (this.radialFadeCounter < 100) {
+		this.ELT.style.opacity = (this.radialFadeCounter + this.layerOpacityAdjustment) * 0.01;
+		this.ELB.style.opacity = this.radialFadeCounter * 0.01;
+		this.radialFadeCounter++;
+		this.radialFadeOutTimer = setTimeout(this.radialFadeOut.bind(this, element, phrase), 24);
+	}
+	else {
+		clearTimeout(this.radialFadeOutTimer);
+		this.radialFadeOutTimer = null;
+		clearTimeout(this.phraseTimer);
+		this.phraseTimer = null;
+		this.readyForNewPhrase = true;
+		this.radialFadeDecision(element, phrase);
+	}
+};
+
+
+/********************
+ *
+ * RADIAL FADE IN
+ *
+ ********************/
+DockAssistant.prototype.radialFadeIn = function (element, phrase) {
+	if (this.radialFadeCounter > 0) {
+		this.ELT.style.opacity = this.radialFadeCounter * 0.01;
+		this.ELB.style.opacity = (this.radialFadeCounter - this.layerOpacityAdjustment) * 0.01;
+		this.radialFadeCounter--;
+		this.radialFadeInTimer = setTimeout(this.radialFadeIn.bind(this, element, phrase), 24);
+	}
+	else {
+		this.readyForNewPhrase = false;
+
+		if (! this.phraseTimer) {
+			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
+		}
+	}
+};
+/////////////////////////////////////////////////////////////////////
 
 
 
@@ -763,11 +737,89 @@ DockAssistant.prototype.doLayerMoveLeft = function (element, phrase) {
 
 
 
+/////////////////////////////////////////////////////////////////////
+//
+// Simple Fade in/out entire phrase
+//
+/********************
+ *
+ * SIMPLE FADE DECISION
+ *
+ ********************/
+DockAssistant.prototype.simpleFadeDecision = function (element, phrase) {
+	if (this.readyForNewPhrase === true) {
+		this.ELT.innerHTML = phrase;
+		element.innerHTML = phrase;
+
+		this.ELT.style.zIndex = "1";
+		this.ELT.style.display = "block";
+		this.ELT.style.opacity = "1.0";
+		this.ELT.style.background = "url('images/EffectScrims/FullBlack.png') center center no-repeat";
+		this.ELT.style.backgroundSize = "100% 100%";
+
+		this.ELB.style.zIndex = "-1";
+		this.ELB.style.display = "none";
+
+		element.style.color = "rgba(250, 250, 250, 1.0)"
+		element.style.display = "block";
+		element.style.zIndex = "-2";
+
+		this.simpleFadeTimer = 100;
+		this.simpleFadeIn(element, phrase);
+	}
+	else {
+		this.simpleFadeTimer = 0;
+		this.simpleFadeOut(element, phrase);
+	}
+};
 
 
+/********************
+ *
+ * SIMPLE FADE OUT
+ *
+ ********************/
+DockAssistant.prototype.simpleFadeOut = function (element, phrase) {
+	this.ELT.style.background = "url('images/EffectScrims/FullBlack.png') center center no-repeat";
+
+	if (this.simpleFadeTimer < 100) {
+		this.ELT.style.opacity = this.simpleFadeTimer * 0.01;
+		this.simpleFadeTimer++;
+		this.simpleFadeOutTimer = setTimeout(this.simpleFadeOut.bind(this, element, phrase), 24);
+	}
+	else {
+		this.readyForNewPhrase = true;
+		clearTimeout(this.simpleFadeOutTimer);
+		this.simpleFadeOutTimer = null;
+		clearTimeout(this.phraseTimer);
+		this.phraseTimer = null;
+		this.simpleFadeDecision(element, phrase);
+	}
+};
 
 
+/********************
+ *
+ * SIMPLE FADE IN
+ *
+ ********************/
+DockAssistant.prototype.simpleFadeIn = function (element, phrase) {
 
+	if (this.simpleFadeTimer > 0) {
+		this.ELT.style.opacity = this.simpleFadeTimer * 0.01;
+		this.simpleFadeTimer--;
+		this.simpleFadeInTimer = setTimeout(this.simpleFadeIn.bind(this, element, phrase), 24);
+	}
+	else {
+		Mojo.Log.info("@@ FINISH SIMPLE FADE IN @@", this.ELT.style.opacity, "|", this.simpleFadeTimer);
+		this.readyForNewPhrase = false;
+
+		if (! this.phraseTimer) {
+			this.phraseTimer = setTimeout(this.getRandomBookPhrases.bind(this), this.phraseDelayTime);
+		}
+	}
+};
+/////////////////////////////////////////////////////////////////////
 
 
 
