@@ -149,11 +149,11 @@ body.main {
 }
 
 .main .border {
-	border: 1px solid blue;
+	border: 0px solid blue;
 }
 
 .main .border2 {
-	border: 1px solid red;
+	border: 0px solid red;
 }
 
 
@@ -351,6 +351,7 @@ body.dock
 .dock .bookPhrases {
 	border: 0px solid green;
 	/*color: rgba(250, 250, 250, 0.0);*/
+	color: rgba(250, 250, 250, 1.0);
 	/*margin-top: 1em;
 	margin-bottom: 1em;
 	margin-left: 1em;
@@ -411,7 +412,7 @@ body.dock
 	display: block;
 	margin: -12px 0px -12px 0px;
 	/*padding: 0px 6px -6px 0px;*/
-	border: 1px solid white;
+	border: 0px solid white;
 	/*text-align: justify;*/
 }
 
