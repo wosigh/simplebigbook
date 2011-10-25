@@ -23,13 +23,11 @@ Mojo.Log.info(Mojo.Controller.appInfo.title, "-", Mojo.Controller.appInfo.versio
 
 function BookmarksAssistant() {
 	this.debugMe = false;
-
 	this.dbName = "SBB_Bookmarks";
 	this.dbVersion = "0.1";
 	this.dbDisplayName = "Simple Big Book";
 	this.dbSize = 200000;
 	this.dbTable = "SBB_Bookmarks_Table";
-
 	this.wasDeactivated = 0;
 }
 
@@ -41,9 +39,6 @@ function BookmarksAssistant() {
  ********************/
 BookmarksAssistant.prototype.setup = function () {
 try{
-	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER SETUP @@");}
-
-	//  ****  Get the preferences from cookie
 	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 	this.prefsModel = this.prefs.get();
 
@@ -62,14 +57,11 @@ try{
 			},
 			menuModel
 		);
-
-		//$('BookmarksWrapperDiv').addClassName('touchpadfix');
 	}
 
 	////////////////////////////////////////////////////
 	//  Make the bookmark model for the popup
 	this.listModel = {items:[]};
-
 	this.initialPopulate();
 	////////////////////////////////////////////////////
 
@@ -96,8 +88,6 @@ try{
 	this.bookmarkDeleteHandler = this.bookmarkDelete.bind(this);
 	this.bookmarkRenameDialogHandler = this.bookmarkRenameDialog.bind(this);
 	this.clearBookmarksHandler = this.clearBookmarks.bind(this);
-
-	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE SETUP @@");}
 } catch (error) {Mojo.Log.error("BOOKMARKS ASSISTANT SETUP ERROR", error);}
 };
 
@@ -109,15 +99,11 @@ try{
  ********************/
 BookmarksAssistant.prototype.activate = function (event) {
 try {
-	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Activate @@");}
-
 	this.controller.listen(this.BookmarksListWidget, Mojo.Event.listDelete, this.bookmarkDelete.bind(this));
 	this.controller.listen(this.BookmarksListWidget, Mojo.Event.listTap, this.bookmarkRenameDialog.bind(this));
 	//this.controller.listen(this.BookmarksListWidget, Mojo.Event.listReorder, this.bookmarkReorder.bind(this));
 	this.controller.listen(this.deleteRowsWidget, Mojo.Event.tap, this.clearBookmarks.bind(this));
-
-	} catch (error) {Mojo.Log.error("ACTIVE ERROR", error);}
-if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Activate @@");}
+} catch (error) {Mojo.Log.error("ACTIVE ERROR", error);}
 };
 
 
@@ -127,14 +113,10 @@ if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Activate @@");}
  *
  ********************/
 BookmarksAssistant.prototype.deactivate = function (event) {
-	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Deactivate @@");}
-
 	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listDelete, this.bookmarkDeleteHandler);
 	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listTap, this.bookmarkRenameDialogHandler);
 	//this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listReorder, this.bookmarkReorder);
 	this.controller.stopListening(this.deleteRowsWidget, Mojo.Event.tap, this.clearBookmarksHandler);
-
-	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Deactivate @@");}
 };
 
 
@@ -144,14 +126,10 @@ BookmarksAssistant.prototype.deactivate = function (event) {
  *
  ********************/
 BookmarksAssistant.prototype.cleanup = function (event) {
-if (this.debugMe===true) {Mojo.Log.info("@@ ENTER Cleanup @@");}
-
 	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listDelete, this.bookmarkDeleteHandler);
 	this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listTap, this.bookmarkRenameDialogHandler);
 	//this.controller.stopListening(this.BookmarksListWidget, Mojo.Event.listReorder, this.bookmarkReorder);
 	this.controller.stopListening(this.deleteRowsWidget, Mojo.Event.tap, this.clearBookmarksHandler);
-
-if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE Cleanup @@");}
 };
 
 
@@ -186,7 +164,6 @@ BookmarksAssistant.prototype.initialPopulate = function(transaction, results) {
  ********************/
 BookmarksAssistant.prototype.displayList = function (transaction, results) {
 try{
-	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER displayList @@");}
 	this.listModel.items = [];
 
 	if (results.rows.length > 0) {
@@ -220,8 +197,6 @@ try{
 	else {
 		Mojo.Log.error(">>>>> displayList EMPTY!");
 	}
-
-	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE displayList @@");}
 } catch (displayListError) {Mojo.Log.error("displayList ERROR", displayListError);}
 };
 
@@ -333,8 +308,6 @@ try {
  ********************/
 BookmarksAssistant.prototype.deleteRows = function(event) {
 try {
-	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER deleteRows @@");}
-
 	SBB.db.transaction(
 		function (transaction) {
 			transaction.executeSql(
@@ -345,10 +318,7 @@ try {
 			);
 		}
 	);
-
 	this.writeDefaults();
-
-	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE deleteRows @@");}
 } catch (deleteRowsError) {Mojo.Log.error("deleteRows ERROR", deleteRowsError);}
 };
 
@@ -360,8 +330,6 @@ try {
  ********************/
 BookmarksAssistant.prototype.writeDefaults = function(event) {
 try {
-	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER writeDefaults @@");}
-
 	SBB.defaultEntries = [];
 	SBB.defaultEntries[0] = {bookmarkName: 'The Steps', chapterNumber: '6', pageNumber: 'howitworks_p59', pagePosition:'0.07917297024710035'};
 	SBB.defaultEntries[1] = {bookmarkName: 'The Promises', chapterNumber: '7', pageNumber: 'intoaction_p83',  pagePosition:'0.7117332494495124'};
@@ -369,7 +337,6 @@ try {
 	SBB.defaultEntries[3] = {bookmarkName: 'Seventh Step Prayer', chapterNumber: '7', pageNumber: 'intoaction_p76',  pagePosition:'0.2467442592010066'};
 	SBB.defaultEntries[4] = {bookmarkName: 'Road of Happy Destiny', chapterNumber: '12', pageNumber: 'avision_p164',  pagePosition:'0.9546072134387352'};
 
-				//"INSERT INTO 'SBB_Bookmarks_Table' (bookmarkName, chapterNumber, pageNumber, pagePosition) VALUES (?, ?, ?, ?)",
 	SBB.db.transaction(
 		function(transaction) {
 			for (i = 0; i < SBB.defaultEntries.length; i++) {
@@ -388,8 +355,6 @@ try {
 	this.listModel.items = [];
 	this.controller.modelChanged(this.listModel, this);
 	this.initialPopulate();
-
-	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE writeDefaults @@");}
 } catch (error) {Mojo.Log.error("writeDefaults ERROR", error);}
 };
 

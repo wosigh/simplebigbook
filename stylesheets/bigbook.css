@@ -81,6 +81,16 @@ body.main {
 	text-align: justify;
 }
 
+
+.main .newBigLetter {
+	float:left;
+	width:0.7em;
+	font-size:400%;
+	font-family:algerian,courier;
+	line-height:80%;
+}
+
+
 .main .hiddenDiv {
 	display: none;
 }
@@ -352,6 +362,7 @@ body.dock
 	border: 0px solid green;
 	/*color: rgba(250, 250, 250, 0.0);*/
 	color: rgba(250, 250, 250, 1.0);
+	display: none;
 	/*margin-top: 1em;
 	margin-bottom: 1em;
 	margin-left: 1em;

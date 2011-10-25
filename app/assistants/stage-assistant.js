@@ -44,8 +44,6 @@ StageAssistant.prototype.setup = function () {
 		disableSceneScroller: false
 	};
 	this.controller.pushScene(this.sceneArgs);
-	
-	//this.createMyTable();
 };
 
 StageAssistant.prototype.activate = function (event) {};
@@ -85,20 +83,6 @@ StageAssistant.prototype.cleanup = function (event) {};
 			{label: $L("Preferences"), command: 'cmd-Preferences'}
 		]
 	};
-
-	/*StageAssistant.myMenuModel = {
-		visible: true,
-		items: [
-			//{label: $L("Dock Test"), command: 'cmd-Dock'},
-			{label: $L("Search"), command: 'cmd-Search'},
-			{label: $L("Add Bookmark"), command: 'cmd-AddBookmarks'},
-			{label: $L("Edit Bookmarks"), command: 'cmd-Bookmarks'},
-			{label: $L("12 Step Organizations"), command: 'cmd-Organizations'},
-			{label: $L("Meetings"), command: 'cmd-Meetings'},
-			{label: $L("Help & About"), command: 'cmd-HelpAbout'},
-			{label: $L("Preferences"), command: 'cmd-Preferences'}
-		]
-	};*/
 
 	////////////////////////////////////////////////////
 	//  ****  Setup for Main Application Menu with Quote Generator
@@ -156,10 +140,9 @@ StageAssistant.prototype.cleanup = function (event) {};
  * Global Simplicity.
  *
  ********************/
-	SBB = {};
-
+try{
 	/*******  List of chapters  *******/
-	try{
+	SBB = {};
 	SBB.chapterList = [];
 	SBB.chapterList.push({
 		chapternumberlabel: "Forward",
@@ -281,7 +264,5 @@ StageAssistant.prototype.cleanup = function (event) {};
 		firstpage: "spiritual_p569_text",
 		file: "15_spiritual.html"
 	});
-	} catch (error) {Mojo.Log.error("STAGE CHAPTERS!", error);}
-
- 
-Mojo.Log.info("=======================  END STAGE ASST =======================");
+} catch (error) {Mojo.Log.error("STAGE CHAPTERS!", error);
+};

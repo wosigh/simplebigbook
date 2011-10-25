@@ -18,8 +18,6 @@
 
 function UsingAssistant() {}
 UsingAssistant.prototype.setup = function () {
-
-	//  ****  Get the preferences from cookie
 	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 	this.prefsModel = this.prefs.get();
 

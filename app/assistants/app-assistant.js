@@ -17,24 +17,6 @@ AppAssistant.prototype.handleLaunch = function(params) {
 if (this.debugMe===true) {Mojo.Log.info("@@ ENTER AA-HANDLELAUNCH @@");}
 
 try {
-	if (this.debugMe === true) {Mojo.Log.info(">>>>> LAUNCH PARAMS:", "'", params, "'");}
-
-	/*if (!SBB.db) {
-		//Mojo.Log.info(">>>>> LOADING SBB.DB");
-		SBB.db = openDatabase(this.dbName, this.dbVersion, this.dbDisplayName, this.dbSize);
-	}*/
-
-	//try { 
-	//	if (! (this.prefs)) {
-	//		this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
-	//		this.prefsModel = this.prefs.get();
-	//		this.prefsModel.launchParams = params;
-	//		this.prefs.put(this.prefsModel);
-	//	}
-	//} catch (launchParamsError) {Mojo.Log.logException(launchParamsError, "launchParamsError: Can't set cookie param.");}
-
-	
-	
 	if (!params) {
 		var stageProxy = this.controller.getStageProxy(mainStageName);
 		var mainStageController = this.controller.getStageController(mainStageName);
@@ -123,5 +105,3 @@ try {
 	}
 } catch (handleCommandError) {Mojo.Log.logException(handleCommandError, "AppAss handleCommand");}
 };
-
-Mojo.Log.info("=======================  END APP ASST =======================");

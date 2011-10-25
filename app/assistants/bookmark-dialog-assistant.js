@@ -1,28 +1,6 @@
 /*
  * Copyright 2008-2009 Palm, Inc. All rights reserved.
  */
-/*jslint laxbreak: true */
-/*global Mojo,_,$L
-*/
-/**
- * Constructor.
- * 
- * If this is a new UrlReference then the tmpIconFile* images will be set and the iconFile* images will not.
- * Conversely if the iconFile* images are set and the tmpIconFile* are not then this is an existing bookmark
- * that will be edited.
- * 
- * <ul>
- * <li>sceneController - Instance of Mojo.Controller.SceneController.</li>
- * <li>bookmarkStore - Instance of BookmarkStore.</li>
- * <li>urlReference - Instance of UrlReference.</li>
- * <li>task - String (BookmarkDialogAssistant.createBookmarkTask, BookmarkDialogAssistant.editBookmarkTask,
- *                   or BookmarkDialogAssistant.createLaunchpointTask.</li>
- * <li>deleteImage - function to call to delete an image.</li>
- * <li>onClose - function to call when closing the bookmark dialog.</li>
- * </ul>
- * 
- * @param {Object} The assistant parameters. 
- */
 function BookmarkDialogAssistant(params) {
 	this.dbName = "SBB_Bookmarks";
 	this.dbVersion = "0.1";

@@ -17,7 +17,6 @@
  */
 
 function SearchAssistant() {
-	this.debugMe = false;
 	this.radioValue = 3;
 }
 
@@ -27,8 +26,6 @@ function SearchAssistant() {
  *
  ********************/
 SearchAssistant.prototype.setup = function () {
-	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER SEARCH SETUP @@");}
-
 	//  ****  Get the preferences from cookie
 	this.prefs = new Mojo.Model.Cookie("SimpleBigBookv2");
 	this.prefsModel = this.prefs.get();
@@ -81,6 +78,9 @@ SearchAssistant.prototype.setup = function () {
 		["15_spiritual.html", "books/", "Spiritual Experience", "spiritual"]
 	];
 
+	Mojo.Log.info(item.length, item[0].length, item[0][0].length);
+	
+	
 	this.linklistAttributes = {
 		renderLimit: 20,
 		lookahead: 15,
@@ -137,8 +137,6 @@ SearchAssistant.prototype.setup = function () {
 	this.controller.setupWidget(Mojo.Menu.appMenu, StageAssistant.mySimpleMenuAttr, StageAssistant.mySimpleMenuModel);
 
 	//Mojo.Log.info("VALUE:", $('srchtype').value.toString());
-
-if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE SEARCH SETUP @@");}
 };
 
 
@@ -148,24 +146,15 @@ if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE SEARCH SETUP @@");}
  *
  ********************/
 SearchAssistant.prototype.activate = function (event) {
-	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER SEARCH ACTIVATE @@");}
-
-	//Needs to be in ACTIVATE not SETUP. Setup gets ran twice (dunno why)
-	//which makes allPages.length == 2 times the real length thus double hits in search!
 	page = "";
 	content = "";
 	srchval = "";
 	getLocalInfo();
 	allPages = [];
-	//allPageUrl = [];
-	//radioValue = 3;
-	//holdlist = 0;
 
 	this.controller.listen('search', Mojo.Event.tap, this.gosearch.bind(this));
 	this.controller.listen('srchtype', Mojo.Event.propertyChange, this.radioCallback.bind(this));
 	this.controller.document.addEventListener("keyup", this.keyDownHandler.bind(this), true);
-
-	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE SEARCH ACTIVATE @@");}
 };
 
 
@@ -186,12 +175,8 @@ SearchAssistant.prototype.deactivate = function (event) {
  *
  ********************/
 SearchAssistant.prototype.cleanup = function (event) {
-	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER SEARCH CLEANUP @@");}
-
 	this.controller.stopListening('search', Mojo.Event.tap, this.gosearch.bind(this));
 	this.controller.stopListening('srchtype', Mojo.Event.propertyChange, this.radioCallback.bind(this));
-
-	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE SEARCH CLEANUP @@");}
 };
 
 
@@ -201,11 +186,7 @@ SearchAssistant.prototype.cleanup = function (event) {
  *
  ********************/
 SearchAssistant.prototype.radioCallback = function (event) {
-	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER SEARCH RADIO CALLBACK @@");}
-
 	this.radioValue = event.value.toString();
-
-	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE SEARCH RADIO CALLBACK @@");}
 };
 
 
@@ -215,8 +196,6 @@ SearchAssistant.prototype.radioCallback = function (event) {
  *
  ********************/
 getLocalInfo = function () {
-	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER SEARCH GET LOCAL INFO @@");}
-
 	var lcUrl = "books/fulltext.html";
 	new Ajax.Request(lcUrl, {
 		method: 'get',
@@ -228,8 +207,6 @@ getLocalInfo = function () {
 		},
 		onFailure: function (failure) {}
 	});
-
-	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE SEARCH GET LOCAL INFO @@");}
 };
 
 
@@ -256,8 +233,6 @@ SearchAssistant.prototype.keyDownHandler = function(event)
  *
  ********************/
 SearchAssistant.prototype.gosearch = function (event) {
-	if (this.debugMe === true) {Mojo.Log.info("@@ ENTER SEARCH GO SEARCH @@");}
-
 	items = [];
 
 	var lcSrch = $('srchval').mojo.getValue();
@@ -285,8 +260,6 @@ SearchAssistant.prototype.gosearch = function (event) {
 		}
 	}
 
-	if (this.debugMe === true) {Mojo.Log.info("** radioValue", this.radioValue);}
-
 	fnd = [];
 	total = 0;
 	time = 0;
@@ -297,8 +270,6 @@ SearchAssistant.prototype.gosearch = function (event) {
 		thisPage = allPages[i];
 		rawdata = thisPage.substr(thisPage.indexOf('"') + 1, thisPage.indexOf(' ') - 2);
 
-		if (this.debugMe === true) {Mojo.Log.info(rawdata.length);}
-
 		underscore = rawdata.indexOf("_");
 		chapname = trimAll(rawdata.substr(0, underscore));
 		rawpage = (rawdata.substring(underscore + 2));
@@ -306,17 +277,13 @@ SearchAssistant.prototype.gosearch = function (event) {
 		if (rawpage.indexOf("_") === -1) {
 			pagetxt_top = false;
 			pagetxt = rawpage;
-			if (this.debugMe === true) {Mojo.Log.info("+++ NOT FIRST PAGE:", pagetxt_top, pagetxt);}
 		} else {
 			//if a first page
 			pagetxt_top = (trimAll(rawpage).substring(0, rawpage.indexOf("_"))) + "_top";
 			pagetxt = (trimAll(rawpage).substring(0, rawpage.indexOf("_")));
-			if (this.debugMe === true) {Mojo.Log.info("+++ IS FIRST PAGE:", pagetxt_top, pagetxt);}
 		}
 
 		for (q = 0; q < item.length; q++) {
-			if (this.debugMe === true) {Mojo.Log.info("** QQQQ", q, item.length, whichchap, chapname);}
-
 			thischap = trimAll(item[q][3]);
 			if (thischap === chapname) {
 				whichchap = item[q][2];
@@ -330,8 +297,6 @@ SearchAssistant.prototype.gosearch = function (event) {
 		lcHtml = "<font size='2'>";
 
 		for (k = 0; k < txt.length; k++) {
-			//if (this.debugMe === true) {Mojo.Log.info("** KKKK", k, txt.length);}
-
 			lcLower = thisPage.toLowerCase();
 			lnAt = lcLower.indexOf(txt[k].toLowerCase());
 			if (lnAt > -1 && txt[k] !== "") {
@@ -365,7 +330,6 @@ SearchAssistant.prototype.gosearch = function (event) {
 			items.push({
 				listdata: lcLine
 			});
-			if (this.debugMe === true) {Mojo.Log.info("** LAST", this.radioValue, lnCntr, lcBut, lcHtml, pagetxt, pagetxt[0]);}
 		}
 	}
 
@@ -379,8 +343,6 @@ SearchAssistant.prototype.gosearch = function (event) {
 	this.linkList.style.display = "block";
 	this.linklistModel.items = items;
 	this.controller.modelChanged(this.linklistModel);
-
-	if (this.debugMe === true) {Mojo.Log.info("@@ LEAVE SEARCH GO SEARCH @@");}
 };
 
 /********************

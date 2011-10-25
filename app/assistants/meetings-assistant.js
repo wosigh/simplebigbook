@@ -69,16 +69,13 @@ MeetingsAssistant.prototype.setup = function () {
 
 MeetingsAssistant.prototype.activate = function (event) {
 	this.controller.listen('zipcodeSearch', Mojo.Event.tap, this.meetingSearch.bind(this));
-	this.controller.listen('meetingSearchVal', Mojo.Event.keydown, this.validateText.bind(this));
 	this.controller.document.addEventListener("keyup", this.keyDownHandler.bind(this), true);
 };
 MeetingsAssistant.prototype.deactivate = function (event) {
 	this.controller.stopListening('zipcodeSearch', Mojo.Event.tap, this.meetingSearch.bind(this));
-	this.controller.stopListening('meetingSearchVal', Mojo.Event.keydown, this.validateText.bind(this));
 };
 MeetingsAssistant.prototype.cleanup = function (event) {
 	this.controller.stopListening('zipcodeSearch', Mojo.Event.tap, this.meetingSearch.bind(this));
-	this.controller.stopListening('meetingSearchVal', Mojo.Event.keydown, this.validateText.bind(this));
 };
  
 /********************
@@ -90,17 +87,12 @@ MeetingsAssistant.prototype.keyDownHandler = function(event)
 {
 	if (Mojo.Char.isEnterKey(event.keyCode)) {
 		$('meetingSearchVal').mojo.blur();
-		//setTimeout(this.enterKeyContinue.bind(this), 10);
 		setTimeout(this.meetingSearch.bind(this), 10);
 	}
 }
 
 
 MeetingsAssistant.prototype.meetingSearch = function (event) {
-try{ 
-	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER meetingSearch @@");}
-
-	//Mojo.Log.info($('meetingSearchVal').mojo.getValue());
 	theZip = $('meetingSearchVal').mojo.getValue();
 
 	this.controller.serviceRequest('palm://com.palm.applicationManager', {
@@ -112,17 +104,4 @@ try{
 			}
 		}
 	});
-
-
-} catch (error) {Mojo.Log.error("MEETINGS ASSISTANT meetingSearch ERROR", error);}
-if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE meetingSearch @@");}
-};
-
-
-MeetingsAssistant.prototype.validateText = function (event) {
-try{ 
-	if (this.debugMe===true) {Mojo.Log.info("@@ ENTER meetingSearch @@");}
-	Mojo.Log.info(event.keyCode);
-	if (this.debugMe===true) {Mojo.Log.info("@@ LEAVE meetingSearch @@");}
-	} catch (error) {Mojo.Log.error("MEETINGS ASSISTANT meetingSearch ERROR", error);}
 };
